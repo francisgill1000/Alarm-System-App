@@ -311,77 +311,7 @@
           </v-row>
         </v-tab-item>
         <v-tab-item v-if="can(`master`)">
-          <v-row class="mt-5 mb-5">
-            <v-col cols="6">
-              <h3>Device</h3>
-              <div>Dashboard / Company / Device</div>
-            </v-col>
-
-            <v-col cols="6">
-              <div class="text-right">
-                <v-btn
-                  v-if="can(`master`)"
-                  small
-                  color="primary"
-                  class="mb-2"
-                  @click="createDevice"
-                  >+ Add Device
-                </v-btn>
-              </div>
-            </v-col>
-          </v-row>
-
-          <v-row v-if="can(`master`)" class="mt-5 mb-5">
-            <v-col cols="3" v-for="(item, index) in devices" :key="index">
-              <v-card>
-                <v-toolbar flat dense small class="primary" dark>{{
-                  item.device_id
-                }}</v-toolbar>
-                <v-card-title>
-                  <span>
-                    <v-chip
-                      small
-                      :class="
-                        item.status.name == 'active' ? 'success' : 'error'
-                      "
-                      >{{ item.status.name }}</v-chip
-                    >
-                  </span>
-                  <v-spacer></v-spacer>
-                  <v-icon
-                    v-if="can(`master`)"
-                    @click="editItem(`/master/device/${item.id}`)"
-                    color="secondary"
-                    small
-                    >mdi-pencil</v-icon
-                  >
-
-                  <v-icon
-                    v-if="can(`master`)"
-                    @click="deleteDeviceItem(item)"
-                    color="red"
-                    small
-                    >mdi-delete
-                  </v-icon>
-                </v-card-title>
-
-                <v-card-text class="text-center">
-                  <div>
-                    <v-avatar color="secondary">
-                      <v-icon dark> mdi-laptop </v-icon>
-                    </v-avatar>
-                  </div>
-
-                  <div>
-                    <b>{{ item.name }}</b>
-                  </div>
-                  <div>
-                    {{ item.location }}
-                  </div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
+          <MasterDevices :company_id="$route.params.id"  />
         </v-tab-item>
       </v-tabs>
     </div>
@@ -435,6 +365,7 @@ export default {
     errors: [],
     data: [],
     devices: [],
+    company_id:0,
   }),
   async created() {
     this.getDataFromApi();
