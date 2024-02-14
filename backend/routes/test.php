@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Alarm\DeviceSensorLogsController;
 use App\Http\Controllers\AlarmLogsController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AttendanceLogController;
@@ -13,8 +14,8 @@ use App\Http\Controllers\Shift\MultiInOutShiftController;
 use App\Http\Controllers\Shift\NightShiftController;
 use App\Http\Controllers\Shift\RenderController;
 use App\Http\Controllers\Shift\SingleShiftController;
-use App\Http\Controllers\TestController;
 use App\Mail\ReportNotificationMail;
+use App\Models\Alarm\DeviceSensorLogs;
 use App\Models\Attendance;
 use App\Models\AttendanceLog;
 use App\Models\Device;
@@ -29,9 +30,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log as Logger;
 
-Route::get("pdf-merge-test",[TestController::class,"pdfMergeTest"]);
+Route::get('/test/getSensorLogs', function (Request $request) {
 
+
+    return DeviceSensorLogs::orderBy("log_time", "DESC")->get();
+});
 Route::get('/test/getLogs', function (Request $request) {
+
+
+    return (new DeviceSensorLogsController)->updateCompanyIds();
     $curl = curl_init();
 
 
