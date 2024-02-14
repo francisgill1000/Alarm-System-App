@@ -1,0 +1,68 @@
+[
+  {
+    "icon": "mdi-home",
+    "title": "Dashboard",
+    "to": "/dashboard",
+    "menu": "dashboard",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Tanent",
+    "to": "/community/tanent",
+    "menu": "community",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-bell",
+    "title": "Visitors",
+    "to": "/community/visitor/dashboard",
+    "menu": "visitors",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-clipboard-text-clock",
+    "title": "Delivery",
+    "to": "/community/delivery_man",
+    "menu": "delivery_man",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi-clock-outline",
+    "title": "Contractor",
+    "to": "/community/contractor",
+    "menu": "contractors",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi mdi-calendar-account",
+    "title": "House Maid",
+    "to": "/community/house_maids",
+    "menu": "house_maids",
+    "module": "topmenu"
+  },
+  {
+    "icon": "mdi mdi-calendar-star-four-points",
+    "title": "Employee",
+    "to": "/employees",
+    "menu": "access_control",
+    "module": "topmenu"
+  },
+
+  {
+    "icon": "mdi mdi-calendar-account",
+    "title": "Parking",
+    "to": "/community/parking",
+    "menu": "house_maids",
+    "module": "topmenu"
+  },
+ 
+  
+  {
+    "icon": "mdi-bell",
+    "title": "Reports",
+    "to": "/attendance_report",
+    "menu": "reports",
+    "module": "topmenu"
+  }
+]
