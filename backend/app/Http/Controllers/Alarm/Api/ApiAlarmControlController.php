@@ -43,7 +43,7 @@ class ApiAlarmControlController extends Controller
 
             $device_serial_number = $request->serial_number;
             if ($request->filled("temperature")) {
-                $temparature = $request->temparature;
+                $temparature = $request->temperature;
             }
             if ($request->filled("humidity")) {
                 $humidity = $request->humidity;
