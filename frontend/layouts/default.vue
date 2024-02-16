@@ -702,7 +702,7 @@ export default {
     this.getCompanyDetails();
     this.setMenus();
     this.setSubLeftMenuItems("dashboard", "/dashboard2", false);
-    this.logo_src = require("@/static/logo44.jpeg");
+    this.logo_src = require("@/static/logo.png");
     this.pendingNotificationsCount = 0;
     this.loadNotificationMenu();
     this.verifyAlarmStatus();

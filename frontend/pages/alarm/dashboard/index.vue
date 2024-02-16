@@ -12,8 +12,14 @@
           <v-col lg="3" md="3" sm="12" xs="12">
             <v-row style="width: 100%; height: 250px">
               <v-card class="py-2" style="width: 100%">
-                <h3 class="pl-5">Temperature</h3>
-                <span>Reload</span>
+                <v-row>
+                  <v-col cols="8"><h3 class="pl-5">Temperature</h3></v-col>
+                  <v-col cols="4" class="pull-right"
+                    ><v-icon @click="getDataFromApi()" style="float: right"
+                      >mdi mdi-reload</v-icon
+                    >
+                  </v-col>
+                </v-row>
                 <v-col
                   lg="12"
                   md="12"
@@ -165,14 +171,14 @@
 <script>
 import AlarmDashboardTemparatureChart1 from "../../../components/Alarm/Dashboard/AlarmDashboardTemparatureChart1.vue";
 import AlarmDashboardTemparatureChart2 from "../../../components/Alarm/Dashboard/AlarmDashboardTemparatureChart2.vue";
-import AlarmDashboardFooter from "../../../components/Alarm/Dashboard/AlarmDashboardFooter.vue";
+// import AlarmDashboardFooter from "../../../components/Alarm/Dashboard/AlarmDashboardFooter.vue";
 
 // import DashboardlastMultiStatistics from "../../components/dashboard2/DashboardlastMultiStatistics.vue";
 export default {
   components: {
     AlarmDashboardTemparatureChart1,
     AlarmDashboardTemparatureChart2,
-    AlarmDashboardFooter,
+    // AlarmDashboardFooter,
   },
   data() {
     return {
@@ -213,10 +219,11 @@ export default {
       this.$router.push(`/login`);
       return "";
     }
-
+    this.loading = true;
     this.getDataFromApi();
 
     setInterval(() => {
+      this.loading = true;
       getDataFromApi();
     }, 1000 * 60);
   },
@@ -282,8 +289,6 @@ export default {
       // }
     },
     getDataFromApi() {
-      this.loading = true;
-
       if (this.$store.state.alarm_temparature_latest) {
         this.data = this.$store.state.alarm_temparature_latest;
       } else {
