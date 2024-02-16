@@ -32,6 +32,7 @@ export default {
         },
         stroke: {
           width: [0, 4],
+          curve: "smooth",
         },
         title: {
           text: "Temparature Hourly Chart",
@@ -79,6 +80,10 @@ export default {
     //   document.querySelector("#" + this.name),
     //   this.chartOptions
     // ).render();
+
+    setInterval(() => {
+      getDataFromApi();
+    }, 1000 * 60);
   },
 
   methods: {

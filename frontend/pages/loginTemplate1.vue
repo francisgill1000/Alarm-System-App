@@ -98,7 +98,7 @@
                       style="color: #fff; padding: 3rem !important"
                     >
                       <h2 class="pb-7" style="font-size: 2em">
-                        Welcome To MyTime2Cloud
+                        Welcome To Xtreme Guard
                       </h2>
 
                       <v-form

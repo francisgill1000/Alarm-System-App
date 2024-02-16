@@ -126,7 +126,7 @@
                           </div>
                           <h3 class="pb-7 pt-15">
                             Welcome To
-                            <span style="font-size: 20px"> Mytime2Cloud </span>
+                            <span style="font-size: 20px"> Xtreme Guard </span>
                           </h3>
                         </div>
                         <div>
@@ -249,9 +249,9 @@
                           color: #fff;
                         "
                       >
-                        <h3>About Mytime2Cloud</h3>
+                        <h3>About Xtreme Guard</h3>
                         <div style="font-weight: 300">
-                          MyTime2Cloud is an innovative and comprehensive
+                          Xtreme Guard is an innovative and comprehensive
                           platform meticulously crafted to redefine how
                           organizations approach workforce management. It serves
                           as the ultimate solution, seamlessly amalgamating

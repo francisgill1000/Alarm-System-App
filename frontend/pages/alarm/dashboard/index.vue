@@ -13,6 +13,7 @@
             <v-row style="width: 100%; height: 250px">
               <v-card class="py-2" style="width: 100%">
                 <h3 class="pl-5">Temperature</h3>
+                <span>Reload</span>
                 <v-col
                   lg="12"
                   md="12"
@@ -214,6 +215,10 @@ export default {
     }
 
     this.getDataFromApi();
+
+    setInterval(() => {
+      getDataFromApi();
+    }, 1000 * 60);
   },
   async created() {
     if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {

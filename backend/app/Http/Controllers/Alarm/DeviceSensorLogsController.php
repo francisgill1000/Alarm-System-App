@@ -56,6 +56,8 @@ class DeviceSensorLogsController extends Controller
             '=',
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
+                ->where("temparature", "!=", "0.0")
+
                 ->whereDate("log_time", $date)->min('temparature')
         )->first();
         if ($temperature) {
@@ -68,6 +70,7 @@ class DeviceSensorLogsController extends Controller
             '=',
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
+                ->where("temparature", "!=", "0.0")
                 ->whereDate("log_time", $date)->max('temparature')
         )->first();
         if ($temperature) {
