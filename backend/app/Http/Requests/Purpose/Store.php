@@ -25,7 +25,6 @@ class Store extends FormRequest
     {
         return [
             "name" => "required",
-            "type" => "required",
             "company_id" => "required",
         ];
     }

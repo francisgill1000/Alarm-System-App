@@ -49,14 +49,12 @@ class Register extends FormRequest
         $validations['company_id'] = 'required';
         $validations['status_id'] = 'nullable';
 
-        $validations['logo'] = 'nullable';
+        $validations['logo'] = 'required';
         $validations['id_copy'] = 'nullable';
         $validations['date'] = 'required|date';
 
         $validations["time_in"] = "required";
         $validations["time_out"] = "required";
-
-        $validations["card_rfid_number"] = "nullable";
 
         return $validations;
     }

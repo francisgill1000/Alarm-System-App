@@ -31,9 +31,9 @@ class RegisterRequest extends FormRequest
 
             'room_id' => [
                 'required',
-                // Rule::unique('tanents')->where(function ($query) {
-                //     return $query->where('room_id', $this->room_id)
-                //         ->where('company_id', $this->company_id);
+                // Rule::unique('tanents')->where(function ($query) use ($room_id, $companyId) {
+                //     return $query->where('room_id', $room_id)
+                //         ->where('company_id', $companyId);
                 // }),
             ],
 
@@ -73,8 +73,6 @@ class RegisterRequest extends FormRequest
             "others_doc" => "nullable",
 
             "gender" => "required",
-
-            "term" => "required",
         ];
     }
 }

@@ -14,9 +14,9 @@ class PurposeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function purposeList()
+    public function purposeList(Purpose $model, Request $request)
     {
-        return Purpose::where('company_id', request("company_id") ?? 0)->where("type",request("type") ?? "visitor")->orderBy("name", "asc")->get();
+        return $model->where('company_id', $request->company_id)->orderBy("name", "asc")->get();
     }
 
     /**

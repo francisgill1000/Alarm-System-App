@@ -56,11 +56,6 @@ class UpdateRequest extends FormRequest
             "others_doc" => "nullable",
 
             "gender" => "required",
-
-            "term" => "required",
-
-            "room_category_id" => "required",
-            "room_sub_category_id" => "required",
         ];
     }
 }

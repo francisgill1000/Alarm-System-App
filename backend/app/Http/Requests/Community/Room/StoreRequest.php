@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Community\Room;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
@@ -24,21 +23,11 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'room_number' => [
-                'required',
-                Rule::unique('rooms')->where(function ($query) {
-                    return $query
-                        ->where('floor_id', $this->floor_id)
-                        ->where('room_category_id', $this->room_category_id)
-                        ->where('room_number', $this->room_number)
-                        ->where('company_id', $this->company_id);
-                }),
-            ],
 
+        return [
+            'room_number' => 'required',
             'floor_id' => 'required',
             'room_category_id' => 'required',
-            "room_sub_category_id" => "required",
             'status_id' => 'required',
             'company_id' => 'required',
         ];

@@ -43,7 +43,7 @@
   {
     "icon": "mdi-transit-transfer",
     "title": "Visitors",
-    "to": "/community/visitor/dashboard",
+    "to": "/visitor/visitor-dashboard",
     "menu": "true",
     "submenu": "visitors",
     "module": "dashboard"
@@ -51,7 +51,7 @@
   {
     "icon": "mdi-chart-box-outline",
     "title": "Reports",
-    "to": "/dashboard",
+    "to": "/visitor/visitor-dashboard",
     "menu": "true",
     "submenu": "visitors",
     "module": "dashboard"
@@ -276,23 +276,51 @@
   {
     "icon": "mdi-home",
     "title": "Dashboard",
-    "to": "/community/visitor/dashboard",
+    "to": "/visitor/visitor-dashboard",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-comment-alert",
+    "title": "Requests",
+    "to": "/visitor/requests",
     "menu": "visitors_access",
     "module": "visitors"
   },
   {
     "icon": "mdi-account",
     "title": "Visitors",
-    "to": "/community/visitor",
+    "to": "/visitor/visitor_list",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-account-tie",
+    "title": "Host",
+    "to": "/host",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-bullhorn",
+    "title": "Purpose",
+    "to": "/purpose",
     "menu": "visitors_access",
     "module": "visitors"
   },
   {
     "icon": "mdi-home ",
-    "title": "Tanent",
-    "to": "/community/tanent/dashboard",
+    "title": "Dashboard",
+    "to": "/community/dashboard",
     "menu": "community",
-    "module": "dashboard"
+    "module": "community"
+  },
+  {
+    "icon": "mdi-clock-time-four-outline ",
+    "title": "Report",
+    "to": "/community/report",
+    "menu": "community",
+    "module": "community"
   },
   {
     "icon": "mdi-account-card-details",
@@ -307,6 +335,34 @@
     "to": "/community/tanent/tanent_upload",
     "menu": "community",
     "module": "community"
+  },
+  {
+    "icon": "mdi-chart-box",
+    "title": "Visitor Logs",
+    "to": "/visitor/visitor_logs",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-select-group",
+    "title": "Zones",
+    "to": "/zone",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-chart-box",
+    "title": "Reports",
+    "to": "/visitor/visitors_report",
+    "menu": "visitors_access",
+    "module": "visitors"
+  },
+  {
+    "icon": "mdi-account-question",
+    "title": "Unknown",
+    "to": "/visitor/unknown",
+    "menu": "visitors_access",
+    "module": "visitors"
   },
   {
     "icon": "mdi-clock-time-four",

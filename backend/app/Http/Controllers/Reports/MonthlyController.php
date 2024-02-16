@@ -21,6 +21,8 @@ class MonthlyController extends Controller
 {
     public function monthly(Request $request)
     {
+
+        //Attendance reports - Monthly Geenration Report 
         $file_name = "Attendance Report";
         if (isset($request->from_date) && isset($request->to_date)) {
             $file_name = "Attendance Report - " . $request->from_date . ' to ' . $request->to_date;
@@ -354,6 +356,7 @@ class MonthlyController extends Controller
         if ($company->p_o_box_no == "null") {
             $company->p_o_box_no = "---";
         }
+        $new_doc = new PDFDoc();
 
         //  <img src="' . getcwd() . '/upload/app-logo.jpeg" height="70px" width="200">
         // <img src="' . $companyLogo . '" height="100px" width="100">      <img src="' . $companyLogo . '" height="100px" width="100">

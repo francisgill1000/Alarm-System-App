@@ -631,7 +631,7 @@ Route::get('/testGetDevices', function () {
 Route::get('/updateCameraDeviceLiveStatus', function () {
 
     //return (new DeviceCameraController())->getActiveSessionId();
-    return (new DeviceCameraController(''))->updateCameraDeviceLiveStatus();
+    //  return (new DeviceCameraController(''))->updateCameraDeviceLiveStatus();
 });
 
 Route::get('/writeLastAttendanceLogTime', function () {

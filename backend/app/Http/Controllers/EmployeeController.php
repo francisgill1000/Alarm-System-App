@@ -95,14 +95,14 @@ class EmployeeController extends Controller
             $data['profile_picture'] = $fileName;
         }
 
-        // $maximumEmployeeCount = Company::whereId($data["company_id"])->pluck("max_employee")[0];
-        // $existEmployeeCount = Employee::where("company_id", $data["company_id"])->count();
+        $maximumEmployeeCount = Company::whereId($data["company_id"])->pluck("max_employee")[0];
+        $existEmployeeCount = Employee::where("company_id", $data["company_id"])->count();
 
 
 
-        // if ($maximumEmployeeCount - $existEmployeeCount <= 0) {
-        //     return $this->response("Account Maximum " . $maximumEmployeeCount . " Employee count is reached.", null, false);
-        // }
+        if ($maximumEmployeeCount - $existEmployeeCount <= 0) {
+            return $this->response("Account Maximum " . $maximumEmployeeCount . " Employee count is reached.", null, false);
+        }
 
         // DB::beginTransaction();
 
@@ -112,7 +112,7 @@ class EmployeeController extends Controller
                 "user_type" => "employee",
                 "name" => "null",
                 "email" => $request->email,
-                "password" => Hash::make("password"),
+                "password" => Hash::make("secret"),
                 "company_id" => $data["company_id"],
             ]);
 
@@ -125,7 +125,7 @@ class EmployeeController extends Controller
 
         unset($data['email']);
 
-        try {   
+        try {
 
             $employee = Employee::create($data);
             if (!$employee) {

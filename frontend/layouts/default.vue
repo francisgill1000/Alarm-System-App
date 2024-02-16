@@ -15,7 +15,7 @@
       <v-list
         v-for="(i, idx) in items"
         :key="idx"
-        style="padding: 5px 0 0 0px"
+        style="padding: 5px 0 0 0px; display: none"
         :title="i.title"
       >
         <v-list-item
@@ -225,6 +225,7 @@
       </v-btn> -->
 
       <v-btn
+        style="display: none"
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
         plan
@@ -236,6 +237,7 @@
       >
 
       <v-menu
+        style="display: none"
         bottom
         origin="center center"
         offset-y
@@ -700,17 +702,17 @@ export default {
     this.getCompanyDetails();
     this.setMenus();
     this.setSubLeftMenuItems("dashboard", "/dashboard2", false);
-    this.logo_src = require("@/static/logo22.png");
+    this.logo_src = require("@/static/logo44.jpeg");
     this.pendingNotificationsCount = 0;
     this.loadNotificationMenu();
     this.verifyAlarmStatus();
 
-    // setInterval(() => {
-    //   this.verifyAlarmStatus();
-    // }, 1000 * 65);
-    // setInterval(() => {
-    //   this.loadNotificationMenu();
-    // }, 1000 * 45 * 3);
+    setInterval(() => {
+      this.verifyAlarmStatus();
+    }, 1000 * 60 * 1);
+    setInterval(() => {
+      this.loadNotificationMenu();
+    }, 1000 * 60 * 2);
   },
 
   mounted() {
@@ -809,7 +811,7 @@ export default {
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
 
-      if(!this.$vuetify.theme.dark) {
+      if (!this.$vuetify.theme.dark) {
         this.$vuetify.theme.themes.light = {
           primary: "#6946dd", //violoet
           accent: "#d8363a",
@@ -820,9 +822,11 @@ export default {
           popup_background: "#ecf0f4",
         };
       }
-
     },
     updateTopmenu() {
+      this.company_top_menu = {};
+
+      return;
       //update company Top menu
       //filter Display Modules From Company Settings
 
@@ -1677,6 +1681,16 @@ body {
 <style>
 .apexcharts-canvas {
   width: 100%;
+}
+</style>
+
+<style>
+.theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+  border-color: #fff !important;
+}
+
+.no-border:before {
+  border-color: #fff !important;
 }
 </style>
 

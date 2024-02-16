@@ -20,14 +20,4 @@ class Vehicle extends Model
     {
         return $this->belongsTo(Parking::class);
     }
-
-    /**
-     * Get the user that owns the Vehicle
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function tanent()
-    {
-        return $this->belongsTo(Tanent::class);
-    }
 }

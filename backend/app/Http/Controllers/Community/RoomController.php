@@ -20,7 +20,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return Room::where("company_id", request("company_id"))->with(["tanent", "floor", "room_category", "room_sub_category"])->paginate(request("per_page") ?? 10);
+        return Room::where("company_id", request("company_id"))->with(["tanent", "floor", "room_category"])->paginate(request("per_page") ?? 10);
     }
 
     public function report()
@@ -133,7 +133,13 @@ class RoomController extends Controller
     public function store(StoreRequest $request)
     {
         try {
-           
+            $exists = Room::where("company_id", $request->company_id)->where('room_number', $request->room_number)->exists();
+
+            // Check if the room number already exists
+            if ($exists) {
+                return $this->response('Room already exists.', null, true);
+            }
+
             $record = Room::create($request->validated());
 
             if ($record) {

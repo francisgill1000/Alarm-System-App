@@ -24,14 +24,17 @@ class StoreRequest extends FormRequest
      */
     public function rules()
     {
+        $room_id = $this->room_id;
+        $companyId = $this->company_id;
+
         return [
 
             'room_id' => [
                 'required',
-                // Rule::unique('tanents')->where(function ($query) {
-                //     return $query->where('room_id', $this->room_id)
-                //         ->where('company_id', $this->company_id);
-                // }),
+                Rule::unique('tanents')->where(function ($query) use ($room_id, $companyId) {
+                    return $query->where('room_id', $room_id)
+                        ->where('company_id', $companyId);
+                }),
             ],
 
 
@@ -52,6 +55,7 @@ class StoreRequest extends FormRequest
             "car_number" => "nullable",
             "parking_number" => "nullable",
 
+
             "rfid" => "nullable",
             "pin" => "nullable",
 
@@ -69,11 +73,6 @@ class StoreRequest extends FormRequest
             "others_doc" => "nullable",
 
             "gender" => "required",
-
-            "term" => "required",
-
-            "room_category_id" => "required",
-            "room_sub_category_id" => "required",
         ];
     }
 }

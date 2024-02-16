@@ -24,10 +24,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            "category" => "required",
-            "floor_id" => "required",
-            "parking_number" => "required",
-            "status_id" => "required",
+            "parking_number" => "required"
         ];
     }
 }

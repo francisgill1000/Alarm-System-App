@@ -28,7 +28,6 @@ class UpdateRequest extends FormRequest
             'room_number' =>  'required',
             'floor_id' => 'required',
             'room_category_id' => 'required',
-            "room_sub_category_id" => "required",
             'status_id' => 'required',
         ];
     }

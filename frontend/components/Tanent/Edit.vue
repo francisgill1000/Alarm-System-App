@@ -16,49 +16,54 @@
         <v-container>
           <v-row>
             <v-col cols="3">
-              <v-row>
-                <v-col cols="12">
-                  <div class="text-center">
-                    <SnippetsUploadAttachment
-                      :defaultImage="setImagePreview"
-                      @uploaded="handleAttachment"
-                    />
+              <div class="text-center">
+                <SnippetsUploadAttachment
+                  :defaultImage="setImagePreview"
+                  @uploaded="handleAttachment"
+                />
 
-                    <span
-                      v-if="errors && errors.logo"
-                      class="text-danger mt-2"
-                      >{{ errors.logo[0] }}</span
-                    >
-                  </div>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    label="RFID"
-                    v-model="payload.rfid"
-                    dense
-                    class="text-center"
-                    outlined
-                    :hide-details="!errors.rfid"
-                    :error-messages="
-                      errors && errors.rfid ? errors.rfid[0] : ''
-                    "
-                  ></v-text-field>
-                </v-col>
-                <v-col cols="12">
-                  <v-text-field
-                    label="PIN"
-                    v-model="payload.pin"
-                    dense
-                    class="text-center"
-                    outlined
-                    :hide-details="!errors.pin"
-                    :error-messages="errors && errors.pin ? errors.pin[0] : ''"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
+                <span v-if="errors && errors.logo" class="text-danger mt-2">{{
+                  errors.logo[0]
+                }}</span>
+              </div>
             </v-col>
             <v-col cols="9">
               <v-row class="mt-4">
+                <v-col cols="6">
+                  <v-autocomplete
+                    @change="getRoomsByFloorId(payload.floor_id)"
+                    label="Floor Number"
+                    outlined
+                    v-model="payload.floor_id"
+                    :items="floors"
+                    dense
+                    item-text="floor_number"
+                    item-value="id"
+                    :hide-details="!errors.floor_id"
+                    :error-messages="
+                      errors && errors.floor_id ? errors.floor_id[0] : ''
+                    "
+                  >
+                  </v-autocomplete>
+                </v-col>
+
+                <v-col cols="6">
+                  <v-autocomplete
+                    @change="getRoomNumber(payload.room_id)"
+                    label="Room"
+                    outlined
+                    v-model="payload.room_id"
+                    :items="rooms"
+                    dense
+                    item-text="room_number"
+                    item-value="id"
+                    :hide-details="!errors.room_id"
+                    :error-messages="
+                      errors && errors.room_id ? errors.room_id[0] : ''
+                    "
+                  >
+                  </v-autocomplete>
+                </v-col>
                 <v-col cols="6">
                   <v-text-field
                     label="First Name"
@@ -85,70 +90,6 @@
                       errors && errors.last_name ? errors.last_name[0] : ''
                     "
                   ></v-text-field>
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    label="Term"
-                    outlined
-                    :readonly="disabled"
-                    v-model="payload.term"
-                    :items="[`Long Term`, `Short Term`]"
-                    dense
-                    :hide-details="!errors.term"
-                    :error-messages="
-                      errors && errors.term ? errors.term[0] : ''
-                    "
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="6">
-                  <v-radio-group
-                    class="ma-0 mt-2 px-2 pa-0"
-                    v-model="payload.gender"
-                    row
-                    :hide-details="!errors.gender"
-                    :error-messages="
-                      errors && errors.gender ? errors.gender[0] : ''
-                    "
-                  >
-                    <v-radio label="Male" value="Male"></v-radio>
-                    <v-radio label="Female" value="Female"></v-radio>
-                    <v-radio label="Other" value="Other"></v-radio>
-                  </v-radio-group>
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    @change="getRoomsByFloorId(payload.floor_id)"
-                    label="Floor Number"
-                    outlined
-                    v-model="payload.floor_id"
-                    :items="floors"
-                    dense
-                    item-text="floor_number"
-                    item-value="id"
-                    :hide-details="!errors.floor_id"
-                    :error-messages="
-                      errors && errors.floor_id ? errors.floor_id[0] : ''
-                    "
-                  >
-                  </v-autocomplete>
-                </v-col>
-                <v-col cols="6">
-                  <v-autocomplete
-                    @change="getRoomNumber(payload.room_id)"
-                    label="Room"
-                    outlined
-                    v-model="payload.room_id"
-                    :items="rooms"
-                    dense
-                    item-text="room_number"
-                    item-value="id"
-                    :hide-details="!errors.room_id"
-                    :error-messages="
-                      errors && errors.room_id ? errors.room_id[0] : ''
-                    "
-                  >
-                  </v-autocomplete>
                 </v-col>
 
                 <v-col cols="6">
@@ -227,6 +168,32 @@
                         ? errors.whatsapp_number[0]
                         : ''
                     "
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                  <v-text-field
+                    label="RFID"
+                    v-model="payload.rfid"
+                    dense
+                    class="text-center"
+                    outlined
+                    :hide-details="!errors.rfid"
+                    :error-messages="
+                      errors && errors.rfid ? errors.rfid[0] : ''
+                    "
+                  ></v-text-field>
+                </v-col>
+
+                <v-col cols="6">
+                  <v-text-field
+                    label="PIN"
+                    v-model="payload.pin"
+                    dense
+                    class="text-center"
+                    outlined
+                    :hide-details="!errors.pin"
+                    :error-messages="errors && errors.pin ? errors.pin[0] : ''"
                   ></v-text-field>
                 </v-col>
 
@@ -603,8 +570,6 @@ export default {
 
   data: () => ({
     payload: {
-      term: "Long Term",
-      gender: "Male",
       full_name: "",
       phone_number: "",
       floor_id: "",
@@ -650,7 +615,7 @@ export default {
     response: "",
     data: [],
     errors: [],
-    member_types: [],
+    member_types:[],
 
     date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
@@ -676,6 +641,7 @@ export default {
     this.editItem(this.item);
     await this.getFloors();
     await this.getMemberTypes();
+
   },
 
   methods: {
@@ -837,6 +803,7 @@ export default {
       formData.append("age", member.age);
       formData.append("phone_number", member.phone_number);
       formData.append("nationality", member.nationality);
+
 
       this.$axios
         .post("/members-update/" + member.id, formData)

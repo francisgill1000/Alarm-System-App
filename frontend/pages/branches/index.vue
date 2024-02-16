@@ -64,138 +64,80 @@
                 <v-col md="9" sm="12" cols="12" dense>
                   <v-row>
                     <v-col md="6" cols="12" sm="12" dense>
+                      <label>Branch Name</label>
                       <v-text-field
                         :disabled="disabled"
                         dense
                         outlined
                         type="text"
                         v-model="branch.branch_name"
-                        label="Contractor Company Name"
-                        :hide-details="!errors.branch_name"
-                        :error-messages="
-                          errors && errors.branch_name
-                            ? errors.branch_name[0]
-                            : ''
-                        "
+                        hide-details
                       ></v-text-field>
-                    </v-col>
-
-                    <v-col md="6" cols="12" sm="12" dense>
-                      <v-text-field
-                        :disabled="disabled"
-                        dense
-                        outlined
-                        type="text"
-                        v-model="branch.manager_name"
-                        label="Contractor Manager Name"
-                        :hide-details="!errors.manager_name"
-                        :error-messages="
-                          errors && errors.manager_name
-                            ? errors.manager_name[0]
-                            : ''
-                        "
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col md="6" cols="12" sm="12" dense>
-                      <v-autocomplete
-                        v-model="branch.contractor_type"
-                        :items="[`Short Type`, `Long Type`]"
-                        dense
-                        outlined
-                        label="Contractor Type"
-                        :hide-details="!errors.contractor_type"
-                        :error-messages="
-                          errors && errors.contractor_type
-                            ? errors.contractor_type[0]
-                            : ''
-                        "
+                      <span
+                        v-if="errors && errors.branch_name"
+                        class="text-danger mt-2"
+                        >{{ errors.branch_name[0] }}</span
                       >
-                      </v-autocomplete>
                     </v-col>
-
                     <v-col md="6" cols="12" sm="12" dense>
-                      <v-text-field
+                      <label v-if="formTitle == 'Update'"
+                        >Manager( Role=manager)</label
+                      >
+                      <v-autocomplete
+                        v-if="formTitle == 'Update'"
                         :disabled="disabled"
+                        v-model="branch.user_id"
+                        :items="managers"
+                        item-text="first_name"
+                        item-value="user_id"
+                        hide-details
                         dense
                         outlined
-                        type="text"
-                        v-model="branch.email"
-                        label="Email"
-                        :hide-details="!errors.email"
-                        :error-messages="
-                          errors && errors.email ? errors.email[0] : ''
-                        "
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col md="6" cols="12" sm="12" dense>
-                      <v-text-field
-                        :disabled="disabled"
-                        dense
-                        outlined
-                        type="text"
-                        v-model="branch.phone_number"
-                        label="Phone Number"
-                        :hide-details="!errors.phone_number"
-                        :error-messages="
-                          errors && errors.phone_number
-                            ? errors.phone_number[0]
-                            : ''
-                        "
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col md="6" cols="12" sm="12" dense>
-                      <v-text-field
-                        :disabled="disabled"
-                        dense
-                        outlined
-                        type="text"
-                        v-model="branch.mobile_number"
-                        label="Mobile Number"
-                        :hide-details="!errors.mobile_number"
-                        :error-messages="
-                          errors && errors.mobile_number
-                            ? errors.mobile_number[0]
-                            : ''
-                        "
-                      ></v-text-field>
+                      ></v-autocomplete>
+                      <span
+                        v-if="errors && errors.user_id"
+                        class="text-danger mt-2"
+                        >{{ errors.user_id[0] }}</span
+                      >
                     </v-col>
 
                     <v-col md="4" cols="12" sm="12" dense>
+                      <label>Licence Number</label>
                       <v-text-field
                         :disabled="disabled"
                         dense
                         outlined
                         type="text"
                         v-model="branch.licence_number"
-                        label="Licence Number"
-                        :hide-details="!errors.licence_number"
-                        :error-messages="
-                          errors && errors.licence_number
-                            ? errors.licence_number[0]
-                            : ''
-                        "
+                        hide-details
                       ></v-text-field>
+                      <span
+                        v-if="errors && errors.licence_number"
+                        class="text-danger mt-2"
+                        >{{ errors.licence_number[0] }}</span
+                      >
                     </v-col>
                     <v-col md="4" cols="12" sm="12" dense>
+                      <label>Licence Issued By</label>
                       <v-text-field
                         :disabled="disabled"
                         dense
                         outlined
                         type="text"
                         v-model="branch.licence_issue_by_department"
-                        label="Licence Issued By"
-                        :hide-details="!errors.licence_issue_by_department"
-                        :error-messages="
-                          errors && errors.licence_issue_by_department
-                            ? errors.licence_issue_by_department[0]
-                            : ''
-                        "
+                        hide-details
                       ></v-text-field>
+                      <span
+                        v-if="errors && errors.licence_issue_by_department"
+                        class="text-danger mt-2"
+                        >{{ errors.licence_issue_by_department[0] }}</span
+                      >
                     </v-col>
                     <v-col md="4" sm="12" cols="12">
+                      <label
+                        >Licence Expiry Date
+                        <span class="text-danger">*</span></label
+                      >
                       <div>
                         <v-menu
                           v-model="joiningDateMenuOpen"
@@ -208,6 +150,7 @@
                           <template v-slot:activator="{ on, attrs }">
                             <v-text-field
                               :disabled="disabled"
+                              hide-details
                               v-model="branch.licence_expiry"
                               persistent-hint
                               append-icon="mdi-calendar"
@@ -216,16 +159,12 @@
                               dense
                               v-bind="attrs"
                               v-on="on"
-                              label="Licence Expiry Date"
-                              :hide-details="
-                                !errors.licence_expiry
-                              "
-                              :error-messages="
-                                errors && errors.licence_expiry
-                                  ? errors.licence_expiry[0]
-                                  : ''
-                              "
                             ></v-text-field>
+                            <span
+                              v-if="errors && errors.licence_expiry"
+                              class="text-danger mt-2"
+                              >{{ errors.licence_expiry[0] }}</span
+                            >
                           </template>
                           <v-date-picker
                             style="min-height: 320px"
@@ -237,57 +176,38 @@
                       </div>
                     </v-col>
 
-                    <v-col md="4" cols="12" sm="12" dense>
+                    <v-col md="6" cols="12" sm="12" dense>
+                      <label>Lat</label>
                       <v-text-field
                         :disabled="disabled"
                         dense
                         outlined
                         type="text"
-                        v-model="branch.car_number"
-                        label="Car Number"
-                        :hide-details="!errors.car_number"
-                        :error-messages="
-                          errors && errors.car_number
-                            ? errors.car_number[0]
-                            : ''
-                        "
+                        v-model="branch.lat"
+                        hide-details
                       ></v-text-field>
+                      <span
+                        v-if="errors && errors.lat"
+                        class="text-danger mt-2"
+                        >{{ errors.lat[0] }}</span
+                      >
                     </v-col>
-
-                    <v-col md="4" cols="12" sm="12" dense>
+                    <v-col md="6" cols="12" sm="12" dense>
+                      <label>Lon</label>
                       <v-text-field
                         :disabled="disabled"
                         dense
                         outlined
                         type="text"
-                        v-model="branch.car_branch"
-                        label="Licence Issued By"
-                        :hide-details="!errors.car_branch"
-                        :error-messages="
-                          errors && errors.car_branch
-                            ? errors.car_branch[0]
-                            : ''
-                        "
+                        v-model="branch.lon"
+                        hide-details
                       ></v-text-field>
+                      <span
+                        v-if="errors && errors.lon"
+                        class="text-danger mt-2"
+                        >{{ errors.lon[0] }}</span
+                      >
                     </v-col>
-
-                    <v-col md="4" cols="12" sm="12" dense>
-                      <v-text-field
-                        :disabled="disabled"
-                        dense
-                        outlined
-                        type="text"
-                        v-model="branch.issued_city"
-                        label="Issued City"
-                        :hide-details="!errors.issued_city"
-                        :error-messages="
-                          errors && errors.issued_city
-                            ? errors.issued_city[0]
-                            : ''
-                        "
-                      ></v-text-field>
-                    </v-col>
-
                     <v-col md="12" cols="12" sm="12" dense>
                       <label>Address</label>
                       <v-textarea
@@ -342,7 +262,7 @@
         <v-card elevation="0" class="mt-2">
           <v-toolbar class="mb-2" dense flat>
             <v-toolbar-title>
-              <span> {{ Model }} </span></v-toolbar-title
+              <span> {{ Model }}es </span></v-toolbar-title
             >
             <span>
               <v-btn
@@ -382,7 +302,7 @@
               class="ma-0 px-0"
               :ripple="false"
               text
-              title="Add Contractor"
+              title="Add Branch"
               @click="OpenDialog('Create')"
             >
               <v-icon right size="x-large" dark v-if="can('employee_create')"
@@ -432,10 +352,10 @@
                       item-text="branch_name"
                       item-value="id"
                       :items="[
-                        { branch_name: `All Contractores`, id: `` },
+                        { branch_name: `All Branches`, id: `` },
                         ...branchesList,
                       ]"
-                      placeholder="Contractor"
+                      placeholder="Branch"
                       @change="applyFilters(header.key, $event)"
                     ></v-autocomplete>
                     <v-select
@@ -698,7 +618,7 @@ export default {
       per_page: 10,
     },
     options: {},
-    Model: "Contractor Company",
+    Model: "Branch",
     endpoint: "branch",
     search: "",
     snackbar: false,
@@ -1135,7 +1055,7 @@ export default {
             this.color = "background";
             this.errors = [];
             this.snackbar = true;
-            this.response = "Contractor inserted successfully";
+            this.response = "Branch inserted successfully";
             this.getDataFromApi();
             this.branchDialog = false;
           }
@@ -1178,7 +1098,7 @@ export default {
           } else {
             this.errors = [];
             this.snackbar = true;
-            this.response = "Contractor updated successfully";
+            this.response = "Branch updated successfully";
             this.getDataFromApi();
             this.branchDialog = false;
           }

@@ -129,3 +129,6 @@ function pushValueWithDelay() {
 // Start the process by calling the function for the first time
 pushValueWithDelay();
 
+
+[vue-gauge](https://www.npmjs.com/package/vue-gauge?activeTab=explore)
+

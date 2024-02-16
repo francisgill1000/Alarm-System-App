@@ -70,10 +70,10 @@ class CompanyBranchController extends Controller
         $max_branches = $company->max_branches ?? 0;
         $remainingEmployee =  (int) $max_branches - (int) $totalBranches;
 
-        // if ($remainingEmployee <= 0) {
+        if ($remainingEmployee <= 0) {
 
-        //     return $this->response("Branch limit exceeded. Maximum limit is " . $max_branches, null, false);
-        // }
+            return $this->response("Branch limit exceeded. Maximum limit is " . $max_branches, null, false);
+        }
 
         if (isset($request->logo)) {
             $file = $request->file('logo');

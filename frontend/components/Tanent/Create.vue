@@ -27,142 +27,19 @@
         <!-- Step 1 Content -->
         <v-row>
           <v-col cols="3">
-            <v-row>
-              <v-col cols="12">
-                <div class="text-center">
-                  <SnippetsUploadAttachment
-                    :defaultImage="setImagePreview"
-                    @uploaded="handleAttachment"
-                  />
+            <div class="text-center">
+              <SnippetsUploadAttachment
+                :defaultImage="setImagePreview"
+                @uploaded="handleAttachment"
+              />
 
-                  <span v-if="errors && errors.logo" class="text-danger mt-2">{{
-                    errors.logo[0]
-                  }}</span>
-                </div>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="RFID"
-                  :readonly="disabled"
-                  v-model="payload.rfid"
-                  dense
-                  class="text-center"
-                  outlined
-                  :hide-details="!errors.rfid"
-                  :error-messages="errors && errors.rfid ? errors.rfid[0] : ''"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="PIN"
-                  :readonly="disabled"
-                  v-model="payload.pin"
-                  dense
-                  class="text-center"
-                  outlined
-                  :hide-details="!errors.pin"
-                  :error-messages="errors && errors.pin ? errors.pin[0] : ''"
-                ></v-text-field>
-              </v-col>
-            </v-row>
+              <span v-if="errors && errors.logo" class="text-danger mt-2">{{
+                errors.logo[0]
+              }}</span>
+            </div>
           </v-col>
           <v-col cols="9">
             <v-row class="mt-4">
-              <v-col cols="6">
-                <v-text-field
-                  label="First Name"
-                  :readonly="disabled"
-                  v-model="payload.first_name"
-                  dense
-                  class="text-center"
-                  outlined
-                  :hide-details="!errors.first_name"
-                  :error-messages="
-                    errors && errors.first_name ? errors.first_name[0] : ''
-                  "
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Last Name"
-                  :readonly="disabled"
-                  v-model="payload.last_name"
-                  dense
-                  class="text-center"
-                  outlined
-                  :hide-details="!errors.last_name"
-                  :error-messages="
-                    errors && errors.last_name ? errors.last_name[0] : ''
-                  "
-                ></v-text-field>
-              </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  label="Term"
-                  outlined
-                  :readonly="disabled"
-                  v-model="payload.term"
-                  :items="[`Long Term`, `Short Term`]"
-                  dense
-                  :hide-details="!errors.term"
-                  :error-messages="errors && errors.term ? errors.term[0] : ''"
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="6">
-                <v-radio-group
-                  class="ma-0 mt-2 px-2 pa-0"
-                  v-model="payload.gender"
-                  row
-                  :hide-details="!errors.gender"
-                  :error-messages="
-                    errors && errors.gender ? errors.gender[0] : ''
-                  "
-                >
-                  <v-radio label="Male" value="Male"></v-radio>
-                  <v-radio label="Female" value="Female"></v-radio>
-                  <v-radio label="Other" value="Other"></v-radio>
-                </v-radio-group>
-              </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  @change="setRoomSubCategories(payload.room_category_id)"
-                  label="Room Category"
-                  outlined
-                  :disabled="disabled"
-                  v-model="payload.room_category_id"
-                  :items="room_categories"
-                  dense
-                  item-text="name"
-                  item-value="id"
-                  :hide-details="!errors.room_category_id"
-                  :error-messages="
-                    errors && errors.room_category_id
-                      ? errors.room_category_id[0]
-                      : ''
-                  "
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  label="Room Sub Category"
-                  outlined
-                  :disabled="disabled"
-                  v-model="payload.room_sub_category_id"
-                  :items="filtered_room_sub_categories"
-                  dense
-                  item-text="name"
-                  item-value="id"
-                  :hide-details="!errors.room_sub_category_id"
-                  :error-messages="
-                    errors && errors.room_sub_category_id
-                      ? errors.room_sub_category_id[0]
-                      : ''
-                  "
-                >
-                </v-autocomplete>
-              </v-col>
               <v-col cols="6">
                 <v-autocomplete
                   @change="getRoomsByFloorId(payload.floor_id)"
@@ -198,6 +75,49 @@
                   "
                 >
                 </v-autocomplete>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+                  label="First Name"
+                  :readonly="disabled"
+                  v-model="payload.first_name"
+                  dense
+                  class="text-center"
+                  outlined
+                  :hide-details="!errors.first_name"
+                  :error-messages="
+                    errors && errors.first_name ? errors.first_name[0] : ''
+                  "
+                ></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+                  label="Last Name"
+                  :readonly="disabled"
+                  v-model="payload.last_name"
+                  dense
+                  class="text-center"
+                  outlined
+                  :hide-details="!errors.last_name"
+                  :error-messages="
+                    errors && errors.last_name ? errors.last_name[0] : ''
+                  "
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-radio-group
+                  class="ma-0 px-2 pa-0"
+                  v-model="payload.gender"
+                  row
+                  :hide-details="!errors.gender"
+                  :error-messages="
+                    errors && errors.gender ? errors.gender[0] : ''
+                  "
+                >
+                  <v-radio label="Male" value="Male"></v-radio>
+                  <v-radio label="Female" value="Female"></v-radio>
+                  <v-radio label="Other" value="Other"></v-radio>
+                </v-radio-group>
               </v-col>
               <v-col cols="6">
                 <v-text-field
@@ -248,6 +168,7 @@
                   ></v-date-picker>
                 </v-menu>
               </v-col>
+
               <v-col cols="6">
                 <v-text-field
                   label="Phone Number"
@@ -278,6 +199,33 @@
                   "
                 ></v-text-field>
               </v-col>
+
+              <v-col cols="6">
+                <v-text-field
+                  label="RFID"
+                  :readonly="disabled"
+                  v-model="payload.rfid"
+                  dense
+                  class="text-center"
+                  outlined
+                  :hide-details="!errors.rfid"
+                  :error-messages="errors && errors.rfid ? errors.rfid[0] : ''"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="6">
+                <v-text-field
+                  label="PIN"
+                  :readonly="disabled"
+                  v-model="payload.pin"
+                  dense
+                  class="text-center"
+                  outlined
+                  :hide-details="!errors.pin"
+                  :error-messages="errors && errors.pin ? errors.pin[0] : ''"
+                ></v-text-field>
+              </v-col>
+
               <v-col cols="6">
                 <v-text-field
                   label="Nationality"
@@ -292,6 +240,7 @@
                   "
                 ></v-text-field>
               </v-col>
+
               <v-col cols="6">
                 <v-text-field
                   label="Address"
@@ -306,6 +255,7 @@
                   "
                 ></v-text-field>
               </v-col>
+
               <v-col cols="6">
                 <v-menu
                   v-model="menu"
@@ -372,6 +322,7 @@
                   ></v-date-picker>
                 </v-menu>
               </v-col>
+
               <v-col cols="12">
                 <v-switch
                   style="margin-top: 5px"
@@ -387,6 +338,7 @@
                 >
                 </v-switch>
               </v-col>
+
               <v-col cols="6" class="my-1">
                 <v-btn
                   v-if="formAction == 'Edit'"
@@ -395,6 +347,7 @@
                   >Update</v-btn
                 >
               </v-col>
+
               <v-col cols="6" class="text-right my-1">
                 <v-btn @click="dialog = false">Close</v-btn>
                 <v-btn
@@ -449,7 +402,16 @@
                 outlined
                 :readonly="disabled"
                 v-model="vehicles.parking_id"
-                :items="parkings"
+                :items="[
+                  {
+                    id: 1,
+                    parking_number: `P1`,
+                  },
+                  {
+                    id: 2,
+                    parking_number: `P2`,
+                  },
+                ]"
                 dense
                 item-text="parking_number"
                 item-value="id"
@@ -516,15 +478,9 @@ export default {
   },
 
   data: () => ({
-    parkings: [],
-    room_categories: [],
-    room_sub_categories: [],
-    filtered_room_sub_categories: [],
     disabled: false,
     step: 1,
     payload: {
-      term: "Long Term",
-      gender: "Male",
       full_name: "",
       phone_number: "",
       floor_id: "",
@@ -657,34 +613,10 @@ export default {
   async created() {
     this.loading = false;
     this.boilerplate = true;
-
-    let config = {
-      params: { company_id: this.$auth.user.company_id },
-    };
     await this.getFloors();
-
-    let { data: room_categories } = await this.$axios.get(
-      `room-category-list`,
-      config
-    );
-    this.room_categories = room_categories;
-
-    let { data: room_sub_categories } = await this.$axios.get(
-      `room-sub-category-list`,
-      config
-    );
-    this.room_sub_categories = room_sub_categories;
-
-    let { data } = await this.$axios.get(`parking-list`);
-    this.parkings = data;
   },
 
   methods: {
-    setRoomSubCategories(id) {
-      this.filtered_room_sub_categories = this.room_sub_categories.filter(
-        (e) => e.room_category_id == id
-      );
-    },
     updatePayload(key, document) {
       this.payload[key] = document;
     },
@@ -903,8 +835,12 @@ export default {
     },
     handleSuccessResponse(message) {
       this.errors = [];
+      this.snackbar = true;
+      this.response = message;
+      this.memberdialog = false;
       this.dialog = false;
-      this.$emit("success", message);
+      this.dialog = true;
+      this.$emit("success");
     },
     handleErrorResponse(response) {
       if (!response) {

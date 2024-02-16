@@ -1,76 +1,45 @@
 <template>
-  <div>
-    <v-avatar style="border: 1px solid #6946dd" size="175">
-      <img v-show="!isClicked" src="/no-profile-image.jpg" ref="img" alt="" />
-
-      <video
-        v-show="isClicked"
-        width="100%"
-        ref="video"
-        autoplay
-        playsinline
-      ></video>
-      <canvas ref="canvas" style="display: none"></canvas>
+    <v-avatar size="200">
+      <v-img v-show="isImageBox" :src="imageSrc" />
+      <video v-show="!isImageBox" ref="video" autoplay playsinline></video>
     </v-avatar>
-    
-    <div class="mb-1">
-      <v-btn small outlined dark class="primary mt-1" @click="takeSnapshot">{{
-        isCamera ? "Take Picture" : "Open Camera"
-      }}</v-btn>
-    </div>
-  </div>
 </template>
 
 <script>
 export default {
-  auth: false,
-  layout: "login",
-
-  data: () => ({
-    isClicked: false,
-    isCamera: false,
-    videoStream: null,
-  }),
-
-  mounted() {
-    this.setupCamera();
+  props: ["isImageBox"],
+  data() {
+    return {
+      videoStream: null,
+      imageSrc: "/no-profile-image.jpg",
+    };
   },
   methods: {
-    async setupCamera() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        const video = this.$refs.video;
-        video.srcObject = stream;
-        this.videoStream = stream;
-        video.play();
-      } catch (error) {
-        console.error("Error accessing the camera: ", error);
-      }
-    },
-    takeSnapshot() {
-      this.isClicked = true;
-      this.isCamera = !this.isCamera;
+    async openCamera() {
       const video = this.$refs.video;
-      const canvas = this.$refs.canvas;
-      const context = canvas.getContext("2d");
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      video.srcObject = mediaStream;
+      this.videoStream = mediaStream;
+    },
+    async takePicture() {
+      const canvas = document.createElement("canvas");
+      const video = this.$refs.video;
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      this.$emit("imageSrc", canvas.toDataURL("image/png"));
+      canvas
+        .getContext("2d")
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
+      this.imageSrc = canvas.toDataURL("image/jpeg");
+      this.$emit("imageSrc", this.imageSrc);
+    },
+  },
 
-      if (this.isCamera) {
-        video.play();
-      } else if (!this.isCamera) {
-        video.pause();
-      }
-    },
-    beforeDestroy() {
-      if (this.videoStream) {
-        this.videoStream.getTracks().forEach((track) => track.stop());
-      }
-    },
+  beforeDestroy() {
+    if (this.videoStream) {
+      this.videoStream.getTracks().forEach((track) => track.stop());
+    }
   },
 };
 </script>

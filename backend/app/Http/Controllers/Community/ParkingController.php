@@ -15,19 +15,9 @@ class ParkingController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function dropDown()
-    {
-        return Parking::orderBy('id', 'desc')->get();
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Parking::orderBy('id', 'desc')->with(["vehicle"])->paginate(request("per_page") ?? 10);
+        return Parking::orderBy('id', 'desc')->paginate(request("per_page") ?? 10);
     }
 
     public function store(StoreRequest $request)

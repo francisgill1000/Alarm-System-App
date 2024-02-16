@@ -23,7 +23,7 @@ class Member extends Model
     ];
     public function tenant()
     {
-        return $this->belongsTo(Tanent::class,"tanent_id");
+        return $this->belongsTo(Tanent::class);
     }
 
     public function getProfilePictureNameAttribute()

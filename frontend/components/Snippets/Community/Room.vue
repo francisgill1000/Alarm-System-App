@@ -21,44 +21,20 @@
           <v-container>
             <v-row>
               <v-col cols="6">
-                <v-autocomplete
-                  @change="setRoomSubCategories(payload.room_category_id)"
-                  label="Room Category"
-                  outlined
+                <v-text-field
+                  label="Room Number"
                   :disabled="disabled"
-                  v-model="payload.room_category_id"
-                  :items="room_categories"
+                  v-model="payload.room_number"
                   dense
-                  item-text="name"
-                  item-value="id"
-                  :hide-details="!errors.room_category_id"
-                  :error-messages="
-                    errors && errors.room_category_id
-                      ? errors.room_category_id[0]
-                      : ''
-                  "
-                >
-                </v-autocomplete>
-              </v-col>
-              <v-col cols="6">
-                <v-autocomplete
-                  label="Room Sub Category"
+                  class="text-center"
                   outlined
-                  :disabled="disabled"
-                  v-model="payload.room_sub_category_id"
-                  :items="filtered_room_sub_categories"
-                  dense
-                  item-text="name"
-                  item-value="id"
-                  :hide-details="!errors.room_sub_category_id"
+                  :hide-details="!errors.room_number"
                   :error-messages="
-                    errors && errors.room_sub_category_id
-                      ? errors.room_sub_category_id[0]
-                      : ''
+                    errors && errors.room_number ? errors.room_number[0] : ''
                   "
-                >
-                </v-autocomplete>
+                ></v-text-field>
               </v-col>
+
               <v-col cols="6">
                 <v-autocomplete
                   label="Floor Number"
@@ -76,19 +52,25 @@
                 >
                 </v-autocomplete>
               </v-col>
+
               <v-col cols="6">
-                <v-text-field
-                  label="Room Number"
-                  :disabled="disabled"
-                  v-model="payload.room_number"
-                  dense
-                  class="text-center"
+                <v-autocomplete
+                  label="Category"
                   outlined
-                  :hide-details="!errors.room_number"
+                  :disabled="disabled"
+                  v-model="payload.room_category_id"
+                  :items="room_categories"
+                  dense
+                  item-text="name"
+                  item-value="id"
+                  :hide-details="!errors.room_category_id"
                   :error-messages="
-                    errors && errors.room_number ? errors.room_number[0] : ''
+                    errors && errors.room_category_id
+                      ? errors.room_category_id[0]
+                      : ''
                   "
-                ></v-text-field>
+                >
+                </v-autocomplete>
               </v-col>
 
               <v-col cols="6">
@@ -277,14 +259,11 @@ export default {
   data: () => ({
     disabled: false,
     room_categories: [],
-    room_sub_categories: [],
-    filtered_room_sub_categories:[],
     floors: [],
     payload: {
-      room_category_id: 1,
-      room_sub_category_id: 1,
-      floor_id: 1,
       room_number: null,
+      floor_id: 1,
+      room_category_id: 1,
       status_id: 1,
       company_id: 0,
     },
@@ -392,22 +371,13 @@ export default {
         filterable: true,
         filterSpecial: false,
       },
+
       {
         text: "Category",
         align: "left",
         sortable: true,
         key: "room_category.name",
         value: "room_category.name",
-        filterable: true,
-        filterSpecial: false,
-      },
-
-      {
-        text: "Sub Category",
-        align: "left",
-        sortable: true,
-        key: "room_sub_category.name",
-        value: "room_sub_category.name",
         filterable: true,
         filterSpecial: false,
       },
@@ -438,8 +408,6 @@ export default {
     this.boilerplate = true;
 
     this.getDataFromApi();
-
-    await this.getDropDowns();
   },
 
   mounted() {},
@@ -453,30 +421,15 @@ export default {
   },
   methods: {
     async getDropDowns() {
-      let { data: room_categories } = await this.$axios.get(
-        `room-category-list`,
-        {
-          params: { company_id: this.id },
-        }
-      );
-      this.room_categories = room_categories;
-
-
-      let { data: room_sub_categories } = await this.$axios.get(
-        `room-sub-category-list`,
-        {
-          params: { company_id: this.id },
-        }
-      );
-      this.room_sub_categories = room_sub_categories;
+      let { data: room_categories } = await this.$axios.get(`room-category`, {
+        params: { company_id: this.id },
+      });
+      this.room_categories = room_categories.data;
 
       let { data: floors } = await this.$axios.get(`floor`, {
         params: { company_id: this.id },
       });
       this.floors = floors.data;
-    },
-    setRoomSubCategories(id) {
-      this.filtered_room_sub_categories = this.room_sub_categories.filter((e) => e.room_category_id == id);
     },
     closeViewDialog() {
       this.viewDialog = false;
@@ -557,6 +510,7 @@ export default {
       this.formAction = "Create";
       this.DialogBox = true;
       this.payload = {};
+      await this.getDropDowns();
     },
     editItem(item) {
       this.disabled = false;
@@ -599,7 +553,7 @@ export default {
         .then(({ data }) => {
           this.errors = [];
           this.snackbar = true;
-          this.response = data.message;
+          this.response = "Room inserted successfully";
           this.getDataFromApi();
           this.DialogBox = false;
           this.dialog = true;

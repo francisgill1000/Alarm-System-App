@@ -13,29 +13,13 @@
       </v-toolbar>
 
       <v-container>
-        <v-row >
-          <!-- <v-col cols="4" class="text-center pt-3">
+        <v-row no-gutters>
+          <v-col cols="4" class="text-center pt-3">
             <v-avatar size="150" style="border: 1px solid #6946dd">
               <v-img :src="imageMemberPreview"></v-img>
             </v-avatar>
-          </v-col> -->
-          <v-col cols="3">
-            <v-row>
-              <v-col cols="12">
-                <div class="text-center">
-                  <SnippetsUploadAttachment
-                    :defaultImage="setImagePreview"
-                    @uploaded="handleAttachment"
-                  />
-
-                  <span v-if="errors && errors.logo" class="text-danger mt-2">{{
-                    errors.logo[0]
-                  }}</span>
-                </div>
-              </v-col>
-            </v-row>
           </v-col>
-          <v-col cols="9" class="pt-2">
+          <v-col cols="8" class="pt-2">
             <v-row>
               <v-col cols="6">
                 <v-text-field
@@ -84,6 +68,17 @@
                     errors && errors.phone_number ? errors.phone_number[0] : ''
                   "
                 ></v-text-field>
+              </v-col>
+              <v-col cols="6">
+                <v-file-input
+                  v-model="member.profile_picture"
+                  dense
+                  outlined
+                  prepend-icon=""
+                  append-icon="mdi-camera"
+                  label="Upload Photo"
+                  @change="previewMemberImage"
+                ></v-file-input>
               </v-col>
               <v-col cols="6">
                 <v-text-field
@@ -156,9 +151,6 @@ export default {
     };
   },
   methods: {
-    handleAttachment(e) {
-      this.member.profile_picture = e;
-    },
     generateRandomId() {
       const length = 8; // Adjust the length of the ID as needed
       const randomNumber = Math.floor(Math.random() * Math.pow(10, length)); // Generate a random number

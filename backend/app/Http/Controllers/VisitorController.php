@@ -69,12 +69,6 @@ class VisitorController extends Controller
     }
 
 
-    public function visitorList(Request $request)
-    {
-        return Visitor::orderBy("id","desc")->with(["branch", "zone", "zone.devices",  "host", "timezone:id,timezone_id,timezone_name", "purpose:id,name"])->paginate($request->input("per_page", 100));
-    }
-
-
     public function search(Request $request)
     {
         $model = (new Visitor)->filters($request);

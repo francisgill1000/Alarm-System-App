@@ -39,7 +39,7 @@ class StoreRequest extends FormRequest
         $controller = new Controller;
 
         return [
-            'department_id' => ['nullable'],
+            'department_id' => ['required'],
             'company_id' => ['required'],
             'employee_id' => ['required', $controller->uniqueRecord("employees", $employee)],
             'system_user_id' => ['required', $controller->uniqueRecord("employees", $employeeDevice), 'regex:/^[1-9][0-9]*$/'],
@@ -52,7 +52,7 @@ class StoreRequest extends FormRequest
             'phone_number' =>  ['required', 'min:10', 'max:13'],
             'whatsapp_number' => ['nullable', 'min:10', 'max:13'],
             'status' => ['nullable'],
-            'branch_id' => ['nullable'],
+            'branch_id' => ['required'],
             'email' => 'nullable|min:3|max:191|unique:users',
             'profile_picture' => ['image', 'mimes:jpeg,png,jpg,svg', 'max:2048', 'sometimes', 'nullable'],
         ];

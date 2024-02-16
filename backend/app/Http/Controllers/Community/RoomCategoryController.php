@@ -15,21 +15,11 @@ class RoomCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function dropDown()
-    {
-        return RoomCategory::where("company_id", request("company_id") ?? 0)->get();
-    }
-
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return RoomCategory::where("company_id", request("company_id") ?? 0)->paginate(request("per_page") ?? 10);
+        return RoomCategory::where("company_id",request("company_id") ?? 0)->paginate(request("per_page") ?? 10);
     }
+
     /**
      * Store a newly created resource in storage.
      *

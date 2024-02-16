@@ -1,5 +1,3 @@
-  
-  
 <template>
   <div
     style="width: 100%"
@@ -13,7 +11,7 @@
       <v-col lg="9" md="9" sm="12" xs="12">
         <v-row>
           <v-col md="12">
-            <v-card class="pa-2" style="height: 400px; overflow: hidden">
+            <v-card class="pa-2" style="height: 354px; overflow: hidden">
               <v-row background fill>
                 <v-col
                   lg="8"
@@ -23,7 +21,7 @@
                   class="d-xs-flex"
                   style="flex: auto"
                 >
-                  <CommDashboardAttendanceChart
+                  <DashboardAttendanceChart
                     :branch_id="branch_id"
                     :name="'AttendanceChart1'"
                     :height="'300'"
@@ -37,7 +35,7 @@
                   class="d-xs-flex pa-2"
                   style="border-left: 1px solid #ddd"
                 >
-                  <CommDashboardLastMonthStatistics
+                  <DashboardlLastMonthStatistics
                     :branch_id="branch_id"
                     name="LastMonthStatistics"
                   />
@@ -49,7 +47,7 @@
         <v-row>
           <v-col lg="12" md="12" sm="12" xs="12">
             <v-card class="py-2" style="height: 772px; overflow: hidden">
-              <CommDashboardRealTimeLogTableview :branch_id="branch_id" />
+              <DashboardRealTimeLogTableview :branch_id="branch_id" />
             </v-card>
           </v-col>
         </v-row>
@@ -63,7 +61,7 @@
             style="flex: auto"
           >
             <v-card class="py-2 mt-2" style="height: 312px; overflow: hidden">
-              <CommDashboardAttendanceHourChart
+              <DashboardAttendanceHourChart
                 :branch_id="branch_id"
                 :name="'AttendanceChart2'"
                 :height="'260'"
@@ -71,10 +69,10 @@
             </v-card>
           </v-col>
           <v-col lg="6" md="6" sm="12" xs="12">
-            <!-- <CommDashboardlastMultiStatistics /> -->
+            <!-- <DashboardlastMultiStatistics /> -->
 
             <v-card class="py-2 mt-2" style="height: 312px; overflow: hidden">
-              <CommDashboardLoginActivities :branch_id="branch_id" />
+              <DashboardLoginActivities :branch_id="branch_id" />
             </v-card>
             <!-- <v-card class="mt-2" style="height: 350px"> </v-card> -->
           </v-col>
@@ -83,11 +81,16 @@
 
       <v-col lg="3" md="3" sm="12" xs="12">
         <v-card class="py-2 mb-2" v-if="branchList.length > 1">
+          <!-- <v-row>
+            <v-col md="12" class="text-center"> 2222 </v-col>
+          </v-row> -->
           <v-row class="mt-2">
             <v-col cols="1">
               <label> </label>
             </v-col>
-            <v-col cols="3"> </v-col>
+            <v-col cols="3">
+              <!-- <label>Branches : </label> -->
+            </v-col>
 
             <v-col cols="4" class="pa-0 ma-0">
               <v-autocomplete
@@ -107,20 +110,82 @@
             </v-col>
           </v-row>
         </v-card>
+        <!-- <v-menu
+          v-if="
+            this.$auth &&
+            this.$auth.user.user_type == 'company' &&
+            this.$route.name == 'dashboard2'
+          "
+          nudge-bottom="50"
+          transition="scale-transition"
+          origin="center center"
+          bottom
+          left
+          min-width="200"
+          nudge-left="20"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <label
+              style="min-width: 150px"
+              class="px-2 text-overflow"
+              v-bind="attrs"
+              v-on="on"
+            >
+              {{ selectedBranchName != "All Branches" ? "Branch: " : "" }}
+              {{ selectedBranchName }}
+            </label>
+          </template>
 
-        <CommDashboardRightsideStaticstics :branch_id="branch_id" />
+          <v-list light nav dense>
+            <v-list-item-group color="primary">
+              <v-list-item
+                @click="filterBranch(branch)"
+                v-for="branch in branchList"
+              >
+                <v-list-item-content class="text-left">
+                  <v-list-item-title class="black--text">
+                    <img
+                      v-if="branch.logo"
+                      :src="branch.logo"
+                      style="vertical-align: middle; max-width: 25px"
+                    />
+
+                    <img
+                      v-else
+                      src="/no-image.PNG"
+                      style="vertical-align: middle; max-width: 25px"
+                    />
+
+                    <span style="">{{ branch.branch_name }}</span>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="selectedBranchName != 'All Branches'">
+                <v-list-item-content
+                  class="text-center"
+                  @click="filterBranch(null)"
+                >
+                  <v-list-item-title class="black--text">
+                    <span style="">All Branches</span>
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-menu> -->
+        <DashboardRightsideStaticstics :branch_id="branch_id" />
 
         <v-row>
           <v-col lg="12" md="12" sm="12" xs="12">
             <v-card class="py-2 mt-2" style="height: 443px; overflow: hidden">
-              <CommDashboardAnnouncment :branch_id="branch_id" />
+              <DashboardAnnouncment :branch_id="branch_id" />
             </v-card>
           </v-col>
         </v-row>
         <v-row>
           <v-col lg="12" md="12" sm="12" xs="12">
             <v-card class="py-2 mt-2" style="height: 312px; overflow: hidden">
-              <CommDashboardAttednaceDepartmentWise
+              <DashboardAttednaceDepartmentWise
                 :branch_id="branch_id"
                 name="AttendanceDepartmentWise"
               />
@@ -135,26 +200,26 @@
 </template>
 
 <script>
-import CommDashboardAttendanceChart from "@/components/Community/Dashboard/CommDashboardAttendanceChartV1.vue";
-import CommDashboardLastMonthStatistics from "@/components/Community/Dashboard/CommDashboardlLastMonthStatisticsV1.vue";
-import CommDashboardRealTimeLogTableview from "@/components/Community/Dashboard/CommDashboardRealTimeLogTableviewV1.vue";
-import CommDashboardRightsideStaticstics from "@/components/Community/Dashboard/CommDashboardRightsideStaticsticsV1.vue";
-import CommDashboardAnnouncment from "@/components/Community/Dashboard/CommDashboardAnnouncmentV1.vue";
-import CommDashboardAttendanceHourChart from "@/components/Community/Dashboard/CommDashboardAttendanceHourChartV1.vue";
-import CommDashboardLoginActivities from "@/components/Community/Dashboard/CommDashboardLoginActivitiesV1.vue";
-import CommDashboardAttednaceDepartmentWise from "@/components/Community/Dashboard/CommDashboardAttednaceDepartmentWiseV1.vue";
+import DashboardAttendanceChart from "../../components/dashboard2/DashboardAttendanceChartV1.vue";
+import DashboardlLastMonthStatistics from "../../components/dashboard2/DashboardlLastMonthStatisticsV1.vue";
+import DashboardRealTimeLogTableview from "../../components/dashboard2/DashboardRealTimeLogTableviewV1.vue";
+import DashboardRightsideStaticstics from "../../components/dashboard2/DashboardRightsideStaticsticsV1.vue";
+import DashboardAnnouncment from "../../components/dashboard2/DashboardAnnouncmentV1.vue";
+import DashboardAttendanceHourChart from "../../components/dashboard2/DashboardAttendanceHourChartV1.vue";
+import DashboardLoginActivities from "../../components/dashboard2/DashboardLoginActivitiesV1.vue";
+import DashboardAttednaceDepartmentWise from "../../components/dashboard2/DashboardAttednaceDepartmentWiseV1.vue";
 // import DashboardlastMultiStatistics from "../../components/dashboard2/DashboardlastMultiStatistics.vue";
 export default {
   components: {
-    CommDashboardAttendanceChart,
-    CommDashboardLastMonthStatistics,
-    CommDashboardRealTimeLogTableview,
-    CommDashboardAnnouncment,
-    CommDashboardLoginActivities,
-    CommDashboardAttednaceDepartmentWise,
-    CommDashboardRightsideStaticstics,
+    DashboardAttendanceChart,
+    DashboardlLastMonthStatistics,
+    DashboardRealTimeLogTableview,
+    DashboardAnnouncment,
+    DashboardLoginActivities,
+    DashboardAttednaceDepartmentWise,
+    DashboardRightsideStaticstics,
     // DashboardlastMultiStatistics,
-    CommDashboardAttendanceHourChart,
+    DashboardAttendanceHourChart,
   },
   data() {
     return {
@@ -199,6 +264,10 @@ export default {
       this.$router.push(`/login`);
       return "";
     }
+
+    this.$router.push(`alarm/dashboard`);
+
+    return;
 
     try {
       await this.$store.dispatch("fetchDropDowns", {

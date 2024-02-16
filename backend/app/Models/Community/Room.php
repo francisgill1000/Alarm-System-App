@@ -35,9 +35,4 @@ class Room extends Model
     {
         return $this->belongsTo(RoomCategory::class);
     }
-
-    public function room_sub_category()
-    {
-        return $this->belongsTo(RoomSubCategory::class);
-    }
 }

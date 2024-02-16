@@ -19,11 +19,6 @@ class MemberController extends Controller
         return Member::where("tanent_id", $id)->get();
     }
 
-    public function maids()
-    {
-        return Member::where("member_type", "Maid")->with("tenant")->paginate(request("per_page") ?? 100);
-    }
-
     /**
      * Store a newly created resource in storage.
      *
