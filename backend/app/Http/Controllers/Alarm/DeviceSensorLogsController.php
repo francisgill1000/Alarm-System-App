@@ -31,11 +31,6 @@ class DeviceSensorLogsController extends Controller
         $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
 
 
-        //last alarm 
-        $Device = Device::where("company_id", $request->company_id)
-            ->where("serial_number", $request->device_serial_number)->get();
-        if (isset($Device[0]))
-            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
 
 
         return [
@@ -54,11 +49,6 @@ class DeviceSensorLogsController extends Controller
         $HouryData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date);
 
 
-        //last alarm 
-        $Device = Device::where("company_id", $request->company_id)
-            ->where("serial_number", $request->device_serial_number)->get();
-        if (isset($Device[0]))
-            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
 
 
         return [
@@ -165,6 +155,14 @@ class DeviceSensorLogsController extends Controller
             $humidity_max = $humidity->humidity;
             $humidity_max_date_time = $humidity->log_time;
         }
+
+
+        //last alarm 
+        $Device = Device::where("company_id", $request->company_id)
+            ->where("serial_number", $request->device_serial_number)->get();
+        if (isset($Device[0]))
+            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
+
 
         return [
             "temperature_latest" =>   $temperature_latest,
