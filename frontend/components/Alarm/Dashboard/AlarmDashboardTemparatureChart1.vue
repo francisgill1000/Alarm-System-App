@@ -43,7 +43,7 @@ export default {
         needleValue: 5,
         centralLabel: "5",
         hasNeedle: true,
-        arcDelimiters: [50, 75, 99],
+        arcDelimiters: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
         chartWidth: 400,
       },
@@ -58,7 +58,7 @@ export default {
         needleValue: this.temperature_latest,
         centralLabel: this.temperature_latest + " C",
         hasNeedle: true,
-        arcDelimiters: [50, 75, 99],
+        arcDelimiters: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
       };
 
