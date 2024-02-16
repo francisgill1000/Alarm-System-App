@@ -112,7 +112,7 @@
               <v-img
                 class="text-center"
                 style="
-                  width: 200px;
+                  width: 250px;
                   padding: 0px;
                   margin: auto;
                   text-align: center;
