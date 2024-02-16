@@ -30,6 +30,7 @@ class DeviceSensorLogsController extends Controller
         $temperature_max = '--';
         $temperature_min_date_time = '--';
         $temperature_max_date_time = '--';
+        $fire_alarm_start_datetime = '--';
 
 
         $date = date('Y-m-d');
@@ -57,8 +58,10 @@ class DeviceSensorLogsController extends Controller
                 ->where("serial_number", $request->device_serial_number)
                 ->whereDate("log_time", $date)->min('temparature')
         )->first();
-        $temperature_min = $temperature->temparature;
-        $temperature_min_date_time = $temperature->log_time;
+        if ($temperature) {
+            $temperature_min = $temperature->temparature;
+            $temperature_min_date_time = $temperature->log_time;
+        }
         //----------------
         $temperature =  $temperature  = $model->clone()->where(
             'temparature',
@@ -67,8 +70,10 @@ class DeviceSensorLogsController extends Controller
                 ->where("serial_number", $request->device_serial_number)
                 ->whereDate("log_time", $date)->max('temparature')
         )->first();
-        $temperature_max = $temperature->temparature;
-        $temperature_max_date_time = $temperature->log_time;
+        if ($temperature) {
+            $temperature_max = $temperature->temparature;
+            $temperature_max_date_time = $temperature->log_time;
+        }
 
         ///----------Hourly Device Logs 
 
@@ -78,8 +83,8 @@ class DeviceSensorLogsController extends Controller
         //last alarm 
         $Device = Device::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)->get();
-
-        $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
+        if (isset($Device[0]))
+            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
 
 
         return [
