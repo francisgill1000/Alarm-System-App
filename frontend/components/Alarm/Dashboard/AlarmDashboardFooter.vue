@@ -139,7 +139,7 @@
                   <br />
                   <div>Last Open</div>
                   <div
-                    :style="getPriorityColor(device.door_open_start_datetime)"
+                    :style="getPriorityColor(device.door_open_status)"
                   >
                     {{
                       device.door_open_start_datetime == null
