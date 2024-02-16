@@ -52,7 +52,7 @@ export default ({ app }, inject) => {
         weekday: "short",
       };
       const formattedDate = inputDate.toLocaleDateString("en-US", options);
-
+      if (year == 1970) return "---";
       return `${formattedDate}  ${hours}:${minutes} `;
     },
     format5: (inputdate) => {

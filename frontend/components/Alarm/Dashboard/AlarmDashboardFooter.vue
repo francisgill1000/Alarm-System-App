@@ -23,10 +23,19 @@
                 </v-col>
                 <v-col cols="8">
                   <div>Status</div>
-                  <div class="green--text">Normal</div>
+                  <div class="green--text">
+                    <div v-if="device.fire_alarm_status == 0">Normal</div>
+                    <div v-else style="color: red">Warning</div>
+                  </div>
                   <br />
                   <div>Last Alarm</div>
-                  <div class="green--text">Feb 23 2024 at 10:00PM</div>
+                  <div :style="getPriorityColor(device.fire_alarm_status)">
+                    {{
+                      device.fire_alarm_start_datetime == null
+                        ? "---"
+                        : $dateFormat.format4(device.fire_alarm_start_datetime)
+                    }}
+                  </div>
                 </v-col>
               </v-row>
             </v-col>
@@ -49,10 +58,21 @@
                 </v-col>
                 <v-col cols="8">
                   <div>Status</div>
-                  <div class="green--text">Normal</div>
+                  <div class="green--text">
+                    <div v-if="device.water_alarm_status == 0">Normal</div>
+                    <div v-else style="color: red">Warning</div>
+                  </div>
                   <br />
                   <div>Last Alarm</div>
-                  <div class="green--text">Feb 23 2024 at 10:00PM</div>
+                  <div
+                    :style="getPriorityColor(device.water_alarm_start_datetime)"
+                  >
+                    {{
+                      device.water_alarm_start_datetime == null
+                        ? "---"
+                        : $dateFormat.format4(device.water_alarm_start_datetime)
+                    }}
+                  </div>
                 </v-col>
               </v-row>
             </v-col>
@@ -75,10 +95,21 @@
                 </v-col>
                 <v-col cols="8">
                   <div>Status</div>
-                  <div class="green--text">Normal</div>
+                  <div class="green--text">
+                    <div v-if="device.power_alarm_status == 0">Normal</div>
+                    <div v-else style="color: red">Warning</div>
+                  </div>
                   <br />
                   <div>Last Alarm</div>
-                  <div class="green--text">Feb 23 2024 at 10:00PM</div>
+                  <div
+                    :style="getPriorityColor(device.power_alarm_start_datetime)"
+                  >
+                    {{
+                      device.power_alarm_start_datetime == null
+                        ? "---"
+                        : $dateFormat.format4(device.power_alarm_start_datetime)
+                    }}
+                  </div>
                 </v-col>
               </v-row>
             </v-col>
@@ -101,10 +132,21 @@
                 </v-col>
                 <v-col cols="8">
                   <div>Status</div>
-                  <div class="green--text">Normal</div>
+                  <div class="green--text">
+                    <div v-if="device.door_open_status == 0">Normal</div>
+                    <div v-else style="color: red">Warning</div>
+                  </div>
                   <br />
                   <div>Last Open</div>
-                  <div class="green--text">Feb 23 2024 at 10:00PM</div>
+                  <div
+                    :style="getPriorityColor(device.door_open_start_datetime)"
+                  >
+                    {{
+                      device.door_open_start_datetime == null
+                        ? "---"
+                        : $dateFormat.format4(device.door_open_start_datetime)
+                    }}
+                  </div>
                 </v-col>
               </v-row>
             </v-col>
@@ -119,6 +161,7 @@
 
 <script>
 export default {
+  props: ["device"],
   data() {
     return {
       branchList: [],
@@ -134,64 +177,66 @@ export default {
   //   },
   // },
   mounted() {
-    // if (this.$auth.user.user_type == "employee") {
-    //   this.$router.push(`/dashboard/employee`);
+    // // if (this.$auth.user.user_type == "employee") {
+    // //   this.$router.push(`/dashboard/employee`);
+    // // }
+    // if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
+    //   alert("You do not have permission to access this branch");
+    //   //this.$router.push("/login");
+    //   this.$axios.get(`/logout`).then(({ res }) => {
+    //     this.$auth.logout();
+    //     this.$router.push(`/login`);
+    //   });
+    //   this.$router.push(`/login`);
+    //   return "";
     // }
-
-    if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
-      alert("You do not have permission to access this branch");
-      //this.$router.push("/login");
-      this.$axios.get(`/logout`).then(({ res }) => {
-        this.$auth.logout();
-        this.$router.push(`/login`);
-      });
-
-      this.$router.push(`/login`);
-      return "";
-    }
   },
   async created() {
-    if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
-      alert("You do not have permission to access this branch");
-      //this.$router.push("/login");
-      this.$axios.get(`/logout`).then(({ res }) => {
-        this.$auth.logout();
-        this.$router.push(`/login`);
-      });
-
-      this.$router.push(`/login`);
-      return "";
-    }
-
-    try {
-      await this.$store.dispatch("fetchDropDowns", {
-        key: "deviceList",
-        endpoint: "device-list",
-        refresh: true,
-      });
-      await this.$store.dispatch("fetchDropDowns", {
-        key: "employeeList",
-        endpoint: "employee-list",
-        refresh: true,
-      });
-      this.branchList = await this.$store.dispatch("fetchDropDowns", {
-        key: "branchList",
-        endpoint: "branch-list",
-        refresh: true,
-      });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    // if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
+    //   alert("You do not have permission to access this branch");
+    //   //this.$router.push("/login");
+    //   this.$axios.get(`/logout`).then(({ res }) => {
+    //     this.$auth.logout();
+    //     this.$router.push(`/login`);
+    //   });
+    //   this.$router.push(`/login`);
+    //   return "";
+    // }
+    // try {
+    //   await this.$store.dispatch("fetchDropDowns", {
+    //     key: "deviceList",
+    //     endpoint: "device-list",
+    //     refresh: true,
+    //   });
+    //   await this.$store.dispatch("fetchDropDowns", {
+    //     key: "employeeList",
+    //     endpoint: "employee-list",
+    //     refresh: true,
+    //   });
+    //   this.branchList = await this.$store.dispatch("fetchDropDowns", {
+    //     key: "branchList",
+    //     endpoint: "branch-list",
+    //     refresh: true,
+    //   });
+    // } catch (error) {
+    //   console.error("Error fetching data:", error);
+    // }
   },
   watch: {
-    overlay(val) {
-      val &&
-        setTimeout(() => {
-          this.overlay = false;
-        }, 3000);
-    },
+    // overlay(val) {
+    //   val &&
+    //     setTimeout(() => {
+    //       this.overlay = false;
+    //     }, 3000);
+    // },
   },
   methods: {
+    getPriorityColor(status) {
+      if (status == 1) {
+        return "color:red";
+      }
+    },
+
     can(per) {
       return this.$pagePermission.can(per, this);
     },

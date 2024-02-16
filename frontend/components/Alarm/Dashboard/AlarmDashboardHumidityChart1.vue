@@ -38,8 +38,8 @@ export default {
       date_from: "",
       date_to: "",
       options: {
-        needleValue: 5,
-        centralLabel: "5",
+        needleValue: 0,
+        centralLabel: "0",
         hasNeedle: true,
         arcDelimiters: [50, 75, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],

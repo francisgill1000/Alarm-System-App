@@ -116,7 +116,7 @@
         style="cursor: pointer"
         @click="gotoHomePage()"
       >
-        <img title="My Time Cloud " :src="logo_src" style="width: 150px" />
+        <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
       </span>
       <v-spacer></v-spacer>
 

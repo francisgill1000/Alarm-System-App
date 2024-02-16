@@ -40,15 +40,15 @@ export default {
       date_from: "",
       date_to: "",
       options: {
-        needleValue: 5,
-        centralLabel: "5",
+        needleValue: 0,
+        centralLabel: "0",
         hasNeedle: true,
         arcDelimiters: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
         chartWidth: 400,
       },
 
-      key: 50,
+      key: 1,
     };
   },
   watch: {},

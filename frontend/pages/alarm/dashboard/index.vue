@@ -182,9 +182,9 @@
           ></v-col>
         </v-row>
       </v-col>
-      <!-- <v-col clas="12" class="pt-10">
-        <AlarmDashboardFooter />
-      </v-col> -->
+      <v-col clas="12" class="pt-10">
+        <AlarmDashboardFooter :device="device" />
+      </v-col>
     </v-row>
   </div>
 
@@ -198,7 +198,7 @@ import AlarmDashboardTemparatureChart2 from "../../../components/Alarm/Dashboard
 import AlarmDashboardHumidityChart1 from "../../../components/Alarm/Dashboard/AlarmDashboardHumidityChart1.vue";
 import AlarmDashboardHumidityChart2 from "../../../components/Alarm/Dashboard/AlarmDashboardHumidityChart2.vue";
 
-// import AlarmDashboardFooter from "../../../components/Alarm/Dashboard/AlarmDashboardFooter.vue";
+import AlarmDashboardFooter from "../../../components/Alarm/Dashboard/AlarmDashboardFooter.vue";
 
 // import DashboardlastMultiStatistics from "../../components/dashboard2/DashboardlastMultiStatistics.vue";
 export default {
@@ -207,7 +207,7 @@ export default {
     AlarmDashboardTemparatureChart2,
     AlarmDashboardHumidityChart1,
     AlarmDashboardHumidityChart2,
-    // AlarmDashboardFooter,
+    AlarmDashboardFooter,
   },
   data() {
     return {
@@ -233,6 +233,16 @@ export default {
       humidity_max: 0,
       humidity_min_date_time: 0,
       humidity_max_date_time: 0,
+      device: {
+        fire_alarm_status: 0,
+        fire_alarm_start_datetime: 0,
+        water_alarm_status: 0,
+        water_alarm_start_datetime: 0,
+        power_alarm_status: 0,
+        power_alarm_start_datetime: 0,
+        door_open_status: 0,
+        door_open_start_datetime: 0,
+      },
     };
   },
   // watch: {
@@ -334,6 +344,7 @@ export default {
           })
           .then(({ data }) => {
             this.data = data;
+            this.device = data.device;
             this.loading = false;
             this.$store.commit("AlarmDashboard/alarm_temparature_latest", data);
 

@@ -65,6 +65,16 @@ class DeviceSensorLogsController extends Controller
         $temperature_min_date_time = '--';
         $temperature_max_date_time = '--';
         $fire_alarm_start_datetime = '--';
+        $water_alarm_start_datetime = '--';
+        $power_alarm_start_datetime = '--';
+        $door_open_start_datetime = '--';
+
+        $temparature_alarm_status = '--';
+        $fire_alarm_status = '--';
+        $water_alarm_status = '--';
+        $power_alarm_status = '--';
+
+
 
 
         $humidity_latest = '--';
@@ -160,8 +170,11 @@ class DeviceSensorLogsController extends Controller
         //last alarm 
         $Device = Device::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)->get();
-        if (isset($Device[0]))
+        if (isset($Device[0])) {
             $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
+            $device = $Device[0];
+        }
+
 
 
         return [
@@ -180,6 +193,8 @@ class DeviceSensorLogsController extends Controller
             "humidity_max" => $humidity_max,
             "humidity_min_date_time" => $humidity_min_date_time,
             "humidity_max_date_time" => $humidity_max_date_time,
+            "device" => $device,
+
 
         ];
     }
