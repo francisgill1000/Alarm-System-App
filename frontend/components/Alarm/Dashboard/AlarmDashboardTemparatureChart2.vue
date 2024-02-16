@@ -133,7 +133,6 @@ export default {
       let counter = 0;
       console.log(" data", data);
       data.forEach((item) => {
-        console.log(" (item.count)", item);
         this.chartOptions.series[0]["data"][counter] = item.count; //parseInt(item.count);
 
         this.chartOptions.series[1]["data"][counter] = item.count;

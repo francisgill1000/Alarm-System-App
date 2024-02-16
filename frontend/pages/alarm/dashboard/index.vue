@@ -195,7 +195,7 @@ export default {
       temperature_min_date_time: 0,
       temperature_max_date_time: 0,
       temperature_hourly_data: {},
-      fire_alarm_start_datetime: null,
+      fire_alarm_start_datetime: "---",
     };
   },
   // watch: {
@@ -319,7 +319,7 @@ export default {
               data.temperature_max_date_time
             );
             this.temperature_hourly_data = data.houry_data;
-            if (this.fire_alarm_start_datetime)
+            if (data.fire_alarm_start_datetime)
               this.fire_alarm_start_datetime = this.$dateFormat.format4(
                 data.fire_alarm_start_datetime
               );
