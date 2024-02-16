@@ -2,6 +2,8 @@
 
 export const state = () => ({
   alarm_temparature_latest: null,
+  alarm_temparature_hourly: null,
+  alarm_humidity_hourly: null,
 });
 
 export const mutations = {
@@ -14,6 +16,12 @@ export const mutations = {
   },
   alarm_temparature_latest(state, alarm_temparature_latest) {
     state.alarm_temparature_latest = alarm_temparature_latest;
+  },
+  alarm_temparature_hourly(state, alarm_temparature_hourly) {
+    state.alarm_temparature_hourly = alarm_temparature_hourly;
+  },
+  alarm_humidity_hourly(state, alarm_humidity_hourly) {
+    state.alarm_humidity_hourly = alarm_humidity_hourly;
   },
 };
 

@@ -12,7 +12,7 @@ export default {
     return {
       series: [
         {
-          name: "Temparature",
+          name: "Humidity",
           type: "column",
           data: [],
         },
@@ -35,7 +35,7 @@ export default {
           curve: "smooth",
         },
         title: {
-          text: "Temparature Hourly Chart",
+          text: "Humidity Hourly Chart",
         },
         dataLabels: {
           enabled: true,
@@ -48,7 +48,7 @@ export default {
         yaxis: [
           {
             title: {
-              text: "Temparature",
+              text: "Humidity",
             },
           },
           {
@@ -85,7 +85,7 @@ export default {
     getDataFromApi() {
       // const data = await this.$store.dispatch("dashboard/every_hour_count");
       this.$axios
-        .get("alarm_dashboard_get_hourly_data", {
+        .get("alarm_dashboard_get_humidity_hourly_data", {
           params: {
             company_id: this.$auth.user.company_id,
             branch_id: this.branch_id > 0 ? this.branch_id : null,
@@ -95,7 +95,7 @@ export default {
         .then(({ data }) => {
           this.data = data;
           this.loading = false;
-          this.$store.commit("AlarmDashboard/alarm_temparature_hourly", data);
+          this.$store.commit("AlarmDashboard/alarm_humidity_hourly", data);
 
           this.temperature_hourly_data = data.houry_data;
           this.key = this.key + 1;

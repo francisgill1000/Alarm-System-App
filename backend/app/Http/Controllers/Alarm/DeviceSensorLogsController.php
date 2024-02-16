@@ -20,8 +20,52 @@ class DeviceSensorLogsController extends Controller
     public function index()
     {
     }
+    public function getDeviceTodayHourlyTemperature(Request $request)
+    {
+
+        $date = date('Y-m-d');
 
 
+        ///----------Hourly Device Logs 
+
+        $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
+
+
+        //last alarm 
+        $Device = Device::where("company_id", $request->company_id)
+            ->where("serial_number", $request->device_serial_number)->get();
+        if (isset($Device[0]))
+            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
+
+
+        return [
+
+            "houry_data" => $HouryData
+        ];
+    }
+    public function getDeviceTodayHourlyHumidity(Request $request)
+    {
+
+        $date = date('Y-m-d');
+
+
+        ///----------Hourly Device Logs 
+
+        $HouryData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date);
+
+
+        //last alarm 
+        $Device = Device::where("company_id", $request->company_id)
+            ->where("serial_number", $request->device_serial_number)->get();
+        if (isset($Device[0]))
+            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
+
+
+        return [
+
+            "houry_data" => $HouryData
+        ];
+    }
     public function getDeviceLatestTemperature(Request $request)
     {
         $temperature_latest = '--';
@@ -31,6 +75,15 @@ class DeviceSensorLogsController extends Controller
         $temperature_min_date_time = '--';
         $temperature_max_date_time = '--';
         $fire_alarm_start_datetime = '--';
+
+
+        $humidity_latest = '--';
+        $humidity_date_time = '--';
+        $humidity_min = '--';
+        $humidity_max = '--';
+        $humidity_min_date_time = '--';
+        $humidity_max_date_time = '--';
+
 
 
         $date = date('Y-m-d');
@@ -45,6 +98,9 @@ class DeviceSensorLogsController extends Controller
         if ($model) {
             $temperature_latest = $model->temparature;
             $temperature_date_time = $model->log_time;
+
+            $humidity_latest = $model->humidity;
+            $humidity_date_time = $model->log_time;
         }
 
         //----
@@ -78,30 +134,86 @@ class DeviceSensorLogsController extends Controller
             $temperature_max_date_time = $temperature->log_time;
         }
 
-        ///----------Hourly Device Logs 
+        //-------Humidity 
+        //----
+        $model =   AlarmDeviceSensorLogs::where("company_id", $request->company_id)
+            ->where("serial_number", $request->device_serial_number)
+            ->whereDate("log_time", $date);
+        $humidity  = $model->clone()->where(
+            'humidity',
+            '=',
+            AlarmDeviceSensorLogs::where("company_id", $request->company_id)
+                ->where("serial_number", $request->device_serial_number)
+                ->where("humidity", "!=", "0.0")
 
-        $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
-
-
-        //last alarm 
-        $Device = Device::where("company_id", $request->company_id)
-            ->where("serial_number", $request->device_serial_number)->get();
-        if (isset($Device[0]))
-            $fire_alarm_start_datetime = $Device[0]->fire_alarm_start_datetime;
-
+                ->whereDate("log_time", $date)->min('humidity')
+        )->first();
+        if ($temperature) {
+            $humidity_min = $humidity->humidity;
+            $humidity_min_date_time = $humidity->log_time;
+        }
+        //----------------
+        $humidity =  $humidity  = $model->clone()->where(
+            'humidity',
+            '=',
+            AlarmDeviceSensorLogs::where("company_id", $request->company_id)
+                ->where("serial_number", $request->device_serial_number)
+                ->where("humidity", "!=", "0.0")
+                ->whereDate("log_time", $date)->max('humidity')
+        )->first();
+        if ($humidity) {
+            $humidity_max = $humidity->humidity;
+            $humidity_max_date_time = $humidity->log_time;
+        }
 
         return [
-            "temperature_latest" =>  (int)$temperature_latest,
+            "temperature_latest" =>   $temperature_latest,
             "temperature_date_time" => $temperature_date_time,
             "temperature_min" => $temperature_min,
             "temperature_max" => $temperature_max,
             "temperature_min_date_time" => $temperature_min_date_time,
             "temperature_max_date_time" => $temperature_max_date_time,
             "fire_alarm_start_datetime" => $fire_alarm_start_datetime,
-            "houry_data" => $HouryData
+
+
+            "humidity_latest" =>   $humidity_latest,
+            "humidity_date_time" => $humidity_date_time,
+            "humidity_min" => $humidity_min,
+            "humidity_max" => $humidity_max,
+            "humidity_min_date_time" => $humidity_min_date_time,
+            "humidity_max_date_time" => $humidity_max_date_time,
+
         ];
     }
+    public function getHumidityHourlyData($company_id, $device_serial_number, $date)
+    {
+        $finalarray = [];
 
+        for ($i = 0; $i < 24; $i++) {
+
+            $j = $i;
+
+            $j = $i <= 9 ? "0" . $i : $i;
+
+            $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
+            $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
+                ->where("serial_number", $device_serial_number)
+
+                ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
+                ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
+                ->avg("humidity");
+
+            $finalarray[] = [
+                "date" => $date,
+                "hour" => $i,
+                "count" => $model == null ? 0 : round($model, 2),
+
+            ];
+        }
+
+
+        return  $finalarray;
+    }
     public function getTemparatureHourlyData($company_id, $device_serial_number, $date)
     {
         $finalarray = [];

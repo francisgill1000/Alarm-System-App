@@ -14,9 +14,7 @@
       style="height: 180px"
     />
 
-    <span style="font-size: 14px"
-      >Updated at : {{ temperature_date_time }}</span
-    >
+    <span style="font-size: 14px">Updated at : {{ humidity_date_time }}</span>
   </div>
 </template>
 
@@ -25,10 +23,10 @@
 export default {
   props: [
     "name",
-    "temperature_latest",
+    "humidity_latest",
     "height",
     "branch_id",
-    "temperature_date_time",
+    "humidity_date_time",
   ],
   // components: { VueGauge },
   data() {
@@ -55,8 +53,8 @@ export default {
   mounted() {
     setTimeout(() => {
       this.options = {
-        needleValue: this.temperature_latest,
-        centralLabel: this.temperature_latest + " C",
+        needleValue: this.humidity_latest,
+        centralLabel: this.humidity_latest + "%",
         hasNeedle: true,
         arcDelimiters: [50, 75, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],

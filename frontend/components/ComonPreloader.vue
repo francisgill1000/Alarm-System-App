@@ -1,10 +1,10 @@
 <template>
-  <div class="text-center" style="width: 80px; margin: 25% auto">
+  <div class="text-center" style="width: 25%; text-align: center">
     <v-img :src="`/preloaders/${icon}.gif`"></v-img>
   </div>
 </template>
 <script>
 export default {
-  props: ["icon"],
+  props: ["icon", "height"],
 };
 </script>
