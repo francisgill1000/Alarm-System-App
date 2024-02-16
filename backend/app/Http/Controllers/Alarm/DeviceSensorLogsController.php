@@ -91,6 +91,7 @@ class DeviceSensorLogsController extends Controller
 
         $model = AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
+            ->where("temparature", '>', 0)
             ->orderBy("log_time", "DESC")
             ->first();
 
@@ -138,6 +139,7 @@ class DeviceSensorLogsController extends Controller
         //----
         $model =   AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
+            ->where("humidity", '>', 0)
             ->whereDate("log_time", $date);
         $humidity  = $model->clone()->where(
             'humidity',
