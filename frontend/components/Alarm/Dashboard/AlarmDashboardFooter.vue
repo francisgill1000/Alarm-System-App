@@ -133,8 +133,8 @@
                 <v-col cols="8">
                   <div>Status</div>
                   <div class="green--text">
-                    <div v-if="device.door_open_status == 0">Normal</div>
-                    <div v-else style="color: red">Warning</div>
+                    <div v-if="device.door_open_status == 0">Closed</div>
+                    <div v-else style="color: red">Open</div>
                   </div>
                   <br />
                   <div>Last Open</div>
