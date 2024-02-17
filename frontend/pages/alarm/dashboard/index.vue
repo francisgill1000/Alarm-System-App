@@ -286,6 +286,9 @@ export default {
     }
     this.loading = true;
     this.getDataFromApi();
+    setInterval(() => {
+      this.getDataFromApi(1);
+    }, 1000 * 60);
   },
   async created() {
     if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
