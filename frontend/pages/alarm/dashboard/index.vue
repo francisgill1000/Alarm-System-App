@@ -17,7 +17,7 @@
                     ><h3 class="pl-5">Today Temperature</h3></v-col
                   >
                   <v-col cols="4" class="pull-right"
-                    ><v-icon @click="getDataFromApi()" style="float: right"
+                    ><v-icon @click="getDataFromApi(1)" style="float: right"
                       >mdi mdi-reload</v-icon
                     >
                   </v-col>
@@ -348,8 +348,8 @@ export default {
       //   this.branch_id = "";
       // }
     },
-    getDataFromApi() {
-      if (this.$store.state.alarm_temparature_latest) {
+    getDataFromApi(reset = 0) {
+      if (this.$store.state.alarm_temparature_latest && reset == 0) {
         this.data = this.$store.state.alarm_temparature_latest;
       } else {
         this.$axios
