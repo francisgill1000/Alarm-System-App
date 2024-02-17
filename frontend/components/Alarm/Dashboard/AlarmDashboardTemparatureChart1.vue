@@ -1,11 +1,14 @@
 <template>
   <div style="width: 100%; height: 200px">
-    <ComonPreloader
+    <!-- <ComonPreloader
       icon="face-scan"
-      v-if="loading"
+    
       style="max-height: 180px"
       height="150px"
-    />
+    /> -->
+    <div v-if="loading" style="height: 180px; margin: auto; padding-top: 20%">
+      Loading....
+    </div>
     <VueGauge
       v-if="!loading"
       :options="options"

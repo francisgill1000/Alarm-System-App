@@ -13,7 +13,9 @@
             <v-row style="width: 100%; height: 250px">
               <v-card class="py-2" style="width: 100%">
                 <v-row>
-                  <v-col cols="8"><h3 class="pl-5">Temperature</h3></v-col>
+                  <v-col cols="8"
+                    ><h3 class="pl-5">Today Temperature</h3></v-col
+                  >
                   <v-col cols="4" class="pull-right"
                     ><v-icon @click="getDataFromApi()" style="float: right"
                       >mdi mdi-reload</v-icon
@@ -45,11 +47,16 @@
                   md="12"
                   style="text-align: center; padding-top: 0px"
                 >
-                  <div style="text-align: center; font-size: 20px">Min</div>
+                  <div style="text-align: center; font-size: 20px">
+                    Today Min
+                  </div>
                   <div class="bold text-h4 green--text">
                     <span v-html="temperature_min"></span>
                   </div>
-                  <span style="font-size: 10px">
+                  <span
+                    style="font-size: 10px"
+                    v-if="temperature_min_date_time != '---'"
+                  >
                     At : {{ temperature_min_date_time }}
                   </span>
                 </div>
@@ -61,12 +68,15 @@
                   style="text-align: center; padding-top: 0px"
                 >
                   <div style="text-align: center; color: red; font-size: 20px">
-                    Max
+                    TodayMax
                   </div>
                   <div class="bold text-h4 red--text">
                     <span v-html="temperature_max"></span>
                   </div>
-                  <span style="font-size: 10px">
+                  <span
+                    style="font-size: 10px"
+                    v-if="temperature_max_date_time != '---'"
+                  >
                     At : {{ temperature_max_date_time }}</span
                   >
                 </div>
@@ -77,7 +87,7 @@
             </v-row>
           </v-col>
           <v-col lg="7" md="7" sm="12" xs="12">
-            <v-row style="width: 100%; height: 250px">
+            <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
                 <v-col
                   lg="12"
@@ -87,7 +97,7 @@
                   <AlarmDashboardTemparatureChart2
                     :branch_id="branch_id"
                     :name="'AlarmDashboardTemparatureChart2'"
-                    :height="'210'"
+                    :height="'220'"
                     :device_serial_number="device_serial_number"
                     :key="key"
                   />
@@ -102,7 +112,7 @@
             <v-row style="width: 100%; height: 250px">
               <v-card class="py-2" style="width: 100%">
                 <v-row>
-                  <v-col cols="8"><h3 class="pl-5">Humidity</h3></v-col>
+                  <v-col cols="8"><h3 class="pl-5">Today Humidity</h3></v-col>
                   <v-col cols="4" class="pull-right"
                     ><v-icon @click="getDataFromApi()" style="float: right"
                       >mdi mdi-reload</v-icon
@@ -134,11 +144,16 @@
                   md="12"
                   style="text-align: center; padding-top: 0px"
                 >
-                  <div style="text-align: center; font-size: 20px">Min</div>
+                  <div style="text-align: center; font-size: 20px">
+                    Today Min
+                  </div>
                   <div class="bold text-h4 green--text">
                     {{ humidity_min }}
                   </div>
-                  <span style="font-size: 10px">
+                  <span
+                    style="font-size: 10px"
+                    v-if="humidity_min_date_time != '---'"
+                  >
                     At : {{ humidity_min_date_time }}
                   </span>
                 </div>
@@ -150,12 +165,15 @@
                   style="text-align: center; padding-top: 0px"
                 >
                   <div style="text-align: center; color: red; font-size: 20px">
-                    Max
+                    Today Max
                   </div>
                   <div class="bold text-h4 red--text">
                     {{ humidity_max }}
                   </div>
-                  <span style="font-size: 10px">
+                  <span
+                    style="font-size: 10px"
+                    v-if="humidity_max_date_time != '---'"
+                  >
                     At : {{ humidity_max_date_time }}</span
                   >
                 </div>
@@ -163,7 +181,7 @@
             </v-row>
           </v-col>
           <v-col lg="7" md="7" sm="12" xs="12">
-            <v-row style="width: 100%; height: 250px">
+            <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
                 <v-col
                   lg="12"
@@ -173,7 +191,7 @@
                   <AlarmDashboardHumidityChart2
                     :branch_id="branch_id"
                     :name="'AlarmDashboardHumidityChart2'"
-                    :height="'210'"
+                    :height="'220'"
                     :device_serial_number="device_serial_number"
                     :key="key"
                   />
@@ -218,7 +236,7 @@ export default {
       branch_id: "",
       overlay: false,
       temperature_latest: 0,
-      temperature_date_time: 0,
+      temperature_date_time: "---",
       temperature_min: 0,
       temperature_max: 0,
       temperature_min_date_time: 0,
@@ -228,7 +246,7 @@ export default {
       device_serial_number: "105",
 
       humidity_latest: 0,
-      humidity_date_time: 0,
+      humidity_date_time: "---",
       humidity_min: 0,
       humidity_max: 0,
       humidity_min_date_time: 0,

@@ -35,6 +35,14 @@ export default ({ app }, inject) => {
       return `${year}-${month}-${day} ${hours}:${minutes} `;
     },
     format4: (inputdate) => {
+      if (
+        inputdate == "---" ||
+        inputdate == "--" ||
+        inputdate == 0 ||
+        inputdate == ""
+      )
+        return "---";
+
       const currentDate = new Date(inputdate); //Output Sun, Jan 01, 2023 10:20
 
       const year = currentDate.getFullYear();
@@ -52,7 +60,7 @@ export default ({ app }, inject) => {
         weekday: "short",
       };
       const formattedDate = inputDate.toLocaleDateString("en-US", options);
-      if (year == 1970) return "---";
+      if (year == 1970 || inputdate == 0) return "---";
       return `${formattedDate}  ${hours}:${minutes} `;
     },
     format5: (inputdate) => {
@@ -77,6 +85,13 @@ export default ({ app }, inject) => {
       return `${hours}:${minutes} ${formattedDate}   `;
     },
     format6: (inputdate) => {
+      if (
+        inputdate == "---" ||
+        inputdate == "--" ||
+        inputdate == 0 ||
+        inputdate == ""
+      )
+        return "---";
       const currentDate = new Date(inputdate);
 
       const year = currentDate.getFullYear();
@@ -94,7 +109,7 @@ export default ({ app }, inject) => {
         weekday: "short",
       };
       const formattedDate = inputDate.toLocaleDateString("en-US", options);
-
+      if (year == 1970 || inputdate == 0) return "---";
       return `${hours}:${minutes}    `;
     },
     monthStartEnd: (inputdate) => {

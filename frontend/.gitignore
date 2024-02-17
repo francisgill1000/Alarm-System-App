@@ -1,3 +1,34 @@
+/node_modules
+/local-publish
+/node
+node_modules/
+node/
+/public/hot
+/public/*
+
+package.json
+nuxt.config.js
+frontend/package.json
+backend/.gitignore
+backend/composer.json
+frontend/.gitignore
+frontend/nuxt.config.js
+
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
+/public/media
+
+.gitignore
 # Logs
 logs
 *.log
@@ -9,6 +40,8 @@ lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+node
 
 # Runtime data
 sw.*
@@ -40,7 +73,9 @@ bower_components
 build/Release
 
 # Dependency directories
+node_modules
 node_modules/
+node/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
@@ -92,6 +127,10 @@ out
 .nuxt
 dist
 publish
+.package.json
+.package-lock.json
+nuxt.config.js
+.nuxt-old
 
 # Gatsby files
 .cache/

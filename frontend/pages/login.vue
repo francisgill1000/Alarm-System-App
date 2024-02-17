@@ -211,7 +211,7 @@
               For Technical Support :
               <a
                 target="_blank"
-                href="https://wa.me/971529048025?text=Hello MyTime2Cloud. I need your support."
+                href="https://wa.me/971529048025?text=Hello Xtreme Guard. I need your support."
                 ><v-icon color="black">mdi-whatsapp</v-icon></a
               >
               <a
@@ -225,8 +225,8 @@
             <v-col class="pa-5">
               <a
                 style="text-decoration: none; color: black"
-                href="mailto:support@mytime2cloud.com"
-                >support@mytime2cloud.com</a
+                href="mailto:support@xtremeguard.org"
+                >support@xtremeguard.org</a
               ></v-col
             >
           </v-row>
@@ -243,31 +243,24 @@
         <div class="about-content">
           <h3>About Xtreme Guard</h3>
           <div style="font-weight: 300">
-            Xtreme Guard is an innovative and comprehensive platform
-            meticulously crafted to redefine how organizations approach
-            workforce management. By combining time attendance management with
-            facial recognition access control, Xtreme Guard simplifies and
-            provides a streamlined experience for both employees and HR
-            professionals.<br />
-            Customization and Reporting: The platform offers customizable
-            settings to fit the specific needs of different organizations. It
-            generates comprehensive reports and analytics based on attendance
-            data, enabling informed decision-making and efficient resource
-            allocation.
+            Xtreme Guard is an innovative and comprehensive platform.
+            <br />In today's technology-driven era, Securing server rooms
+            requires a multifaceted approach, and incorporating advanced
+            security systems is essential for ensuring the safety and
+            reliability of critical infrastructure. This content will detail the
+            importance of humidity and temperature monitoring alongside fire
+            alarms, smoke alarms, water leakage alarms, power-off alarms, and
+            door open status monitors for comprehensive server room protection.
           </div>
           <h3 class="pt-10">Features</h3>
           <ul style="font-weight: 300">
-            <li>Employees management</li>
+            <li>Temparature Monitoring</li>
+            <li>Humidity Monitoring</li>
+            <li>Fire/Smoke Detective Alarm Systems</li>
 
-            <li>Time Attendance</li>
-            <li>Leave management</li>
-            <li>Payroll management</li>
-            <li>Access Controll</li>
-            <li>Visitor management</li>
-            <li>Face Recognisation Integration</li>
-            <li>Custom Reports</li>
-            <li>Custom Dashboards</li>
-            <li>Email and Whatsapp Notifications</li>
+            <li>Water Leakage Alarm Systems</li>
+            <li>Power-Off Alarm Systems</li>
+            <li>Door Open Status Monitoring</li>
           </ul>
           <v-row class="text-left pt-10">
             <v-col class="pa-5">
@@ -276,7 +269,7 @@
               <a
                 style="font-weight: 300"
                 target="_blank"
-                href="https://wa.me/971529048025?text=Hello MyTime2Cloud. I need your support."
+                href="https://wa.me/971529048025?text=Hello XtremeGuard. I need your support."
                 ><v-icon color="white">mdi-whatsapp</v-icon></a
               >
 
@@ -288,8 +281,8 @@
               <br />
               <a
                 style="text-decoration: none; color: #fff; font-weight: 300"
-                href="mailto:support@mytime2cloud.com"
-                >support@mytime2cloud.com</a
+                href="mailto:support@xtremeguard.org"
+                >support@xtremeguard.org</a
               >
             </v-col>
           </v-row>

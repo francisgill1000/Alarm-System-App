@@ -154,6 +154,7 @@
       <v-spacer></v-spacer>
 
       <v-menu
+        style="z-index: 99999"
         nudge-bottom="50"
         transition="scale-transition"
         origin="center center"
@@ -1691,6 +1692,14 @@ body {
 
 .no-border:before {
   border-color: #fff !important;
+}
+
+.apexcharts-title-text,
+.apexcharts-yaxis-title-text {
+  font-family: "Roboto" !important;
+  font-weight: normal !important;
+
+  font-size: 19px;
 }
 </style>
 

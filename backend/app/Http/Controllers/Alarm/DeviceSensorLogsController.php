@@ -24,14 +24,10 @@ class DeviceSensorLogsController extends Controller
     {
 
         $date = date('Y-m-d');
-
-
-        ///----------Hourly Device Logs 
-
+        if ($request->filled("from_date")) {
+            $date = $request->from_date;
+        }
         $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
-
-
-
 
         return [
 
@@ -42,14 +38,10 @@ class DeviceSensorLogsController extends Controller
     {
 
         $date = date('Y-m-d');
-
-
-        ///----------Hourly Device Logs 
-
+        if ($request->filled("from_date")) {
+            $date = $request->from_date;
+        }
         $HouryData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date);
-
-
-
 
         return [
 
@@ -92,6 +84,7 @@ class DeviceSensorLogsController extends Controller
         $model = AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
             ->where("temparature", '>', 0)
+            ->whereDate("log_time", $date)
             ->orderBy("log_time", "DESC")
             ->first();
 
@@ -210,7 +203,7 @@ class DeviceSensorLogsController extends Controller
 
             $j = $i <= 9 ? "0" . $i : $i;
 
-            $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
+            //$date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
             $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
                 ->where("serial_number", $device_serial_number)
 
@@ -239,7 +232,7 @@ class DeviceSensorLogsController extends Controller
 
             $j = $i <= 9 ? "0" . $i : $i;
 
-            $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
+            // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
             $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
                 ->where("serial_number", $device_serial_number)
 

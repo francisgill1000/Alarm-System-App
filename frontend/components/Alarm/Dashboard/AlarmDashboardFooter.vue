@@ -13,7 +13,7 @@
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">Smoke Alarm</h3>
 
-              <v-row style="font-size: 24px">
+              <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
                     class="pa-10"
@@ -48,7 +48,7 @@
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">Water Leakage Alarm</h3>
 
-              <v-row style="font-size: 24px">
+              <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
                     class="pa-10"
@@ -85,7 +85,7 @@
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">A/C Power Failure Alarm</h3>
 
-              <v-row style="font-size: 24px">
+              <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
                     class="pa-10"
@@ -122,7 +122,7 @@
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">Door Open Status</h3>
 
-              <v-row style="font-size: 24px">
+              <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
                     class="pa-10"
@@ -138,9 +138,7 @@
                   </div>
                   <br />
                   <div>Last Open</div>
-                  <div
-                    :style="getPriorityColor(device.door_open_status)"
-                  >
+                  <div :style="getPriorityColor(device.door_open_status)">
                     {{
                       device.door_open_start_datetime == null
                         ? "---"

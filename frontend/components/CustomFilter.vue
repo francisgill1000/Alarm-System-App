@@ -41,7 +41,7 @@
       <v-col md="4" sm="6" class="box" style="padding-top: 7px;">-->
 
       <date-picker
-        style="padding-top: 7px; width: 230px"
+        style="padding-top: 7px; width: 230px; z-index: 9999"
         value-type="format"
         format="YYYY-MM-DD"
         type="date"
