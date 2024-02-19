@@ -41,7 +41,7 @@ class ReportNotificationMail extends Mailable
         }
         $body_content =  "Hi, Automated Email Reports. <br/>Thanks.";
         //return $this->view('emails.report')->with(["body" => $this->model->body]);
-        if ($this->model->company->company_mail_content) {
+        if (count($this->model->company->company_mail_content)) {
             if ($this->model->company->company_mail_content[0]) {
                 $body_content = $this->model->company->company_mail_content[0]->content;
             }

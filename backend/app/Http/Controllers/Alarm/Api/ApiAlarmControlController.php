@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers\Alarm\Api;
 
+use App\Console\Commands\SendWhatsappNotification;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\WhatsappController;
+use App\Mail\DbBackupMail;
+use App\Mail\EmailContentDefault;
+use App\Mail\ReportNotificationMail;
 use App\Models\Alarm\DeviceSensorLogs;
 use Illuminate\Http\Request;
 use App\Models\Community\AttendanceLog;
 use App\Models\Company;
 use App\Models\Device;
+use App\Models\ReportNotification;
+use App\Models\ReportNotificationLogs;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ApiAlarmControlController extends Controller
 {
@@ -73,7 +82,7 @@ class ApiAlarmControlController extends Controller
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
                 $logs["humidity"] = $humidity;
-                $logs["smoke_alarm"] = $smoke_alarm == 1 ? 0 : 1;
+                $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
                 $logs["water_leakage"] = $water_leakage;
                 $logs["power_failure"] = $power_failure;
                 $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
@@ -86,6 +95,7 @@ class ApiAlarmControlController extends Controller
                 $logs["log_time"] = $log_time;
                 DeviceSensorLogs::create($logs);
 
+                $deviceModel = Device::where("serial_number", $device_serial_number);
 
                 $row = [];
 
@@ -106,26 +116,34 @@ class ApiAlarmControlController extends Controller
                 if ($smoke_alarm == 1) {
                     $row["smoke_alarm_status"] = 1;
                     $row["smoke_alarm_start_datetime"] = $log_time;
+
+                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->first()->name, $deviceModel->first()->company_id);
                 }
 
                 if ($water_leakage == 1) {
                     $row["water_alarm_status"] = 1;
                     $row["water_alarm_start_datetime"] = $log_time;
+                    $message[] = $this->SendWhatsappNotification("Water Leakage ",  $deviceModel->first()->name, $deviceModel->first()->company_id);
                 }
                 if ($power_failure == 1) {
                     $row["power_alarm_status"] = 1;
                     $row["power_alarm_start_datetime"] = $log_time;
+                    $message[] = $this->SendWhatsappNotification("Power OFF", $deviceModel->first()->name, $deviceModel->first()->company_id);
                 }
                 if ($door_status == 1) {
                     $row["door_open_status"] = 1;
                     $row["door_open_start_datetime"] = $log_time;
+                    $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
                 }
 
 
                 //return [$logs, $row];
 
-                Device::where("serial_number", $device_serial_number)
-                    ->update($row);
+                // Device::where("serial_number", $device_serial_number)
+                //     ->update($row);
+                $deviceModel->clone()->update($row);
+
+
                 return $this->response('Successfully Updated', null, true);
             }
         } catch (\Exception $e) {
@@ -135,6 +153,123 @@ class ApiAlarmControlController extends Controller
         }
 
         return $this->response('Data error', null, false);
+    }
+
+    public function SendWhatsappNotification($issue, $room_name, $company_id)
+    {
+
+
+        $reports = ReportNotification::where("company_id", $company_id)->get();
+
+        foreach ($reports as $model) {
+            $id = $model["id"];
+
+            $script_name = "ReportNotificationCrons";
+
+            $date = date("Y-m-d H:i:s");
+
+            // try {
+
+            $model = ReportNotification::with(["managers", "company.company_mail_content"])->where("id", $id)->first();
+
+
+            if (in_array("Email", $model->mediums)) {
+
+
+
+                foreach ($model->managers as $key => $value) {
+                    $body_content1 = "📊 *{$issue} Notification <br/>";
+
+                    $body_content1 = " Hello, {$value->name} <br/>";
+                    $body_content1 .= " Company:  {$model->company->name}<br/>";
+                    $body_content1 .= "This is Notifing you about {$issue} status <br/>";
+                    $body_content1 .= " Date:  $date<br/>";
+                    $body_content1 .= "Room Name: *{$room_name}<br/><br/><br/><br/>";
+
+                    $body_content1 .= "*Xtreme Guard*<br/>";
+
+                    $data = [
+                        'subject' => "{$issue} Notification - {$date}",
+                        'body' => $body_content1,
+                    ];
+
+
+
+                    $body_content1 = new EmailContentDefault($data);
+
+                    if ($value->email != '') {
+                        Mail::to($value->email)
+                            ->send($body_content1);
+
+
+                        $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
+
+
+
+                        ReportNotificationLogs::create($data);
+                    }
+                }
+            } else {
+                echo "[" . $date . "] Cron: $script_name. No emails are configured";
+            }
+
+            //wahtsapp with attachments
+            if (in_array("Whatsapp", $model->mediums)) {
+
+                foreach ($model->managers as $key => $manager) {
+
+                    if ($manager->whatsapp_number != '') {
+
+
+                        $body_content1 = "📊 *{$issue} Notification* 📊\n\n";
+
+                        $body_content1 = "*Hello, {$manager->name}*\n\n";
+                        $body_content1 .= "*Company:  {$model->company->name}*\n\n";
+                        $body_content1 .= "This is Notifing you about {$issue} status \n\n";
+                        $body_content1 .= "*Date:* $date\n\n";
+                        $body_content1 .= "Room Name: *{$room_name}*\n";
+
+                        $body_content1 .= "*Xtreme Guard*";
+
+
+
+
+                        if (count($model->company->company_whatsapp_content))
+                            $body_content1 .= $model->company->company_whatsapp_content[0]->content;
+
+                        (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
+
+                        $data = [
+                            "company_id" => $model->company->id,
+                            "branch_id" => $manager->branch_id,
+                            "notification_id" => $manager->notification_id,
+                            "notification_manager_id" => $manager->id,
+                            "whatsapp_number" => $manager->whatsapp_number
+                        ];
+
+                        ReportNotificationLogs::create($data);
+                    }
+                }
+            }
+            // } catch (\Exception $e) {
+            // }
+
+
+            // $device = Device::with(["company"])->where("serial_number", $device_serial_number)->first();
+            // $message = "";
+
+            // $date = date("d-M-Y");
+
+
+
+
+
+
+
+
+
+            // return (new SendWhatsappNotification())->sendWhatsappNotification($company, $message, $number, $attachments = []);
+        }
     }
     // public function LogDeviceStatus_old(Request $request)
     // {

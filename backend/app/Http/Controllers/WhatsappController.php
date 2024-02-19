@@ -176,6 +176,10 @@ class WhatsappController extends Controller
                 'media_url' => $attachments['media_url'],
                 'filename' => $attachments['filename'],
             ];
+            if (isset($attachments['media_url']) && isset($attachments['filename'])) {
+                $data['media_url'] = $attachments['media_url'];
+                $data['filename'] = $attachments['filename'];;
+            }
         }
         // print_r($data);
         $response = Http::withoutVerifying()->get(env('WHATSAPP_URL'), $data);
