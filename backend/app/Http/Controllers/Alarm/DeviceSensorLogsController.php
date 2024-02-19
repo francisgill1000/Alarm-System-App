@@ -107,7 +107,7 @@ class DeviceSensorLogsController extends Controller
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
                 ->where("temparature", "!=", "0.0")
-
+                ->where("temparature", "!=", "NaN")
                 ->whereDate("log_time", $date)->min('temparature')
         )->first();
         if ($temperature) {
@@ -115,12 +115,13 @@ class DeviceSensorLogsController extends Controller
             $temperature_min_date_time = $temperature->log_time;
         }
         //----------------
-        $temperature =  $temperature  = $model->clone()->where(
+        return  $temperature =  $temperature  = $model->clone()->where(
             'temparature',
             '=',
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
                 ->where("temparature", "!=", "0.0")
+                ->where("temparature", "!=", "NaN")
                 ->whereDate("log_time", $date)->max('temparature')
         )->first();
         if ($temperature) {
