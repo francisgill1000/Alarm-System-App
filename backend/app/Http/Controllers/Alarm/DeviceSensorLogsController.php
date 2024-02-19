@@ -134,6 +134,7 @@ class DeviceSensorLogsController extends Controller
         $model =   AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
             ->where("humidity", '>', 0)
+            ->where("humidity", "!=", "NaN")
             ->whereDate("log_time", $date);
         $humidity  = $model->clone()->where(
             'humidity',
@@ -141,7 +142,7 @@ class DeviceSensorLogsController extends Controller
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
                 ->where("humidity", "!=", "0.0")
-
+                ->where("humidity", "!=", "NaN")
                 ->whereDate("log_time", $date)->min('humidity')
         )->first();
         if ($temperature) {
@@ -155,6 +156,7 @@ class DeviceSensorLogsController extends Controller
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
                 ->where("humidity", "!=", "0.0")
+                ->where("humidity", "!=", "NaN")
                 ->whereDate("log_time", $date)->max('humidity')
         )->first();
         if ($humidity) {
