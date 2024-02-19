@@ -158,7 +158,7 @@ class ApiAlarmControlController extends Controller
     public function SendWhatsappNotification($issue, $room_name, $company_id)
     {
 
-
+        return false;
         $reports = ReportNotification::where("company_id", $company_id)->get();
 
         foreach ($reports as $model) {
