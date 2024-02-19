@@ -188,7 +188,7 @@ class DeviceSensorLogsController extends Controller
             "humidity_max" => $humidity_max,
             "humidity_min_date_time" => $humidity_min_date_time,
             "humidity_max_date_time" => $humidity_max_date_time,
-            "device" => $device,
+            "device" => $Device,
 
 
         ];
