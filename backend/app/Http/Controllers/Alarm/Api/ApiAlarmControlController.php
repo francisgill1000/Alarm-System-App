@@ -133,7 +133,7 @@ class ApiAlarmControlController extends Controller
                 if ($door_status == 1) {
                     $row["door_open_status"] = 1;
                     $row["door_open_start_datetime"] = $log_time;
-                    $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    // $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
                 }
 
 
