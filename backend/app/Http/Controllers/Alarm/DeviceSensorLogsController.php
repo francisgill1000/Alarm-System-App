@@ -115,7 +115,7 @@ class DeviceSensorLogsController extends Controller
             $temperature_min_date_time = $temperature->log_time;
         }
         //----------------
-        return  $temperature =  $temperature  = $model->clone()->where(
+        $temperature =  $temperature  = $model->clone()->where(
             'temparature',
             '=',
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
