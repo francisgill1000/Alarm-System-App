@@ -73,10 +73,10 @@ class ApiAlarmControlController extends Controller
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
                 $logs["humidity"] = $humidity;
-                $logs["smoke_alarm"] = $smoke_alarm;
+                $logs["smoke_alarm"] = $smoke_alarm == 1 ? 0 : 1;
                 $logs["water_leakage"] = $water_leakage;
                 $logs["power_failure"] = $power_failure;
-                $logs["door_status"] = $door_status == 1 ? 0 : 1;
+                $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
 
                 // $logs["smoke_alarm"] = $smoke_alarm == 'true' ? 1 : 0;
                 // $logs["water_leakage"] = $water_leakage == 'true' ? 1 : 0;
