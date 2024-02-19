@@ -82,7 +82,7 @@ class ApiAlarmControlController extends Controller
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
                 $logs["humidity"] = $humidity;
-                $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
+                $logs["smoke_alarm"] = $smoke_alarm == 1 ? 0 : 1;
                 $logs["water_leakage"] = $water_leakage;
                 $logs["power_failure"] = $power_failure;
                 $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
@@ -227,9 +227,9 @@ class ApiAlarmControlController extends Controller
                         $body_content1 .= "*Company:  {$model->company->name}*\n\n";
                         $body_content1 .= "This is Notifing you about {$issue} status \n\n";
                         $body_content1 .= "*Date:* $date\n\n";
-                        $body_content1 .= "Room Name: *{$room_name}*\n";
+                        $body_content1 .= "Room Name: *{$room_name}*\n\n";
 
-                        $body_content1 .= "*Xtreme Guard*";
+                        $body_content1 .= "*Xtreme Guard*\n";
 
 
 
