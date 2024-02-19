@@ -243,7 +243,7 @@ export default {
       temperature_max_date_time: 0,
       temperature_hourly_data: {},
       fire_alarm_start_datetime: "---",
-      device_serial_number: "105",
+      device_serial_number: "1234567890",
 
       humidity_latest: 0,
       humidity_date_time: "---",
