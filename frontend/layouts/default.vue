@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <v-navigation-drawer
-      expand-on-hover
       rail
       v-model="drawer"
       dark
@@ -9,13 +8,57 @@
       fixed
       app
       :color="sideBarcolor"
-      :width="150"
+      :width="130"
+    >
+      <br />
+      <v-list style="padding: 5px 0 0 0px">
+        <v-list-item
+          @click="goToPage('/alarm/dashboard')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-view-dashboard</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Dashboard
+          </v-list-item-title>
+        </v-list-item>
+        <!-- <v-list-item
+          @click="goToPage('/alarm/temparature_logs')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-view-dashboard</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Temperature
+          </v-list-item-title>
+        </v-list-item> -->
+      </v-list>
+    </v-navigation-drawer>
+    <!-- <v-navigation-drawer
+      rail
+      v-model="drawer"
+      dark
+      :clipped="clipped"
+      fixed
+      app
+      :color="sideBarcolor"
+      :width="130"
     >
       <br />
       <v-list
         v-for="(i, idx) in items"
         :key="idx"
-        style="padding: 5px 0 0 0px; display: none"
+        style="padding: 5px 0 0 0px"
         :title="i.title"
       >
         <v-list-item
@@ -101,7 +144,7 @@
           </div>
         </div>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <v-app-bar
       :color="changeColor"
       dark
@@ -416,7 +459,7 @@
 
     <v-main
       class="main_bg"
-      :style="miniVariant ? 'padding-left: 60px;' : 'padding-left: 140px;'"
+      :style="miniVariant ? 'padding-left: 60px;' : 'padding-left: 135px;'"
     >
       <v-container style="max-width: 100%">
         <nuxt />
@@ -683,8 +726,8 @@ export default {
       },
       clipped: true,
 
-      miniVariant: true,
-      title: "MyTime2Cloud",
+      miniVariant: false,
+      title: "XTremeGuard",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",

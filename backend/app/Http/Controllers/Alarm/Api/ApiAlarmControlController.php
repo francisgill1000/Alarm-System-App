@@ -31,12 +31,13 @@ class ApiAlarmControlController extends Controller
         try {
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
 
-            $temparature = 0;
-            $humidity = 0;
-            $fire_alarm = 0;
-            $water_leakage = 0;
-            $power_failure = 0;
-            $door_status = 0;
+            $temparature = -1;
+            $humidity = -1;
+            $fire_alarm = -1;
+            $smoke_alarm = -1;
+            $water_leakage = -1;
+            $power_failure = -1;
+            $door_status = -1;
             $log_time = date('Y-m-d H:i:s');
 
             $max_temparature = 30;
@@ -57,12 +58,22 @@ class ApiAlarmControlController extends Controller
 
             if ($device_serial_number != '') {
 
+                // if ($request->filled("message")) {
+                //     $message = $request->message;
+
+                //     if(strrpos($message, "Temperature:"))
+                //     {
+
+                //     }
+                // }
+
 
                 if ($request->filled("temperature")) {
-                    $temparature = $request->temperature;
+                    $temparature = $request->temperature == 'NaN' ? 0 : $request->temperature;
+                    //$temparature = (float) $request->temperature;
                 }
                 if ($request->filled("humidity")) {
-                    $humidity = $request->humidity;
+                    $humidity = $request->humidity == 'NaN' ? 0 : $request->humidity;
                 }
 
                 if ($request->filled("smokeStatus")) {
@@ -82,7 +93,8 @@ class ApiAlarmControlController extends Controller
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
                 $logs["humidity"] = $humidity;
-                $logs["smoke_alarm"] = $smoke_alarm == 1 ? 0 : 1;
+                $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
+
                 $logs["water_leakage"] = $water_leakage;
                 $logs["power_failure"] = $power_failure;
                 $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
@@ -113,26 +125,37 @@ class ApiAlarmControlController extends Controller
                 //     $row["fire_alarm_status"] = 1;
                 //     $row["fire_alarm_start_datetime"] = $log_time;
                 // }
+                $row["smoke_alarm_status"] = $smoke_alarm;
+                $row["water_alarm_status"] = $water_leakage;
+                $row["power_alarm_status"] = $power_failure;
+                $row["door_open_status"] = $door_status;
+                //smoke_alarm
                 if ($smoke_alarm == 1) {
-                    $row["smoke_alarm_status"] = 1;
                     $row["smoke_alarm_start_datetime"] = $log_time;
-
-                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    //$message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->first()->name, $deviceModel->first()->company_id);
+                } else if ($smoke_alarm == 0) {
+                    $row["smoke_alarm_end_datetime"] = $log_time;
                 }
-
+                //water_leakage
                 if ($water_leakage == 1) {
-                    $row["water_alarm_status"] = 1;
                     $row["water_alarm_start_datetime"] = $log_time;
-                    $message[] = $this->SendWhatsappNotification("Water Leakage ",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    //$message[] = $this->SendWhatsappNotification("Water Leakage ",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                } else if ($water_leakage == 0) {
+                    $row["water_alarm_end_datetime"] = $log_time;
                 }
+                //power_failure
                 if ($power_failure == 1) {
-                    $row["power_alarm_status"] = 1;
                     $row["power_alarm_start_datetime"] = $log_time;
-                    $message[] = $this->SendWhatsappNotification("Power OFF", $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    // $message[] = $this->SendWhatsappNotification("Power OFF", $deviceModel->first()->name, $deviceModel->first()->company_id);
+                } else if ($power_failure == 0) {
+                    $row["power_alarm_end_datetime"] = $log_time;
                 }
+                //door_status
                 if ($door_status == 1) {
-                    $row["door_open_status"] = 1;
                     $row["door_open_start_datetime"] = $log_time;
+                    // $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                } else  if ($door_status == 0) {
+                    $row["door_open_end_datetime"] = $log_time;
                     // $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
                 }
 

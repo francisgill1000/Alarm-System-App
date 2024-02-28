@@ -7,6 +7,34 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-row>
+      <v-col
+        style="
+          position: fixed;
+          top: -7px;
+          z-index: 9999;
+          text-align: -webkit-center;
+          margin-left: -12%;
+        "
+      >
+        <v-bottom-navigation
+          :value="topMenu"
+          color="primary"
+          style="width: 100%; box-shadow: none; background: transparent"
+          elevation="0"
+        >
+          <v-btn
+            v-if="device.serial_number != null"
+            @click="ChangeDevice(device.serial_number)"
+            v-for="device in devicesList"
+            style="width: auto; max-width: 100%"
+            width="auto"
+          >
+            <span style="font-size: 15px">{{ device.name }}</span>
+          </v-btn>
+        </v-bottom-navigation>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="12" class="pt-5">
         <v-row style="width: 100%">
           <v-col lg="3" md="3" sm="12" xs="12">
@@ -47,9 +75,7 @@
                   md="12"
                   style="text-align: center; padding-top: 0px"
                 >
-                  <div style="text-align: center; font-size: 20px">
-                    Today Min
-                  </div>
+                  <div style="text-align: center; font-size: 20px">Min</div>
                   <div class="bold text-h4 green--text">
                     <span v-html="temperature_min"></span>
                   </div>
@@ -68,7 +94,7 @@
                   style="text-align: center; padding-top: 0px"
                 >
                   <div style="text-align: center; color: red; font-size: 20px">
-                    TodayMax
+                    Max
                   </div>
                   <div class="bold text-h4 red--text">
                     <span v-html="temperature_max"></span>
@@ -144,9 +170,7 @@
                   md="12"
                   style="text-align: center; padding-top: 0px"
                 >
-                  <div style="text-align: center; font-size: 20px">
-                    Today Min
-                  </div>
+                  <div style="text-align: center; font-size: 20px">Min</div>
                   <div class="bold text-h4 green--text">
                     {{ humidity_min }}
                   </div>
@@ -165,7 +189,7 @@
                   style="text-align: center; padding-top: 0px"
                 >
                   <div style="text-align: center; color: red; font-size: 20px">
-                    Today Max
+                    Max
                   </div>
                   <div class="bold text-h4 red--text">
                     {{ humidity_max }}
@@ -201,7 +225,7 @@
         </v-row>
       </v-col>
       <v-col clas="12" class="pt-10">
-        <AlarmDashboardFooter :device="device" />
+        <AlarmDashboardFooter :device="device" :key="key" />
       </v-col>
     </v-row>
   </div>
@@ -229,6 +253,7 @@ export default {
   },
   data() {
     return {
+      topMenu: 1,
       key: 1,
       branchList: [],
       selectedBranchName: "All Branches",
@@ -243,7 +268,7 @@ export default {
       temperature_max_date_time: 0,
       temperature_hourly_data: {},
       fire_alarm_start_datetime: "---",
-      device_serial_number: "24000001",
+      device_serial_number: "",
 
       humidity_latest: 0,
       humidity_date_time: "---",
@@ -261,13 +286,16 @@ export default {
         door_open_status: 0,
         door_open_start_datetime: 0,
       },
+      devicesList: {},
     };
   },
-  // watch: {
-  //   branch_id(branch_id) {
-  //     return branch_id > 0 ? branch_id : null;
-  //   },
-  // },
+  watch: {
+    device_serial_number(val) {
+      this.key++;
+
+      this.getDataFromApi(1);
+    },
+  },
   mounted() {
     // if (this.$auth.user.user_type == "employee") {
     //   this.$router.push(`/dashboard/employee`);
@@ -286,8 +314,11 @@ export default {
     }
     this.loading = true;
     this.getDataFromApi();
+
     setInterval(() => {
-      this.getDataFromApi(1);
+      if (this.$route.name == "alarm-dashboard") {
+        this.getDataFromApi(1);
+      }
     }, 1000 * 30);
   },
   async created() {
@@ -309,11 +340,17 @@ export default {
         endpoint: "device-list",
         refresh: true,
       });
-      await this.$store.dispatch("fetchDropDowns", {
-        key: "employeeList",
-        endpoint: "employee-list",
-        refresh: true,
-      });
+      this.devicesList = this.$store.state.deviceList;
+      if (this.$store.state.deviceList && this.$store.state.deviceList[0]) {
+        this.device_serial_number = this.$store.state.deviceList[0].device_id;
+        this.getDataFromApi();
+      }
+
+      // await this.$store.dispatch("fetchDropDowns", {
+      //   key: "employeeList",
+      //   endpoint: "employee-list",
+      //   refresh: true,
+      // });
       this.branchList = await this.$store.dispatch("fetchDropDowns", {
         key: "branchList",
         endpoint: "branch-list",
@@ -323,15 +360,22 @@ export default {
       console.error("Error fetching data:", error);
     }
   },
-  watch: {
-    overlay(val) {
-      val &&
-        setTimeout(() => {
-          this.overlay = false;
-        }, 3000);
-    },
-  },
+  // watch: {
+  //   overlay(val) {
+  //     val &&
+  //       setTimeout(() => {
+  //         this.overlay = false;
+  //       }, 3000);
+  //   },
+  // },
   methods: {
+    ChangeDevice(serial_number) {
+      this.device_serial_number = serial_number;
+      this.key++;
+
+      this.getDataFromApi(1);
+      console.log(this.device_serial_number, " this.device_serial_number");
+    },
     can(per) {
       return this.$pagePermission.can(per, this);
     },
@@ -352,6 +396,8 @@ export default {
       // }
     },
     getDataFromApi(reset = 0) {
+      if (this.device_serial_number == "" || this.device_serial_number == null)
+        return false;
       if (this.$store.state.alarm_temparature_latest && reset == 0) {
         this.data = this.$store.state.alarm_temparature_latest;
       } else {

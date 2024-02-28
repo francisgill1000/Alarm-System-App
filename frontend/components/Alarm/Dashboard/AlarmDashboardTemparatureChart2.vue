@@ -124,8 +124,9 @@ export default {
   mounted() {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
-
-    this.getDataFromApi();
+    setTimeout(() => {
+      this.getDataFromApi();
+    }, 2000);
   },
 
   methods: {

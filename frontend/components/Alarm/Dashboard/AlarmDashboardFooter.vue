@@ -24,16 +24,16 @@
                 <v-col cols="8">
                   <div>Status</div>
                   <div class="green--text">
-                    <div v-if="device.fire_alarm_status == 0">Normal</div>
+                    <div v-if="device.smoke_alarm_status == 0">Normal</div>
                     <div v-else style="color: red">Warning</div>
                   </div>
                   <br />
-                  <div>Last Alarm</div>
-                  <div :style="getPriorityColor(device.fire_alarm_status)">
+                  <div style="font-size: 13px">Last Alarm</div>
+                  <div :style="getPriorityColor(device.smoke_alarm_status)">
                     {{
-                      device.fire_alarm_start_datetime == null
+                      device.smoke_alarm_start_datetime == null
                         ? "---"
-                        : $dateFormat.format4(device.fire_alarm_start_datetime)
+                        : $dateFormat.format4(device.smoke_alarm_start_datetime)
                     }}
                   </div>
                 </v-col>
@@ -63,10 +63,8 @@
                     <div v-else style="color: red">Warning</div>
                   </div>
                   <br />
-                  <div>Last Alarm</div>
-                  <div
-                    :style="getPriorityColor(device.water_alarm_start_datetime)"
-                  >
+                  <div style="font-size: 13px">Last Alarm</div>
+                  <div :style="getPriorityColor(device.water_alarm_status)">
                     {{
                       device.water_alarm_start_datetime == null
                         ? "---"
@@ -100,10 +98,8 @@
                     <div v-else style="color: red">Warning</div>
                   </div>
                   <br />
-                  <div>Last Alarm</div>
-                  <div
-                    :style="getPriorityColor(device.power_alarm_start_datetime)"
-                  >
+                  <div style="font-size: 13px">Last Alarm</div>
+                  <div :style="getPriorityColor(device.power_alarm_status)">
                     {{
                       device.power_alarm_start_datetime == null
                         ? "---"
@@ -137,7 +133,7 @@
                     <div v-else style="color: red">Open</div>
                   </div>
                   <br />
-                  <div>Last Open</div>
+                  <div style="font-size: 13px">Last Open</div>
                   <div :style="getPriorityColor(device.door_open_status)">
                     {{
                       device.door_open_start_datetime == null
