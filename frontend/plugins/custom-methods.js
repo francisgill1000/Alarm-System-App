@@ -85,6 +85,7 @@ export default ({ app }, inject) => {
       return `${hours}:${minutes} ${formattedDate}   `;
     },
     format6: (inputdate) => {
+      //20:30
       if (
         inputdate == "---" ||
         inputdate == "--" ||

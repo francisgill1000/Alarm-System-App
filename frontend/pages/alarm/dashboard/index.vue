@@ -285,6 +285,8 @@ export default {
         power_alarm_start_datetime: 0,
         door_open_status: 0,
         door_open_start_datetime: 0,
+        smoke_alarm_status: 0,
+        smoke_alarm_start_datetime: 0,
       },
       devicesList: {},
     };

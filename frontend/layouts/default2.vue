@@ -632,7 +632,7 @@ export default {
     },
     deviceList() {
       this.$axios
-        .get(`device_list`, {
+        .get(`device_list_not_manual`, {
           params: { company_id: this.$auth.user.company_id },
         })
         .then(({ data }) => {

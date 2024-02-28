@@ -48,6 +48,7 @@
         v-model="time3"
         @change="CustomFilter()"
         range
+        label="Date"
       ></date-picker>
       <!--</v-col>
        <v-col md="3" v-if="filterType == 5">

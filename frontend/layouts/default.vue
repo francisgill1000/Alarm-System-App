@@ -27,8 +27,8 @@
             Dashboard
           </v-list-item-title>
         </v-list-item>
-        <!-- <v-list-item
-          @click="goToPage('/alarm/temparature_logs')"
+        <v-list-item
+          @click="goToPage('/alarm/temperatureLogs')"
           router
           :class="!miniVariant || 'pl-2'"
           vertical
@@ -39,9 +39,9 @@
           </v-list-item-icon>
 
           <v-list-item-title class="text-center p-2">
-            Temperature
+            Reports
           </v-list-item-title>
-        </v-list-item> -->
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <!-- <v-navigation-drawer
