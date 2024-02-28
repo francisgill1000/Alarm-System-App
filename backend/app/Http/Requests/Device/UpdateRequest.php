@@ -34,7 +34,7 @@ class UpdateRequest extends FormRequest
             'company_id' => ['required', 'min:1', 'integer'],
             'status_id' => ['required', 'min:1', 'integer'],
 
-            'model_number' => ['nullable', 'min:6', 'max:50'],
+            'model_number' => ['nullable', 'min:4', 'max:50'],
             'device_type' =>  'required',
 
             'mode' => ['nullable'],
@@ -45,7 +45,11 @@ class UpdateRequest extends FormRequest
             'utc_time_zone' => 'required',
             'branch_id' => 'required',
             'serial_number' => 'required',
-            'camera_save_images' => 'required'
+            'camera_save_images' => 'required',
+            'smoke_enabled' => 'required',
+            'water_enabled' => 'required',
+            'acpower_enabled' => 'required',
+            'door_enabled' => 'required',
         ];
     }
 }

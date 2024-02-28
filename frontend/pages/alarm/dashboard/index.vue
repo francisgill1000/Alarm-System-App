@@ -23,9 +23,10 @@
           elevation="0"
         >
           <v-btn
+            :key="index"
             v-if="device.serial_number != null"
             @click="ChangeDevice(device.serial_number)"
-            v-for="device in devicesList"
+            v-for="(device, index) in devicesList"
             style="width: auto; max-width: 100%"
             width="auto"
           >

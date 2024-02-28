@@ -57,6 +57,21 @@
             Alarm Reports</v-list-item-title
           >
         </v-list-item>
+        <v-list-item
+          @click="goToPage('/alarm/rooms')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-view-dashboard</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Server Rooms
+          </v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     <!-- <v-navigation-drawer

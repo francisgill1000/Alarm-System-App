@@ -161,6 +161,9 @@ class DeviceController extends Controller
             $data = $request->validated();
 
 
+            if ($request->isNotFilled("device_type")) {
+                $data["device_type"] = "---";
+            }
 
 
             $data["ip"] = "0.0.0.0";

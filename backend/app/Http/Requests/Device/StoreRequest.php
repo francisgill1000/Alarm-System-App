@@ -48,15 +48,20 @@ class StoreRequest extends FormRequest
             'device_id' => ['required'],
 
             'model_number' => ['nullable', 'min:4', 'max:20'],
-            'device_type' => ['required'],
+            'device_type' => ['nullable'],
 
             'mode' => ['nullable'],
 
             'ip' => 'required|ip',
-            'function' => 'required',
+            'function' => 'nullable',
             'utc_time_zone' => 'required',
             'branch_id' => 'nullable',
             //'camera_save_images' => 'required'
+
+            'smoke_enabled' => 'nullable',
+            'water_enabled' => 'nullable',
+            'acpower_enabled' => 'nullable',
+            'door_enabled' => 'nullable',
 
         ];
     }
