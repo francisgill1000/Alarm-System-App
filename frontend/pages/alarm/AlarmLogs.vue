@@ -11,9 +11,7 @@
         <v-card elevation="0" class="mt-2">
           <v-toolbar class="mb-2 white--text" color="white" dense flat>
             <v-toolbar-title>
-              <span style="color: black"
-                >Temperature Reports</span
-              ></v-toolbar-title
+              <span style="color: black"> Alarm Reports</span></v-toolbar-title
             >
             <span>
               <v-btn
@@ -30,7 +28,7 @@
             </span>
 
             <v-spacer></v-spacer>
-            <!-- <span>
+            <span>
               <v-select
                 @change="getDataFromApi()"
                 style="height: 30px; width: 230px; margin-right: 21px"
@@ -42,17 +40,18 @@
                 item-text="name"
                 item-value="value"
                 :items="[
-                  { name: `All`, value: null },
-                  { name: `Smoke/Fire Detected `, value: `2` },
-                  { name: `Water  Leakage`, value: `3` },
-                  { name: `Door  Open`, value: `4` },
-                  { name: `AC Power Off`, value: `5` },
-                  { name: `Any Alarm Detected`, value: `1` },
-                  { name: `All Alarm - Normal`, value: `0` },
+                  // { name: `All`, value: null },
+                  { name: `Any Alarm Detected`, value: 1 },
+                  { name: `Smoke/Fire Detected `, value: 2 },
+                  { name: `Water  Leakage`, value: 3 },
+                  { name: `Door  Open`, value: 4 },
+                  { name: `AC Power Off`, value: 5 },
+
+                  //{ name: `All Alarm - Normal`, value: 0 },
                 ]"
                 placeholder="Room"
               ></v-select>
-            </span> -->
+            </span>
             <span>
               <v-autocomplete
                 @change="getDataFromApi()"
@@ -165,7 +164,7 @@ export default {
   },
   data: () => ({
     cumulativeIndex: 1,
-    filter_alarm_status: null,
+    filter_alarm_status: 1,
     filter_device_serial_number: null,
     filter_from_date: null,
     filter_to_date: null,
@@ -292,36 +291,36 @@ export default {
         filterable: true,
         filterSpecial: false,
       },
-      // {
-      //   text: "Water Leakage",
-      //   align: "center",
-      //   sortable: false,
-      //   key: "water_leakage", //sorting
-      //   value: "water_leakage", //edit purpose
+      {
+        text: "Water Leakage",
+        align: "center",
+        sortable: false,
+        key: "water_leakage", //sorting
+        value: "water_leakage", //edit purpose
 
-      //   filterable: true,
-      //   filterSpecial: false,
-      // },
-      // {
-      //   text: "AC Power Failure  ",
-      //   align: "center",
-      //   sortable: false,
-      //   key: "power_failure", //sorting
-      //   value: "power_failure", //edit purpose
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "AC Power Failure  ",
+        align: "center",
+        sortable: false,
+        key: "power_failure", //sorting
+        value: "power_failure", //edit purpose
 
-      //   filterable: true,
-      //   filterSpecial: false,
-      // },
-      // {
-      //   text: "Door Status",
-      //   align: "center",
-      //   sortable: false,
-      //   key: "door_status", //sorting
-      //   value: "door_status", //edit purpose
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Door Status",
+        align: "center",
+        sortable: false,
+        key: "door_status", //sorting
+        value: "door_status", //edit purpose
 
-      //   filterable: true,
-      //   filterSpecial: false,
-      // },
+        filterable: true,
+        filterSpecial: false,
+      },
     ],
     filterApplied: true,
   }),
