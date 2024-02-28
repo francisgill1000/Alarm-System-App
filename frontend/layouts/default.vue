@@ -8,7 +8,7 @@
       fixed
       app
       :color="sideBarcolor"
-      :width="130"
+      :width="136"
     >
       <br />
       <v-list style="padding: 5px 0 0 0px">
