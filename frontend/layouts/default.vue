@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-navigation-drawer
+      expand-on-hover
       rail
       v-model="drawer"
       dark
@@ -8,7 +9,7 @@
       fixed
       app
       :color="sideBarcolor"
-      :width="136"
+      :width="150"
     >
       <br />
       <v-list style="padding: 5px 0 0 0px">
@@ -74,107 +75,6 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <!-- <v-navigation-drawer
-      rail
-      v-model="drawer"
-      dark
-      :clipped="clipped"
-      fixed
-      app
-      :color="sideBarcolor"
-      :width="130"
-    >
-      <br />
-      <v-list
-        v-for="(i, idx) in items"
-        :key="idx"
-        style="padding: 5px 0 0 0px"
-        :title="i.title"
-      >
-        <v-list-item
-          :to="i.module != 'dashboard' ? i.to : ''"
-          @click="getTopMenuItems(i)"
-          router
-          v-if="!i.hasChildren"
-          :class="!miniVariant || 'pl-2'"
-          vertical
-          style="display: inline-block"
-          :title="i.title"
-        >
-          <v-list-item-icon class="ma-2" :title="i.title">
-            <v-icon>{{ i.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-title class="text-center p-2">
-            {{ i.title }}&nbsp;
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item
-          v-else
-          :class="!miniVariant || 'pl-2'"
-          @click="i.open_menu = !i.open_menu"
-        >
-          <v-list-item-icon class="mx-2">
-            <v-icon>{{ i.icon }}</v-icon>
-            <v-icon v-if="miniVariant" small
-              >{{ !i.open_menu ? "mdi-chevron-down" : "mdi-chevron-up" }}
-            </v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-title>{{ i.title }} </v-list-item-title>
-          <v-icon small
-            >{{ !i.open_menu ? "mdi-chevron-down" : "mdi-chevron-up" }}
-          </v-icon>
-        </v-list-item>
-        <div v-if="i.open_menu">
-          <div v-for="(j, jdx) in i.hasChildren" :key="jdx">
-            <v-tooltip
-              style="margin-left: 25px"
-              v-if="miniVariant"
-              right
-              color="primary"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-list-item
-                  v-bind="attrs"
-                  v-on="on"
-                  style="min-height: 0"
-                  :to="j.to"
-                  class="submenutitle"
-                >
-                  <v-list-item-title class="my-2">
-                    {{ j.title }}
-                  </v-list-item-title>
-
-                  <v-list-item-icon
-                    :style="miniVariant ? 'margin-left: -54px;' : ''"
-                  >
-                    <v-icon
-                      :to="j.to"
-                      :style="miniVariant ? 'margin-left: 12px;' : ''"
-                    >
-                      {{ j.icon }}
-                    </v-icon>
-                  </v-list-item-icon>
-                </v-list-item>
-              </template>
-              <span>{{ j.title }}</span>
-            </v-tooltip>
-
-            <v-list-item
-              v-else
-              style="min-height: 0; margin-left: 50px"
-              :to="j.to"
-              class="submenutitle"
-            >
-              <v-list-item-title v-if="can(j.menu)" class="my-2">
-                {{ j.title }}
-              </v-list-item-title>
-            </v-list-item>
-          </div>
-        </div>
-      </v-list>
-    </v-navigation-drawer> -->
     <v-app-bar
       :color="changeColor"
       dark
@@ -189,7 +89,7 @@
         style="cursor: pointer"
         @click="gotoHomePage()"
       >
-        <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
+        <img title="My Time Cloud " :src="logo_src" style="width: 150px" />
       </span>
       <v-spacer></v-spacer>
 
@@ -227,7 +127,6 @@
       <v-spacer></v-spacer>
 
       <v-menu
-        style="z-index: 99999"
         nudge-bottom="50"
         transition="scale-transition"
         origin="center center"
@@ -296,10 +195,9 @@
             $vuetify.theme.dark ? "white-balance-sunny" : "moon-waning-crescent"
           }}</v-icon
         >
-      </v-btn> -->
+      </v-btn>  -->
 
       <v-btn
-        style="display: none"
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
         plan
@@ -311,7 +209,6 @@
       >
 
       <v-menu
-        style="display: none"
         bottom
         origin="center center"
         offset-y
@@ -489,7 +386,7 @@
 
     <v-main
       class="main_bg"
-      :style="miniVariant ? 'padding-left: 60px;' : 'padding-left: 135px;'"
+      :style="miniVariant ? 'padding-left: 60px;' : 'padding-left: 140px;'"
     >
       <v-container style="max-width: 100%">
         <nuxt />
@@ -756,8 +653,8 @@ export default {
       },
       clipped: true,
 
-      miniVariant: false,
-      title: "XTremeGuard",
+      miniVariant: true,
+      title: "MyTime2Cloud",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",
@@ -776,10 +673,15 @@ export default {
     this.getCompanyDetails();
     this.setMenus();
     this.setSubLeftMenuItems("dashboard", "/dashboard2", false);
-    this.logo_src = require("@/static/logo.png");
+    this.logo_src = require("@/static/logo22.png");
     this.pendingNotificationsCount = 0;
-    this.loadNotificationMenu();
-    this.verifyAlarmStatus();
+  },
+
+  mounted() {
+    setTimeout(() => {
+      this.loadNotificationMenu();
+      this.verifyAlarmStatus();
+    }, 1000 * 10);
 
     setInterval(() => {
       this.verifyAlarmStatus();
@@ -787,9 +689,6 @@ export default {
     setInterval(() => {
       this.loadNotificationMenu();
     }, 1000 * 60 * 2);
-  },
-
-  mounted() {
     //this.company_menus = [];
 
     let menu_name = this.$route.name;
@@ -898,9 +797,6 @@ export default {
       }
     },
     updateTopmenu() {
-      this.company_top_menu = {};
-
-      return;
       //update company Top menu
       //filter Display Modules From Company Settings
 
@@ -1090,7 +986,7 @@ export default {
         this.menuProperties[menu_name].elevation = 0;
         this.menuProperties[menu_name].selected = bgColor;
       }
-      if (redirect) this.$router.push(page);
+      if (redirect) return this.$router.push(page);
     },
 
     setMenus() {
@@ -1765,14 +1661,6 @@ body {
 
 .no-border:before {
   border-color: #fff !important;
-}
-
-.apexcharts-title-text,
-.apexcharts-yaxis-title-text {
-  font-family: "Roboto" !important;
-  font-weight: normal !important;
-
-  font-size: 19px;
 }
 </style>
 
