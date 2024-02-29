@@ -67,5 +67,12 @@
     "to": "/branches",
     "menu": "branch_access",
     "module": "settings"
+  },
+  {
+    "icon": "mdi-email",
+    "title": "Automation",
+    "to": "/automation",
+    "menu": "notifications_access",
+    "module": "settings"
   }
 ]

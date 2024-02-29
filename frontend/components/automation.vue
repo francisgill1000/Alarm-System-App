@@ -38,6 +38,7 @@
     </span>
 
     <v-autocomplete
+      style="display: none"
       class="pb-1"
       label="Report Type"
       @change="setDay"
@@ -137,6 +138,7 @@
     }}</span>
 
     <TimePickerCommon
+      style="display: none"
       label=""
       :default_value="payload.time"
       @getTime="(value) => (payload.time = value)"
@@ -448,7 +450,7 @@ export default {
       reports: [],
       mediums: [],
       frequency: "Daily",
-      time: null,
+      time: "00:00",
       tos: [],
       ccs: [],
       bccs: [],
@@ -586,7 +588,6 @@ export default {
     can(per) {
       return this.$pagePermission.can(per, this);
     },
-    
 
     add_number() {
       if (this.number && this.number.length > 10) {
