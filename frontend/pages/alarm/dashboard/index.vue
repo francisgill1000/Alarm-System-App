@@ -254,7 +254,7 @@ export default {
   },
   data() {
     return {
-      topMenu: 1,
+      topMenu: 0,
       key: 1,
       branchList: [],
       selectedBranchName: "All Branches",
