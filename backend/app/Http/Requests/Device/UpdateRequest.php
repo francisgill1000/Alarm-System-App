@@ -41,7 +41,7 @@ class UpdateRequest extends FormRequest
 
             'ip' => 'required|ip',
             'port' => 'required',
-            'function' => 'required',
+            'function' => 'nullable',
             'utc_time_zone' => 'required',
             'branch_id' => 'required',
             'serial_number' => 'required',

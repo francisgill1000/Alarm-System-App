@@ -465,6 +465,10 @@ class DeviceController extends Controller
 
 
         try {
+            $data = $request->all();
+            if ($request->isNotFilled("device_type")) {
+                $data["device_type"] = "---";
+            }
             $record = $Device->update($request->validated());
 
 
