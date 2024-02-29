@@ -7,7 +7,15 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-row>
-      <v-col style="position: fixed; top: -7px; z-index: 9999">
+      <v-col
+        style="
+          position: fixed;
+          top: -7px;
+          z-index: 9999;
+          margin-left: 20%;
+          width: 50%;
+        "
+      >
         <v-bottom-navigation
           :value="topMenu"
           color="primary"

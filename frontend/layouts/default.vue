@@ -12,8 +12,97 @@
       :width="150"
     >
       <br />
-      <v-list style="padding: 5px 0 0 0px">
+      <v-list
+        v-for="(i, idx) in items"
+        :key="idx"
+        style="padding: 5px 0 0 0px"
+        :title="i.title"
+      >
         <v-list-item
+          :to="i.module != 'dashboard' ? i.to : ''"
+          @click="getTopMenuItems(i)"
+          router
+          v-if="!i.hasChildren"
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+          :title="i.title"
+        >
+          <v-list-item-icon class="ma-2" :title="i.title">
+            <v-icon>{{ i.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            {{ i.title }}&nbsp;
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          v-else
+          :class="!miniVariant || 'pl-2'"
+          @click="i.open_menu = !i.open_menu"
+        >
+          <v-list-item-icon class="mx-2">
+            <v-icon>{{ i.icon }}</v-icon>
+            <v-icon v-if="miniVariant" small
+              >{{ !i.open_menu ? "mdi-chevron-down" : "mdi-chevron-up" }}
+            </v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title>{{ i.title }} </v-list-item-title>
+          <v-icon small
+            >{{ !i.open_menu ? "mdi-chevron-down" : "mdi-chevron-up" }}
+          </v-icon>
+        </v-list-item>
+        <div v-if="i.open_menu">
+          <div v-for="(j, jdx) in i.hasChildren" :key="jdx">
+            <v-tooltip
+              style="margin-left: 25px"
+              v-if="miniVariant"
+              right
+              color="primary"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-list-item
+                  v-bind="attrs"
+                  v-on="on"
+                  style="min-height: 0"
+                  :to="j.to"
+                  class="submenutitle"
+                >
+                  <v-list-item-title class="my-2">
+                    {{ j.title }}
+                  </v-list-item-title>
+
+                  <v-list-item-icon
+                    :style="miniVariant ? 'margin-left: -54px;' : ''"
+                  >
+                    <v-icon
+                      :to="j.to"
+                      :style="miniVariant ? 'margin-left: 12px;' : ''"
+                    >
+                      {{ j.icon }}
+                    </v-icon>
+                  </v-list-item-icon>
+                </v-list-item>
+              </template>
+              <span>{{ j.title }}</span>
+            </v-tooltip>
+
+            <v-list-item
+              v-else
+              style="min-height: 0; margin-left: 50px"
+              :to="j.to"
+              class="submenutitle"
+            >
+              <v-list-item-title v-if="can(j.menu)" class="my-2">
+                {{ j.title }}
+              </v-list-item-title>
+            </v-list-item>
+          </div>
+        </div>
+      </v-list>
+      <!--<v-list style="padding: 5px 0 0 0px">
+      <v-list-item
           @click="goToPage('/alarm/dashboard')"
           router
           :class="!miniVariant || 'pl-2'"
@@ -27,7 +116,7 @@
           <v-list-item-title class="text-center p-2">
             Dashboard
           </v-list-item-title>
-        </v-list-item>
+         </v-list-item>
         <v-list-item
           @click="goToPage('/alarm/temperatureLogs')"
           router
@@ -72,8 +161,8 @@
           <v-list-item-title class="text-center p-2">
             Server Rooms
           </v-list-item-title>
-        </v-list-item>
-      </v-list>
+        </v-list-item> 
+      </v-list>-->
     </v-navigation-drawer>
     <v-app-bar
       :color="changeColor"
@@ -135,6 +224,7 @@
         left
         min-width="200"
         nudge-left="20"
+        style="z-index: 9999"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon color="red" v-bind="attrs" v-on="on">
@@ -157,22 +247,6 @@
                 <v-list-item-title class="black--text"
                   >Profile</v-list-item-title
                 >
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item
-              v-if="$auth.user.user_type != 'company'"
-              @click="changeLoginType()"
-            >
-              <v-list-item-icon>
-                <v-icon>mdi-account-multiple-outline</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title class="black--text">
-                  Login Into employee
-                  <!-- {{
-                    caps(getLoginType == "branch" ? "employee" : "branch")
-                  }} -->
-                </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
 
@@ -857,7 +931,7 @@ export default {
     },
     gotoHomePage() {
       //location.href = process.env.APP_URL + "/dashboard2";
-      location.href = location.href; // process.env.APP_URL + "/dashboard2";
+      location.href = "/alarm/dashboard"; // process.env.APP_URL + "/dashboard2";
     },
     loadNotificationMenu() {
       let company_id = this.$auth.user?.company?.id || 0;
