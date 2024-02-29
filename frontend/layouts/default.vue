@@ -995,7 +995,7 @@ export default {
       // document.addEventListener("click", this.playAudioOnUserInteraction);
       // var elem = this.$refs.myBtn;
       // elem.click();
-      this.$refs.myBtn.click();
+      ////////// this.$refs.myBtn.click();
       //var prevented = elem.dispatchEvent(new Event("change")); // Fire event
     },
     playAudioOnUserInteraction() {
@@ -1172,7 +1172,7 @@ export default {
         if (data.length > 0) {
           this.notificationAlarmDevices = data;
 
-          this.alarmNotificationStatus = false;
+          this.alarmNotificationStatus = true;
           //this.palysound();
         } else {
           this.alarmNotificationStatus = false;
