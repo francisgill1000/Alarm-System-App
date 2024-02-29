@@ -109,7 +109,7 @@ class ApiAlarmControlController extends Controller
 
                 $deviceModel = Device::where("serial_number", $device_serial_number);
 
-                if (count($deviceModel->get()) == 0) {
+                if (count($deviceModel->clone()->get()) == 0) {
                     return $this->response('Device Information is not available', null, false);
                 }
 
@@ -136,31 +136,31 @@ class ApiAlarmControlController extends Controller
                 //smoke_alarm
                 if ($smoke_alarm == 1) {
                     $row["smoke_alarm_start_datetime"] = $log_time;
-                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else if ($smoke_alarm == 0) {
                     $row["smoke_alarm_end_datetime"] = $log_time;
                 }
                 //water_leakage
                 if ($water_leakage == 1) {
                     $row["water_alarm_start_datetime"] = $log_time;
-                    //$message[] = $this->SendWhatsappNotification("Water Leakage ",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    //$message[] = $this->SendWhatsappNotification("Water Leakage ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else if ($water_leakage == 0) {
                     $row["water_alarm_end_datetime"] = $log_time;
                 }
                 //power_failure
                 if ($power_failure == 1) {
                     $row["power_alarm_start_datetime"] = $log_time;
-                    // $message[] = $this->SendWhatsappNotification("Power OFF", $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    // $message[] = $this->SendWhatsappNotification("Power OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else if ($power_failure == 0) {
                     $row["power_alarm_end_datetime"] = $log_time;
                 }
                 //door_status
                 if ($door_status == 1) {
                     $row["door_open_start_datetime"] = $log_time;
-                    // $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    // $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else  if ($door_status == 0) {
                     $row["door_open_end_datetime"] = $log_time;
-                    // $message[] =  $this->SendWhatsappNotification("Door Open",  $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    // $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 }
 
 
@@ -169,7 +169,7 @@ class ApiAlarmControlController extends Controller
                 // Device::where("serial_number", $device_serial_number)
                 //     ->update($row);
                 $deviceModel->clone()->update($row);
-                return $message;
+                //return $message;
 
                 return $this->response('Successfully Updated', null, true);
             }
@@ -182,7 +182,7 @@ class ApiAlarmControlController extends Controller
         return $this->response('Data error', null, false);
     }
 
-    public function SendWhatsappNotification($issue, $room_name, $company_id)
+    public function SendWhatsappNotification($issue, $room_name, $company_id, $date)
     {
 
 
@@ -193,11 +193,11 @@ class ApiAlarmControlController extends Controller
 
             $script_name = "ReportNotificationCrons";
 
-            $date = date("Y-m-d H:i:s");
+            // $date = date("Y-m-d H:i:s");
 
             // try {
 
-            return   $model = ReportNotification::with(["managers", "company.company_mail_content"])->where("id", $id)
+            $model = ReportNotification::with(["managers", "company.company_mail_content"])->where("id", $id)
 
 
                 ->with("managers", function ($query) use ($company_id) {
@@ -232,8 +232,8 @@ class ApiAlarmControlController extends Controller
                     $body_content1 = new EmailContentDefault($data);
 
                     if ($value->email != '') {
-                        // Mail::to($value->email)
-                        //     ->send($body_content1);
+                        Mail::to($value->email)
+                            ->send($body_content1);
 
 
                         $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
@@ -271,7 +271,7 @@ class ApiAlarmControlController extends Controller
                         if (count($model->company->company_whatsapp_content))
                             $body_content1 .= $model->company->company_whatsapp_content[0]->content;
 
-                        //(new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
+                        (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
 
                         $data = [
                             "company_id" => $model->company->id,
