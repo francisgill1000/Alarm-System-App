@@ -143,24 +143,24 @@ class ApiAlarmControlController extends Controller
                 //water_leakage
                 if ($water_leakage == 1) {
                     $row["water_alarm_start_datetime"] = $log_time;
-                    //$message[] = $this->SendWhatsappNotification("Water Leakage ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] = $this->SendWhatsappNotification("Water Leakage ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else if ($water_leakage == 0) {
                     $row["water_alarm_end_datetime"] = $log_time;
                 }
                 //power_failure
                 if ($power_failure == 1) {
                     $row["power_alarm_start_datetime"] = $log_time;
-                    // $message[] = $this->SendWhatsappNotification("Power OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] = $this->SendWhatsappNotification("Power OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else if ($power_failure == 0) {
                     $row["power_alarm_end_datetime"] = $log_time;
                 }
                 //door_status
                 if ($door_status == 1) {
                     $row["door_open_start_datetime"] = $log_time;
-                    // $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else  if ($door_status == 0) {
                     $row["door_open_end_datetime"] = $log_time;
-                    // $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 }
 
 
