@@ -248,7 +248,7 @@ export default {
         sortable: false,
         key: "device_name",
         value: "device_name",
-        width: "150px",
+
         filterable: true,
         filterSpecial: false,
       },

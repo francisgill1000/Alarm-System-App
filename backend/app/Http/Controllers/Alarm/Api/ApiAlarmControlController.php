@@ -109,6 +109,10 @@ class ApiAlarmControlController extends Controller
 
                 $deviceModel = Device::where("serial_number", $device_serial_number);
 
+                if (count($deviceModel->get()) == 0) {
+                    return $this->response('Device Information is not available', null, false);
+                }
+
                 $row = [];
 
                 if ($temparature >= $max_temparature) {
@@ -132,7 +136,7 @@ class ApiAlarmControlController extends Controller
                 //smoke_alarm
                 if ($smoke_alarm == 1) {
                     $row["smoke_alarm_start_datetime"] = $log_time;
-                    //$message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->first()->name, $deviceModel->first()->company_id);
+                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->first()->name, $deviceModel->first()->company_id);
                 } else if ($smoke_alarm == 0) {
                     $row["smoke_alarm_end_datetime"] = $log_time;
                 }
@@ -165,7 +169,7 @@ class ApiAlarmControlController extends Controller
                 // Device::where("serial_number", $device_serial_number)
                 //     ->update($row);
                 $deviceModel->clone()->update($row);
-
+                return $message;
 
                 return $this->response('Successfully Updated', null, true);
             }
@@ -181,7 +185,7 @@ class ApiAlarmControlController extends Controller
     public function SendWhatsappNotification($issue, $room_name, $company_id)
     {
 
-        return false;
+
         $reports = ReportNotification::where("company_id", $company_id)->get();
 
         foreach ($reports as $model) {
@@ -193,7 +197,14 @@ class ApiAlarmControlController extends Controller
 
             // try {
 
-            $model = ReportNotification::with(["managers", "company.company_mail_content"])->where("id", $id)->first();
+            return   $model = ReportNotification::with(["managers", "company.company_mail_content"])->where("id", $id)
+
+
+                ->with("managers", function ($query) use ($company_id) {
+                    $query->where("company_id", $company_id);
+                })
+
+                ->first();
 
 
             if (in_array("Email", $model->mediums)) {
@@ -221,8 +232,8 @@ class ApiAlarmControlController extends Controller
                     $body_content1 = new EmailContentDefault($data);
 
                     if ($value->email != '') {
-                        Mail::to($value->email)
-                            ->send($body_content1);
+                        // Mail::to($value->email)
+                        //     ->send($body_content1);
 
 
                         $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
@@ -260,7 +271,7 @@ class ApiAlarmControlController extends Controller
                         if (count($model->company->company_whatsapp_content))
                             $body_content1 .= $model->company->company_whatsapp_content[0]->content;
 
-                        (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
+                        //(new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
 
                         $data = [
                             "company_id" => $model->company->id,
