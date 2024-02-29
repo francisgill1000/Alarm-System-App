@@ -446,7 +446,7 @@
                         Device Name :{{ device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch.branch_name }}
+                        Branch Name :{{ device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Location :{{ device.location }}
@@ -477,7 +477,7 @@
                         Device Name :{{ device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch.branch_name }}
+                        Branch Name :{{ device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Location :{{ device.location }}
@@ -508,7 +508,7 @@
                         Device Name :{{ device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch.branch_name }}
+                        Branch Name :{{ device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Location :{{ device.location }}
@@ -539,7 +539,7 @@
                         Device Name :{{ device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch.branch_name }}
+                        Branch Name :{{ device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Location :{{ device.location }}
