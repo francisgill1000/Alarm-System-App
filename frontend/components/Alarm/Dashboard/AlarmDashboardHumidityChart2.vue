@@ -60,6 +60,12 @@ export default {
         },
       ],
       chartOptions: {
+        plotOptions: {
+          bar: {
+            columnWidth: "10%",
+          },
+        },
+        colors: ["#304FFE", "#FF8000"],
         chart: {
           height: 350,
           type: "line",

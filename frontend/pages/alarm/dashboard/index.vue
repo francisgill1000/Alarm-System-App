@@ -7,15 +7,7 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <v-row>
-      <v-col
-        style="
-          position: fixed;
-          top: -7px;
-          z-index: 9999;
-          text-align: -webkit-center;
-          margin-left: -12%;
-        "
-      >
+      <v-col style="position: fixed; top: -7px; z-index: 9999">
         <v-bottom-navigation
           :value="topMenu"
           color="primary"
@@ -46,7 +38,12 @@
                     ><h3 class="pl-5">Today Temperature</h3></v-col
                   >
                   <v-col cols="4" class="pull-right"
-                    ><v-icon @click="getDataFromApi(1)" style="float: right"
+                    ><v-icon
+                      @click="
+                        keyChart2++;
+                        getDataFromApi(1);
+                      "
+                      style="float: right"
                       >mdi mdi-reload</v-icon
                     >
                   </v-col>
@@ -71,10 +68,11 @@
           <v-col lg="2" md="2" sm="12" xs="12">
             <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
+                <h3 class="pl-5">Today</h3>
                 <div
                   lg="12"
                   md="12"
-                  style="text-align: center; padding-top: 0px"
+                  style="text-align: center; padding-top: 0px; margin-top: -5px"
                 >
                   <div style="text-align: center; font-size: 20px">Min</div>
                   <div class="bold text-h4 green--text">
@@ -126,7 +124,7 @@
                     :name="'AlarmDashboardTemparatureChart2'"
                     :height="'220'"
                     :device_serial_number="device_serial_number"
-                    :key="key"
+                    :key="keyChart2"
                   />
                 </v-col>
               </v-card> </v-row
@@ -166,10 +164,11 @@
           <v-col lg="2" md="2" sm="12" xs="12">
             <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
+                <h3 class="pl-5">Today</h3>
                 <div
                   lg="12"
                   md="12"
-                  style="text-align: center; padding-top: 0px"
+                  style="text-align: center; padding-top: 0px; margin-top: -5px"
                 >
                   <div style="text-align: center; font-size: 20px">Min</div>
                   <div class="bold text-h4 green--text">
@@ -218,7 +217,7 @@
                     :name="'AlarmDashboardHumidityChart2'"
                     :height="'220'"
                     :device_serial_number="device_serial_number"
-                    :key="key"
+                    :key="keyChart2"
                   />
                 </v-col>
               </v-card> </v-row
@@ -256,6 +255,7 @@ export default {
     return {
       topMenu: 0,
       key: 1,
+      keyChart2: 1,
       branchList: [],
       selectedBranchName: "All Branches",
       seelctedBranchId: "",
@@ -295,6 +295,7 @@ export default {
   watch: {
     device_serial_number(val) {
       this.key++;
+      this.keyChart2++;
 
       this.getDataFromApi(1);
     },
@@ -375,6 +376,7 @@ export default {
     ChangeDevice(serial_number) {
       this.device_serial_number = serial_number;
       this.key++;
+      this.keyChart2++;
 
       this.getDataFromApi(1);
       console.log(this.device_serial_number, " this.device_serial_number");

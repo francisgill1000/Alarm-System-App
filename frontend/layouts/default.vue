@@ -36,7 +36,7 @@
           style="display: inline-block"
         >
           <v-list-item-icon class="ma-2">
-            <v-icon>mdi mdi-view-dashboard</v-icon>
+            <v-icon>mdi mdi-fire</v-icon>
           </v-list-item-icon>
 
           <v-list-item-title class="text-center p-2">
@@ -51,7 +51,7 @@
           style="display: inline-block"
         >
           <v-list-item-icon class="ma-2">
-            <v-icon>mdi mdi-view-dashboard</v-icon>
+            <v-icon>mdi-alarm-light</v-icon>
           </v-list-item-icon>
 
           <v-list-item-title class="text-center p-2">
@@ -66,7 +66,7 @@
           style="display: inline-block"
         >
           <v-list-item-icon class="ma-2">
-            <v-icon>mdi mdi-view-dashboard</v-icon>
+            <v-icon>mdi mdi-server</v-icon>
           </v-list-item-icon>
 
           <v-list-item-title class="text-center p-2">
@@ -89,11 +89,12 @@
         style="cursor: pointer"
         @click="gotoHomePage()"
       >
-        <img title="My Time Cloud " :src="logo_src" style="width: 150px" />
+        <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
       </span>
+
       <v-spacer></v-spacer>
 
-      <span style="100%">
+      <span style="100%;display: none">
         <template
           v-if="
             getLoginType == 'company' ||
@@ -654,7 +655,7 @@ export default {
       clipped: true,
 
       miniVariant: true,
-      title: "MyTime2Cloud",
+      title: "Xtreme Guards",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",
@@ -673,7 +674,7 @@ export default {
     this.getCompanyDetails();
     this.setMenus();
     this.setSubLeftMenuItems("dashboard", "/dashboard2", false);
-    this.logo_src = require("@/static/logo22.png");
+    this.logo_src = require("@/static/logo.png");
     this.pendingNotificationsCount = 0;
   },
 

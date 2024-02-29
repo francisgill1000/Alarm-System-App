@@ -68,6 +68,13 @@ export default {
         },
       ],
       chartOptions: {
+        plotOptions: {
+          bar: {
+            columnWidth: "10%",
+          },
+        },
+        colors: ["#008450", "#efb700"],
+
         chart: {
           height: 350,
           type: "line",
@@ -127,6 +134,11 @@ export default {
     setTimeout(() => {
       this.getDataFromApi();
     }, 2000);
+
+    this.$store.commit(
+      "AlarmDashboard/alarm_temperature_chart2_date",
+      this.from_date
+    );
   },
 
   methods: {
