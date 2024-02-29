@@ -31,17 +31,7 @@
   },
 
   {
-    "text": "No. EMP",
-    "align": "left",
-    "sortable": false,
-    "key": "employees_count",
-    "value": "employees_count",
-    "width": "150px",
-    "filterable": false,
-    "filterSpecial": false
-  },
-  {
-    "text": "No. Device",
+    "text": " Devices",
     "align": "left",
     "sortable": false,
     "key": "devices_count",
@@ -49,15 +39,7 @@
     "filterable": false,
     "filterSpecial": false
   },
-  {
-    "text": "No. Depatment",
-    "align": "left",
-    "sortable": false,
-    "key": "departments_count",
-    "value": "departments_count",
-    "filterable": false,
-    "filterSpecial": false
-  },
+
   {
     "text": "Since",
     "align": "left",

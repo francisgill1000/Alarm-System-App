@@ -65,7 +65,7 @@ export default {
             columnWidth: "10%",
           },
         },
-        colors: ["#304FFE", "#FF8000"],
+        colors: ["#00b0f0", "#FF8000"],
         chart: {
           height: 350,
           type: "line",
@@ -121,9 +121,9 @@ export default {
   mounted() {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
-    setTimeout(() => {
-      this.getDataFromApi();
-    }, 2000);
+    /// setTimeout(() => {
+    this.getDataFromApi();
+    // }, 2000);
   },
 
   methods: {

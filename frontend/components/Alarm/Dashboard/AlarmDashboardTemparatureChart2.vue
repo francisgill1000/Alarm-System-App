@@ -73,7 +73,7 @@ export default {
             columnWidth: "10%",
           },
         },
-        colors: ["#008450", "#efb700"],
+        colors: ["#c00000", "#efb700"],
 
         chart: {
           height: 350,
@@ -131,9 +131,9 @@ export default {
   mounted() {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
-    setTimeout(() => {
-      this.getDataFromApi();
-    }, 2000);
+    // setTimeout(() => {
+    this.getDataFromApi();
+    /// }, 2000);
 
     this.$store.commit(
       "AlarmDashboard/alarm_temperature_chart2_date",

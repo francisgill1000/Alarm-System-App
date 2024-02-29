@@ -11,13 +11,20 @@
         <v-row style="width: 100%; height: 250px">
           <v-card class="py-2" style="width: 100%">
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
-              <h3 style="text-align: left">Smoke Alarm</h3>
+              <h3 style="text-align: left">Smoke/Fire Alarm</h3>
 
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
+                    v-if="device.smoke_alarm_status == 0"
                     class="pa-10"
                     src="../../../static/icons/fire_logo.jpg"
+                    style="width: 160px"
+                  />
+                  <img
+                    v-else-if="device.smoke_alarm_status == 1"
+                    class="pa-10"
+                    src="../../../static/alarm-icons/smoke_alarm.png"
                     style="width: 160px"
                   />
                 </v-col>
@@ -51,8 +58,15 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
+                    v-if="device.water_alarm_status == 0"
                     class="pa-10"
                     src="../../../static/icons/water_logo.jpg"
+                    style="width: 160px"
+                  />
+                  <img
+                    v-else-if="device.water_alarm_status == 1"
+                    class="pa-10"
+                    src="../../../static/alarm-icons/water-leakage.png"
                     style="width: 160px"
                   />
                 </v-col>
@@ -86,8 +100,15 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
+                    v-if="device.power_alarm_status == 0"
                     class="pa-10"
                     src="../../../static/icons/power_logo.jpg"
+                    style="width: 160px"
+                  />
+                  <img
+                    v-else-if="device.power_alarm_status == 1"
+                    class="pa-10"
+                    src="../../../static/alarm-icons/acpower.png"
                     style="width: 160px"
                   />
                 </v-col>
@@ -121,8 +142,15 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
+                    v-if="device.door_open_status == 0"
                     class="pa-10"
                     src="../../../static/icons/door_logo.jpg"
+                    style="width: 160px"
+                  />
+                  <img
+                    v-else-if="device.door_open_status == 1"
+                    class="pa-10"
+                    src="../../../static/alarm-icons/dooropen.png"
                     style="width: 160px"
                   />
                 </v-col>

@@ -613,7 +613,14 @@ class DeviceController extends Controller
 
     public function getAlarmNotification(Request $request)
     {
-        return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
+        //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
+        $model = $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id);
+        return $model->where(function ($query) use ($request) {
+            $query->where("smoke_alarm_status", 1);
+            $query->orWhere("water_alarm_status",  1);
+            $query->orWhere("power_alarm_status",  1);
+            $query->orWhere("door_open_status",  1);
+        })->get();
     }
     public function openDoorAlways(Request $request)
     {

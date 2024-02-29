@@ -140,15 +140,15 @@
 
         <v-col cols="2">
           <table>
-            <tr>
+            <!-- <tr>
               <td>
                 <strong>No. EMP</strong>
                 <br />
                 {{ employeeObject.employees_count || "---" }}
-                <!-- {{ employeeObject.location || "---" }} -->
+                 
                 <br />
               </td>
-            </tr>
+            </tr> -->
             <tr>
               <td>
                 <strong>No. DEVICE</strong>
@@ -158,15 +158,15 @@
                 <br />
               </td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td>
                 <strong>No. DEPARTMENT</strong>
                 <br />
                 {{ employeeObject.departments_count || "---" }}
-                <!-- {{ employeeObject.location || "---" }} -->
+                 
                 <br />
               </td>
-            </tr>
+            </tr> -->
           </table>
         </v-col>
 

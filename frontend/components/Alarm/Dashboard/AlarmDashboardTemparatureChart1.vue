@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 200px">
+  <div style="width: 100%; height: 190px">
     <!-- <ComonPreloader
       icon="face-scan"
     

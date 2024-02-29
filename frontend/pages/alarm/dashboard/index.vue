@@ -37,6 +37,16 @@
     </v-row>
     <v-row>
       <v-col cols="12" class="pt-5">
+        <!-- {{ audioSrc }}
+        <audio ref="audio" controls>
+          <source :src="audioSrc" type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio>
+        <audio ref="audio" controls>
+          <source src="../../../assets/alarm-sound1.mp3" type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio> -->
+
         <v-row style="width: 100%">
           <v-col lg="3" md="3" sm="12" xs="12">
             <v-row style="width: 100%; height: 250px">
@@ -61,14 +71,25 @@
                   md="12"
                   style="text-align: center; padding-top: 0px"
                 >
-                  <AlarmDashboardTemparatureChart1
-                    :branch_id="branch_id"
-                    :name="'AlarmDashboardTemparatureChart1'"
-                    :height="'200'"
-                    :temperature_latest="temperature_latest"
-                    :temperature_date_time="temperature_date_time"
-                    :key="key"
-                  />
+                  <v-row>
+                    <v-col
+                      cols="2"
+                      class="align-items-center justify-content-center pt-10"
+                      ><img
+                        src="../../../static/alarm-icons/temperature.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10">
+                      <AlarmDashboardTemparatureChart1
+                        :branch_id="branch_id"
+                        :name="'AlarmDashboardTemparatureChart1'"
+                        :height="'180'"
+                        :temperature_latest="temperature_latest"
+                        :temperature_date_time="temperature_date_time"
+                        :key="key"
+                      />
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-card>
             </v-row>
@@ -157,14 +178,25 @@
                   md="12"
                   style="text-align: center; padding-top: 0px"
                 >
-                  <AlarmDashboardHumidityChart1
-                    :branch_id="branch_id"
-                    :name="'AlarmDashboardHumidityChart1'"
-                    :height="'200'"
-                    :humidity_latest="humidity_latest"
-                    :humidity_date_time="humidity_date_time"
-                    :key="key"
-                  />
+                  <v-row>
+                    <v-col
+                      cols="2"
+                      class="align-items-center justify-content-center pt-10"
+                      ><img
+                        src="../../../static/alarm-icons/humidity.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10">
+                      <AlarmDashboardHumidityChart1
+                        :branch_id="branch_id"
+                        :name="'AlarmDashboardHumidityChart1'"
+                        :height="'200'"
+                        :humidity_latest="humidity_latest"
+                        :humidity_date_time="humidity_date_time"
+                        :key="key"
+                      />
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-card>
             </v-row>
@@ -261,6 +293,7 @@ export default {
   },
   data() {
     return {
+      audioSrc: null,
       topMenu: 0,
       key: 1,
       keyChart2: 1,

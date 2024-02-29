@@ -263,11 +263,19 @@
           </v-list-item-group>
         </v-list>
       </v-menu>
-
-      <v-btn icon @click="gotoHomePage()">
-        <v-icon>mdi-mdi-view-dashboard </v-icon>
-      </v-btn>
-
+      <!-- <button type="button" @click="playAudioOnUserInteraction" ref="myBtn">
+        Click Me!
+      </button> -->
+      <v-btn
+        v-if="getLoginType == 'company' || getLoginType == 'branch'"
+        icon
+        plan
+        @click="gotoHomePage()"
+        class="mr-3"
+        ><v-icon class="violet--text" style="text-align: center"
+          >mdi-view-dashboard</v-icon
+        ></v-btn
+      >
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
@@ -279,7 +287,7 @@
         ></v-btn
       >
 
-      <v-menu
+      <!-- <v-menu
         bottom
         origin="center center"
         offset-y
@@ -317,14 +325,10 @@
                 item.title
               }}</v-list-item-title>
             </v-list-item-content>
-            <!-- <v-list-item-title
-              style="cursor: pointer"
-              @click="goToPage(item.click)"
-              >{{ item.title }}
-            </v-list-item-title> -->
+             
           </v-list-item>
         </v-list>
-      </v-menu>
+      </v-menu> -->
 
       <!-- <v-menu
         bottom
@@ -386,6 +390,7 @@
           </v-btn>
         </template>
       </v-snackbar>
+
       <v-dialog
         persistent
         v-model="alarmNotificationStatus"
@@ -397,6 +402,12 @@
         </template> -->
         <template v-slot:default="dialog">
           <v-card>
+            <!-- <audio controls src="../static/alarm-sound1.mp3"></audio>
+            <audio ref="audio" preload="auto" volume="0.1" muted loop>
+              <source src="../static/alarm-sound1.mp3" />
+            </audio> -->
+
+            <!-- <div @click="s()" class="toggle-sound"></div> -->
             <v-toolbar
               color="error"
               style="
@@ -404,52 +415,171 @@
                 padding-left: 35%;
                 color: #fff !important;
               "
-              >Attention :Fire Alarm Notification
+              >Attention : Alarm Notification
             </v-toolbar>
             <v-card-text>
               <v-row
                 v-for="(device, index) in notificationAlarmDevices"
                 key="index"
               >
-                <v-col cols="2"
-                  ><img src="../static/fire2.png" width="50px"
-                /></v-col>
-                <v-col cols="10" class="pl-4">
-                  <div class="pa-3" style="font-size: 20px; font-weight: bold">
-                    Fire Alarm Triggered at :
-                    {{ $dateFormat.format5(device.alarm_start_datetime) }}
-                  </div>
-                  <div class="bold pa-1">Device Name :{{ device.name }}</div>
-                  <div class="bold pa-1">
-                    Branch Name :{{ device.branch.branch_name }}
-                  </div>
-                  <div class="bold pa-1">
-                    Device Location :{{ device.branch.location }}
-                  </div>
+                <v-col cols="12">
+                  <v-row
+                    v-if="device.smoke_alarm_status"
+                    style="border-bottom: 1px solid #ddd"
+                  >
+                    <v-col cols="2" class="pt-10 text-center"
+                      ><img
+                        src="../static/alarm-icons/smoke_alarm.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10" class="pl-4">
+                      <div
+                        class="pa-3 pt-0"
+                        style="font-size: 20px; font-weight: bold"
+                      >
+                        Smoke Alarm Triggered at :
+                        {{
+                          $dateFormat.format5(device.smoke_alarm_start_datetime)
+                        }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Name :{{ device.name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Branch Name :{{ device.branch.branch_name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Location :{{ device.location }}
+                      </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-row
+                    v-if="device.door_open_status"
+                    style="border-bottom: 1px solid #ddd"
+                  >
+                    <v-col cols="2" class="pt-10 text-center"
+                      ><img
+                        src="../static/alarm-icons/dooropen.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10" class="pl-4">
+                      <div
+                        class="pa-3 pt-0"
+                        style="font-size: 20px; font-weight: bold"
+                      >
+                        Door Keep Open Alarm Triggered at :
+                        {{
+                          $dateFormat.format5(device.door_open_start_datetime)
+                        }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Name :{{ device.name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Branch Name :{{ device.branch.branch_name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Location :{{ device.location }}
+                      </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-row
+                    v-if="device.power_alarm_status"
+                    style="border-bottom: 1px solid #ddd"
+                  >
+                    <v-col cols="2" class="pt-10 text-center"
+                      ><img
+                        src="../static/alarm-icons/acpower.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10" class="pl-4">
+                      <div
+                        class="pa-3 pt-0"
+                        style="font-size: 20px; font-weight: bold"
+                      >
+                        AC Power Off Alarm Triggered at :
+                        {{
+                          $dateFormat.format5(device.power_alarm_start_datetime)
+                        }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Name :{{ device.name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Branch Name :{{ device.branch.branch_name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Location :{{ device.location }}
+                      </div>
+                    </v-col>
+                  </v-row>
+
+                  <v-row
+                    v-if="device.water_alarm_status"
+                    style="border-bottom: 1px solid #ddd"
+                  >
+                    <v-col cols="2" class="pt-10 text-center"
+                      ><img
+                        src="../static/alarm-icons/water-leakage.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10" class="pl-4">
+                      <div
+                        class="pa-3 pt-0"
+                        style="font-size: 20px; font-weight: bold"
+                      >
+                        Water Leakage Alarm Triggered at :
+                        {{
+                          $dateFormat.format5(device.water_alarm_start_datetime)
+                        }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Name :{{ device.name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Branch Name :{{ device.branch.branch_name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Location :{{ device.location }}
+                      </div>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
 
-              <div></div>
               <div>
-                <div style="color: green">
+                <!-- <div style="color: green">
                   <strong>Note: </strong>All Branch Level Doors are Opened
                 </div>
                 <br />
-                Check Devices list and Turn off Alarm to Close this popup.
-
+                Check Devices list and Turn off Alarm to Close this popup. -->
+                <!-- Check Devices list
+                <v-spacer></v-spacer>
                 <v-btn
+                  style="float: right"
                   color="error"
                   @click="
                     goToPage('/device');
                     alarmNotificationStatus = false;
                   "
                   >View Devices</v-btn
-                >
+                > -->
               </div>
             </v-card-text>
-            <!-- <v-card-actions class="justify-end">
-              <v-btn text @click="alarmNotificationStatus = false">Close</v-btn>
-            </v-card-actions> -->
+            <v-card-actions class="justify-end">
+              <!-- <v-btn text @click="alarmNotificationStatus = false">Close</v-btn> -->
+              <v-btn
+                style="float: right"
+                color="error"
+                @click="
+                  goToPage('/device');
+                  alarmNotificationStatus = false;
+                "
+                >View Devices</v-btn
+              >
+            </v-card-actions>
           </v-card>
         </template>
       </v-dialog>
@@ -735,6 +865,7 @@ export default {
 
       inactivityTimeout: null,
       alarmNotificationStatus: false,
+      audio: null,
     };
   },
   created() {
@@ -749,6 +880,10 @@ export default {
   },
 
   mounted() {
+    setTimeout(() => {
+      this.palysound();
+    }, 5000);
+
     setTimeout(() => {
       this.loadNotificationMenu();
       this.verifyAlarmStatus();
@@ -852,6 +987,23 @@ export default {
     },
   },
   methods: {
+    palysound() {
+      this.audio = new Audio(
+        process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
+      );
+      //this.playAudioOnUserInteraction();
+      // document.addEventListener("click", this.playAudioOnUserInteraction);
+      // var elem = this.$refs.myBtn;
+      // elem.click();
+      this.$refs.myBtn.click();
+      //var prevented = elem.dispatchEvent(new Event("change")); // Fire event
+    },
+    playAudioOnUserInteraction() {
+      this.audio.play();
+    },
+    stopsound() {
+      //audio.stop();
+    },
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
 
@@ -1020,9 +1172,11 @@ export default {
         if (data.length > 0) {
           this.notificationAlarmDevices = data;
 
-          this.alarmNotificationStatus = true;
+          this.alarmNotificationStatus = false;
+          //this.palysound();
         } else {
           this.alarmNotificationStatus = false;
+          //this.stopsound();
         }
       });
     },
