@@ -264,13 +264,9 @@
         </v-list>
       </v-menu>
 
-      <!-- <v-btn icon plan @click="toggleTheme">
-        <v-icon
-          >mdi-{{
-            $vuetify.theme.dark ? "white-balance-sunny" : "moon-waning-crescent"
-          }}</v-icon
-        >
-      </v-btn>  -->
+      <v-btn icon @click="gotoHomePage()">
+        <v-icon>mdi-mdi-view-dashboard </v-icon>
+      </v-btn>
 
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
