@@ -276,7 +276,7 @@ class DeviceSensorLogsController extends Controller
             //$date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
             $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
                 ->where("serial_number", $device_serial_number)
-
+                ->where("humidity", "!=", "NaN")
                 ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
                 ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
                 ->avg("humidity");
@@ -294,6 +294,8 @@ class DeviceSensorLogsController extends Controller
     }
     public function getTemparatureHourlyData($company_id, $device_serial_number, $date)
     {
+
+
         $finalarray = [];
 
         for ($i = 0; $i < 24; $i++) {
@@ -305,7 +307,7 @@ class DeviceSensorLogsController extends Controller
             // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
             $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
                 ->where("serial_number", $device_serial_number)
-
+                ->where("temparature", "!=", "NaN")
                 ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
                 ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
                 ->avg("temparature");
