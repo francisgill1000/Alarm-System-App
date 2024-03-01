@@ -358,7 +358,7 @@ export default {
       return "";
     }
     this.loading = true;
-    this.getDataFromApi();
+    this.getDataFromApi(1);
 
     setInterval(() => {
       if (this.$route.name == "alarm-dashboard") {
@@ -404,6 +404,7 @@ export default {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+    this.getDataFromApi(1);
   },
   // watch: {
   //   overlay(val) {
@@ -442,62 +443,70 @@ export default {
       // }
     },
     getDataFromApi(reset = 0) {
-      if (this.device_serial_number == "" || this.device_serial_number == null)
-        return false;
-      if (this.$store.state.alarm_temparature_latest && reset == 0) {
-        this.data = this.$store.state.alarm_temparature_latest;
-      } else {
-        this.$axios
-          .get("alarm_dashboard_get_temparature_latest", {
-            params: {
-              company_id: this.$auth.user.company_id,
-              branch_id: this.branch_id > 0 ? this.branch_id : null,
-              device_serial_number: this.device_serial_number,
-            },
-          })
-          .then(({ data }) => {
-            this.data = data;
-            this.device = data.device;
-            this.loading = false;
-            this.$store.commit("AlarmDashboard/alarm_temparature_latest", data);
-
-            this.temperature_latest = data.temperature_latest;
-            this.temperature_date_time = this.$dateFormat.format4(
-              data.temperature_date_time
-            );
-
-            this.temperature_min = data.temperature_min + "&deg;C";
-            this.temperature_max = data.temperature_max + "&deg;C";
-            this.temperature_min_date_time = this.$dateFormat.format6(
-              data.temperature_min_date_time
-            );
-            this.temperature_max_date_time = this.$dateFormat.format6(
-              data.temperature_max_date_time
-            );
-            // this.temperature_hourly_data = data.houry_data;
-            if (data.fire_alarm_start_datetime)
-              this.fire_alarm_start_datetime = this.$dateFormat.format4(
-                data.fire_alarm_start_datetime
+      try {
+        if (
+          this.device_serial_number == "" ||
+          this.device_serial_number == null
+        )
+          return false;
+        if (this.$store.state.alarm_temparature_latest && reset == 0) {
+          this.data = this.$store.state.alarm_temparature_latest;
+        } else {
+          this.$axios
+            .get("alarm_dashboard_get_temparature_latest", {
+              params: {
+                company_id: this.$auth.user.company_id,
+                branch_id: this.branch_id > 0 ? this.branch_id : null,
+                device_serial_number: this.device_serial_number,
+              },
+            })
+            .then(({ data }) => {
+              this.data = data;
+              this.device = data.device;
+              this.loading = false;
+              this.$store.commit(
+                "AlarmDashboard/alarm_temparature_latest",
+                data
               );
 
-            //humidity
-            this.humidity_latest = data.humidity_latest;
-            this.humidity_date_time = this.$dateFormat.format4(
-              data.humidity_date_time
-            );
+              this.temperature_latest = data.temperature_latest;
+              this.temperature_date_time = this.$dateFormat.format4(
+                data.temperature_date_time
+              );
 
-            this.humidity_min = data.humidity_min + "%";
-            this.humidity_max = data.humidity_max + "%";
-            this.humidity_min_date_time = this.$dateFormat.format6(
-              data.humidity_min_date_time
-            );
-            this.humidity_max_date_time = this.$dateFormat.format6(
-              data.humidity_max_date_time
-            );
+              this.temperature_min = data.temperature_min + "&deg;C";
+              this.temperature_max = data.temperature_max + "&deg;C";
+              this.temperature_min_date_time = this.$dateFormat.format6(
+                data.temperature_min_date_time
+              );
+              this.temperature_max_date_time = this.$dateFormat.format6(
+                data.temperature_max_date_time
+              );
+              // this.temperature_hourly_data = data.houry_data;
+              if (data.fire_alarm_start_datetime)
+                this.fire_alarm_start_datetime = this.$dateFormat.format4(
+                  data.fire_alarm_start_datetime
+                );
 
-            this.key = this.key + 1;
-          });
-      }
+              //humidity
+              this.humidity_latest = data.humidity_latest;
+              this.humidity_date_time = this.$dateFormat.format4(
+                data.humidity_date_time
+              );
+
+              this.humidity_min = data.humidity_min + "%";
+              this.humidity_max = data.humidity_max + "%";
+              this.humidity_min_date_time = this.$dateFormat.format6(
+                data.humidity_min_date_time
+              );
+              this.humidity_max_date_time = this.$dateFormat.format6(
+                data.humidity_max_date_time
+              );
+
+              this.key = this.key + 1;
+            });
+        }
+      } catch (e) {}
     },
   },
 };
