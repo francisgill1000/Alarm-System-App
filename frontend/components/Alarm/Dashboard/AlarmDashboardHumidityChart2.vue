@@ -35,7 +35,7 @@
         @change="getDataFromApi()"
       ></v-date-picker>
     </v-menu>
-    <div :id="name" style="width: 100%; margin-top: -10px"></div>
+    <div v-id="key > 1" :id="name" style="width: 100%; margin-top: -10px"></div>
   </div>
 </template>
 
@@ -45,6 +45,7 @@ export default {
   props: ["name", "height", "branch_id", "device_serial_number"],
   data() {
     return {
+      key: 1,
       from_date: "",
       from_menu: false,
       series: [

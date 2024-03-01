@@ -16,13 +16,6 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
-                    v-if="device.smoke_alarm_status == 0"
-                    class="pa-10"
-                    src="../../../static/icons/fire_logo.jpg"
-                    style="width: 160px"
-                  />
-                  <img
-                    v-else-if="device.smoke_alarm_status == 1"
                     class="pa-10"
                     src="../../../static/alarm-icons/smoke_alarm.png"
                     style="width: 160px"
@@ -58,13 +51,6 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
-                    v-if="device.water_alarm_status == 0"
-                    class="pa-10"
-                    src="../../../static/icons/water_logo.jpg"
-                    style="width: 160px"
-                  />
-                  <img
-                    v-else-if="device.water_alarm_status == 1"
                     class="pa-10"
                     src="../../../static/alarm-icons/water-leakage.png"
                     style="width: 160px"
@@ -100,13 +86,6 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
-                    v-if="device.power_alarm_status == 0"
-                    class="pa-10"
-                    src="../../../static/icons/power_logo.jpg"
-                    style="width: 160px"
-                  />
-                  <img
-                    v-else-if="device.power_alarm_status == 1"
                     class="pa-10"
                     src="../../../static/alarm-icons/acpower.png"
                     style="width: 160px"
@@ -142,13 +121,6 @@
               <v-row style="font-size: 20px">
                 <v-col cols="4">
                   <img
-                    v-if="device.door_open_status == 0"
-                    class="pa-10"
-                    src="../../../static/icons/door_logo.jpg"
-                    style="width: 160px"
-                  />
-                  <img
-                    v-else-if="device.door_open_status == 1"
                     class="pa-10"
                     src="../../../static/alarm-icons/dooropen.png"
                     style="width: 160px"

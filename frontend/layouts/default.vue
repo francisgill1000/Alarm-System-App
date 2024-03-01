@@ -392,7 +392,6 @@
       </v-snackbar>
 
       <v-dialog
-        persistent
         v-model="alarmNotificationStatus"
         transition="dialog-top-transition"
         max-width="800"
@@ -402,6 +401,13 @@
         </template> -->
         <template v-slot:default="dialog">
           <v-card>
+            <!-- <v-card-title dense class="popup_background">
+              <span>Alarm</span>
+              <v-spacer></v-spacer>
+              <v-icon @click="alarmNotificationStatus = false" outlined>
+                mdi mdi-close-circle
+              </v-icon>
+            </v-card-title> -->
             <!-- <audio controls src="../static/alarm-sound1.mp3"></audio>
             <audio ref="audio" preload="auto" volume="0.1" muted loop>
               <source src="../static/alarm-sound1.mp3" />
@@ -416,6 +422,15 @@
                 color: #fff !important;
               "
               >Attention : Alarm Notification
+              <v-spacer></v-spacer>
+              <v-icon
+                style="color: #fff !important"
+                fill
+                @click="alarmNotificationStatus = false"
+                outlined
+              >
+                mdi mdi-close-circle
+              </v-icon>
             </v-toolbar>
             <v-card-text>
               <v-row
