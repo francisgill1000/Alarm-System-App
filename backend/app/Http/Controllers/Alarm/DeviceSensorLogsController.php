@@ -294,8 +294,6 @@ class DeviceSensorLogsController extends Controller
     }
     public function getTemparatureHourlyData($company_id, $device_serial_number, $date)
     {
-
-
         $finalarray = [];
 
         for ($i = 0; $i < 24; $i++) {
