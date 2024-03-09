@@ -408,10 +408,6 @@
                 mdi mdi-close-circle
               </v-icon>
             </v-card-title> -->
-            <!-- <audio controls src="../static/alarm-sound1.mp3"></audio>
-            <audio ref="audio" preload="auto" volume="0.1" muted loop>
-              <source src="../static/alarm-sound1.mp3" />
-            </audio> -->
 
             <!-- <div @click="s()" class="toggle-sound"></div> -->
             <v-toolbar
@@ -426,7 +422,10 @@
               <v-icon
                 style="color: #fff !important"
                 fill
-                @click="alarmNotificationStatus = false"
+                @click="
+                  alarmNotificationStatus = false;
+                  stopsound();
+                "
                 outlined
               >
                 mdi mdi-close-circle
@@ -895,9 +894,9 @@ export default {
   },
 
   mounted() {
-    setTimeout(() => {
-      this.palysound();
-    }, 5000);
+    // setTimeout(() => {
+    //   this.palysound();
+    // }, 5000);
 
     setTimeout(() => {
       this.loadNotificationMenu();
@@ -1006,7 +1005,7 @@ export default {
       this.audio = new Audio(
         process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
       );
-      //this.playAudioOnUserInteraction();
+      this.playAudioOnUserInteraction();
       // document.addEventListener("click", this.playAudioOnUserInteraction);
       // var elem = this.$refs.myBtn;
       // elem.click();
@@ -1017,7 +1016,7 @@ export default {
       this.audio.play();
     },
     stopsound() {
-      //audio.stop();
+      this.audio.pause();
     },
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
@@ -1188,10 +1187,10 @@ export default {
           this.notificationAlarmDevices = data;
 
           this.alarmNotificationStatus = true;
-          //this.palysound();
+          this.palysound();
         } else {
           this.alarmNotificationStatus = false;
-          //this.stopsound();
+          this.stopsound();
         }
       });
     },

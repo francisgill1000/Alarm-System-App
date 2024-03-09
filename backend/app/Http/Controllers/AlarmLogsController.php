@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;;
 
+use App\Models\Alarm\DeviceSensorLogs;
 use App\Models\AlarmLogs;
+use App\Models\Company;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

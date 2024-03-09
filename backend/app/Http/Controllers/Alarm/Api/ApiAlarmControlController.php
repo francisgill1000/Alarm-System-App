@@ -71,9 +71,15 @@ class ApiAlarmControlController extends Controller
                 if ($request->filled("temperature")) {
                     $temparature = $request->temperature == 'NaN' ? 0 : $request->temperature;
                     //$temparature = (float) $request->temperature;
+                    if ($temparature == "NaN") {
+                        $temparature = 0;
+                    }
                 }
                 if ($request->filled("humidity")) {
                     $humidity = $request->humidity == 'NaN' ? 0 : $request->humidity;
+                    if ($humidity == "NaN") {
+                        $humidity = 0;
+                    }
                 }
 
                 if ($request->filled("smokeStatus")) {

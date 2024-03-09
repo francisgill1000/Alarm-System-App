@@ -37,16 +37,6 @@
     </v-row>
     <v-row>
       <v-col cols="12" class="pt-5">
-        <!-- {{ audioSrc }}
-        <audio ref="audio" controls>
-          <source :src="audioSrc" type="audio/mp3" />
-          Your browser does not support the audio element.
-        </audio>
-        <audio ref="audio" controls>
-          <source src="../../../assets/alarm-sound1.mp3" type="audio/mp3" />
-          Your browser does not support the audio element.
-        </audio> -->
-
         <v-row style="width: 100%">
           <v-col lg="3" md="3" sm="12" xs="12">
             <v-row style="width: 100%; height: 250px">
@@ -56,12 +46,7 @@
                     ><h3 class="pl-5">Today Temperature</h3></v-col
                   >
                   <v-col cols="4" class="pull-right"
-                    ><v-icon
-                      @click="
-                        keyChart2++;
-                        getDataFromApi(1);
-                      "
-                      style="float: right"
+                    ><v-icon @click="getDataFromApi(1)" style="float: right"
                       >mdi mdi-reload</v-icon
                     >
                   </v-col>
@@ -335,10 +320,12 @@ export default {
   },
   watch: {
     device_serial_number(val) {
-      this.key++;
-      this.keyChart2++;
+      try {
+        this.key++;
+        this.keyChart2++;
 
-      this.getDataFromApi(1);
+        this.getDataFromApi(1);
+      } catch (e) {}
     },
   },
   mounted() {
@@ -358,6 +345,7 @@ export default {
       return "";
     }
     this.loading = true;
+    setTimeout(() => {}, 1000);
     this.getDataFromApi(1);
 
     setInterval(() => {
@@ -416,12 +404,14 @@ export default {
   // },
   methods: {
     ChangeDevice(serial_number) {
-      this.device_serial_number = serial_number;
-      this.key++;
-      this.keyChart2++;
+      try {
+        this.device_serial_number = serial_number;
+        this.key++;
+        this.keyChart2++;
 
-      this.getDataFromApi(1);
-      console.log(this.device_serial_number, " this.device_serial_number");
+        this.getDataFromApi(1);
+        //console.log(this.device_serial_number, " this.device_serial_number");
+      } catch (e) {}
     },
     can(per) {
       return this.$pagePermission.can(per, this);
@@ -443,6 +433,9 @@ export default {
       // }
     },
     getDataFromApi(reset = 0) {
+      if (reset == 1) {
+        this.keyChart2++;
+      }
       try {
         if (
           this.device_serial_number == "" ||

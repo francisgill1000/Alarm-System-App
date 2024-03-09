@@ -23,14 +23,6 @@
     "submenu": "leftmenu",
     "module": "dashboard"
   },
-  {
-    "icon": "mdi mdi-server",
-    "title": "Server Rooms",
-    "to": "/alarm/rooms",
-    "menu": "payroll_access",
-    "submenu": "leftmenu",
-    "module": "dashboard"
-  },
 
   {
     "icon": "mdi-view-dashboard",
@@ -53,13 +45,6 @@
     "menu": "leftmenu",
     "module": "leftmenu"
   },
-  {
-    "icon": "mdi mdi-server",
-    "title": "Server Rooms",
-    "to": "/alarm/rooms",
-    "menu": "leftmenu",
-    "module": "leftmenu"
-  },
 
   {
     "icon": "mdi-filmstrip-box-multiple",
@@ -72,6 +57,13 @@
     "icon": "mdi-email",
     "title": "Automation",
     "to": "/automation",
+    "menu": "notifications_access",
+    "module": "settings"
+  },
+  {
+    "icon": "mdi mdi-server",
+    "title": "Server Rooms",
+    "to": "/alarm/rooms",
     "menu": "notifications_access",
     "module": "settings"
   }

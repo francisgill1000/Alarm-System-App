@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Alarm;
 
 use App\Http\Controllers\Controller;
 use App\Models\Alarm\DeviceSensorLogs as AlarmDeviceSensorLogs;
+use App\Models\Company;
 use App\Models\Device;
 use App\Models\DeviceSensorLogs;
 use Illuminate\Http\Request;
@@ -430,5 +431,54 @@ class DeviceSensorLogsController extends Controller
     public function destroy(AlarmDeviceSensorLogs $deviceSensorLogs)
     {
         //
+    }
+
+    public function deleteOldLogs()
+    {
+
+        $date = date("Y-m-d", strtotime('-5 days'));
+        $return = [];
+
+
+        $companies = Company::get();
+
+        $finalDuplicateIds = [];
+        foreach ($companies as $company) {
+
+            $logs = AlarmDeviceSensorLogs::where("company_id", $company->id)
+
+                ->where("water_leakage", 0)
+                ->where("power_failure", 0)
+                ->where("door_status", 0)
+                ->where("smoke_alarm", 0)
+                ->where("log_time", ">=",  $date . ' 00:00:00')
+                ->where("log_time", "<",  $date . ' 23:59:59');
+
+            $logs = $logs->get();
+
+
+            $uniqueCombinations = [];
+            $duplicateCombinations = [];
+
+            foreach ($logs as $log) {
+
+                $key = $log['serial_number'] . '_' . date("Y-m-d H:i", strtotime($log['log_time'])) . '-' . $log['smoke_status'] . '_' . $log['water_leakage'] . '_' . $log['power_failure'] . '_' . $log['door_status'];
+                if (isset($uniqueCombinations[$key])) {
+                    $duplicateCombinations[] =   $log['id'];
+                } else {
+
+                    $uniqueCombinations[$key] =  $log['id'];
+                }
+            }
+
+            $finalDuplicateIds = array_merge($finalDuplicateIds, $duplicateCombinations);
+
+            // }
+        }
+
+        if (count($finalDuplicateIds))
+            AlarmDeviceSensorLogs::whereIn("id", $finalDuplicateIds)->delete();
+
+        return  $finalDuplicateIds;
     }
 }
