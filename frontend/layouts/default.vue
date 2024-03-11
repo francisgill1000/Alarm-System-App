@@ -1016,7 +1016,7 @@ export default {
       this.audio.play();
     },
     stopsound() {
-      this.audio.pause();
+      if (this.audio) this.audio.pause();
     },
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
@@ -1190,6 +1190,7 @@ export default {
           this.palysound();
         } else {
           this.alarmNotificationStatus = false;
+
           this.stopsound();
         }
       });
