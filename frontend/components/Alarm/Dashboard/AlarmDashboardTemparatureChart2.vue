@@ -116,12 +116,12 @@ export default {
     };
   },
   watch: {
-    branch_id() {
-      try {
-        this.$store.commit("AlarmDashboard/alarm_temparature_hourly", null);
-        this.getDataFromApi();
-      } catch (e) {}
-    },
+    // branch_id() {
+    //   try {
+    //     this.$store.commit("AlarmDashboard/alarm_temparature_hourly", null);
+    //     this.getDataFromApi();
+    //   } catch (e) {}
+    // },
   },
 
   created() {
@@ -134,6 +134,8 @@ export default {
     this.chartOptions.series = this.series;
     // setTimeout(() => {
     this.getDataFromApi();
+
+    console.log("Mounted");
     /// }, 2000);
 
     this.$store.commit(
@@ -148,6 +150,7 @@ export default {
       this.$router.push("/attendance_report");
     },
     getDataFromApi() {
+      if (!this.device_serial_number) return;
       // const data = await this.$store.dispatch("dashboard/every_hour_count");
       this.$axios
         .get("alarm_dashboard_get_hourly_data", {

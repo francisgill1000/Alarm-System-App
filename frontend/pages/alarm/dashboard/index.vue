@@ -134,7 +134,6 @@
                   style="text-align: center; padding-top: 0px"
                 >
                   <AlarmDashboardTemparatureChart2
-                    :branch_id="branch_id"
                     :name="'AlarmDashboardTemparatureChart2'"
                     :height="'220'"
                     :device_serial_number="device_serial_number"
@@ -319,14 +318,13 @@ export default {
     };
   },
   watch: {
-    device_serial_number(val) {
-      try {
-        this.key++;
-        this.keyChart2++;
-
-        this.getDataFromApi(1);
-      } catch (e) {}
-    },
+    // device_serial_number(val) {
+    //   try {
+    //     this.key++;
+    //     this.keyChart2++;
+    //     this.getDataFromApi(1);
+    //   } catch (e) {}
+    // },
   },
   mounted() {
     // if (this.$auth.user.user_type == "employee") {
@@ -346,7 +344,7 @@ export default {
     }
     this.loading = true;
     setTimeout(() => {}, 1000);
-    this.getDataFromApi(1);
+    ///this.getDataFromApi(1);
 
     setInterval(() => {
       if (this.$route.name == "alarm-dashboard") {
@@ -376,7 +374,7 @@ export default {
       this.devicesList = this.$store.state.deviceList;
       if (this.$store.state.deviceList && this.$store.state.deviceList[0]) {
         this.device_serial_number = this.$store.state.deviceList[0].device_id;
-        this.getDataFromApi();
+        //this.getDataFromApi();
       }
 
       // await this.$store.dispatch("fetchDropDowns", {
@@ -449,7 +447,7 @@ export default {
             .get("alarm_dashboard_get_temparature_latest", {
               params: {
                 company_id: this.$auth.user.company_id,
-                branch_id: this.branch_id > 0 ? this.branch_id : null,
+
                 device_serial_number: this.device_serial_number,
               },
             })
