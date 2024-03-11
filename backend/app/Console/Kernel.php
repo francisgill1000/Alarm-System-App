@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         $schedule
             ->command('task:delete_old_logs')
             // ->everyThirtyMinutes()
-            ->dailyAt("06:00")
+            ->dailyAt("02:00")
 
             ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 

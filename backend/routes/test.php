@@ -33,7 +33,7 @@ use Illuminate\Support\Facades\Log as Logger;
 Route::get('/test/getSensorLogs', function (Request $request) {
 
 
-    return DeviceSensorLogs::orderBy("log_time", "DESC")->get();
+    return DeviceSensorLogs::orderBy("log_time", "DESC")->paginate(100);;
 });
 Route::get('/test/getLogs', function (Request $request) {
 
