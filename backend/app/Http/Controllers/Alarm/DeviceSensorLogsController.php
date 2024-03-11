@@ -153,7 +153,7 @@ class DeviceSensorLogsController extends Controller
         $model = AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             // ->where("serial_number", $request->device_serial_number)
             ->where("serial_number", $request->device_serial_number)
-
+            ->where("temparature", '!=', "NaN")
             ->where("temparature", '>', 0)
             ->whereDate("log_time", $date)
             ->orderBy("log_time", "DESC")
