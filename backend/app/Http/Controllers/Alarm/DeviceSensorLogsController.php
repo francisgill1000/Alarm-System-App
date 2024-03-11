@@ -7,6 +7,9 @@ use App\Models\Alarm\DeviceSensorLogs as AlarmDeviceSensorLogs;
 use App\Models\Company;
 use App\Models\Device;
 use App\Models\DeviceSensorLogs;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log as Logger;
 use Ramsey\Uuid\Type\Integer;
@@ -435,6 +438,72 @@ class DeviceSensorLogsController extends Controller
 
     public function deleteOldLogs()
     {
+        try {
+
+            //delete duplicate 5 days before old logs 
+            $this->deleteOld5DaysLogs();
+        } catch (\Exception $e) {
+        }
+        try {
+            $this->deleteOneMonthOldLogs();
+        } catch (\Exception $e) {
+        }
+    }
+    public function deleteOneMonthOldLogs()
+    {
+
+        //Fetch 30minutes logs and keep one record for every 30 minutes with alarm
+        //Deleting records which has no alarm vaue 
+
+        $date =  date("Y-m-d", strtotime('-30 days'));
+        $startTime = new DateTime($date . "00:00:00"); // Current date and time
+        $endTime = new DateTime($date . "23:59:59");; // Display for the next 24 hours
+
+        $interval = new DateInterval('PT30M'); // 30 minutes interval
+        $period = new DatePeriod($startTime, $interval, $endTime);
+
+        $companies = Company::get();
+
+
+        $finalDuplicateIds = [];
+        foreach ($companies as $company) {
+
+            foreach ($period as $dt) {
+                $filter_from_date = $dt->format('Y-m-d H:i:s');
+
+                $filter_to_datetime = $dt;
+                $filter_to_datetime = $filter_to_datetime->modify('+30 minutes'); // Add 5 minutes to the current date and time
+                $filter_to_datetime = $filter_to_datetime->format('Y-m-d H:i:s');
+
+
+                $logs = AlarmDeviceSensorLogs::where("company_id", $company->id)
+                    ->where("water_leakage", 0)
+                    ->where("power_failure", 0)
+                    ->where("door_status", 0)
+                    ->where("smoke_alarm", 0)
+                    ->where("fire_alarm", 0)
+                    ->where("log_time", ">=",  $filter_from_date)
+                    ->where("log_time", "<",  $filter_to_datetime);
+
+                $deleteIds = $logs->get()->pluck('id')->toArray();
+
+                array_shift($deleteIds);
+
+
+                $finalDuplicateIds = array_merge($finalDuplicateIds, $deleteIds);
+            }
+        }
+
+
+        if (count($finalDuplicateIds))
+            AlarmDeviceSensorLogs::whereIn("id", $finalDuplicateIds)->delete();
+
+        return $finalDuplicateIds;
+    }
+    public function deleteOld5DaysLogs()
+    {
+
+        //delete duplicate 5 days before old logs 
 
         $date = date("Y-m-d", strtotime('-5 days'));
         $return = [];
@@ -451,6 +520,7 @@ class DeviceSensorLogsController extends Controller
                 ->where("power_failure", 0)
                 ->where("door_status", 0)
                 ->where("smoke_alarm", 0)
+                ->where("fire_alarm", 0)
                 ->where("log_time", ">=",  $date . ' 00:00:00')
                 ->where("log_time", "<",  $date . ' 23:59:59');
 

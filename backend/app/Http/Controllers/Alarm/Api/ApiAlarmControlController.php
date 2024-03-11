@@ -71,15 +71,13 @@ class ApiAlarmControlController extends Controller
                 if ($request->filled("temperature")) {
                     $temparature = $request->temperature == 'NaN' ? 0 : $request->temperature;
                     //$temparature = (float) $request->temperature;
-                    if ($temparature == "NaN") {
-                        $temparature = 0;
-                    }
+
                 }
                 if ($request->filled("humidity")) {
                     $humidity = $request->humidity == 'NaN' ? 0 : $request->humidity;
-                    if ($humidity == "NaN") {
-                        $humidity = 0;
-                    }
+                }
+                if ($request->filled("file_alarm")) {
+                    $file_alarm = $request->file_alarm;
                 }
 
                 if ($request->filled("smokeStatus")) {
@@ -95,9 +93,17 @@ class ApiAlarmControlController extends Controller
                     $door_status = $request->doorOpen;
                 }
 
+                if ($temparature == "NaN") {
+                    $temparature = 0;
+                }
+                if ($humidity == "NaN") {
+                    $humidity = 0;
+                }
+
 
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
+                $logs["file_alarm"] = $file_alarm;
                 $logs["humidity"] = $humidity;
                 $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
 
@@ -111,8 +117,10 @@ class ApiAlarmControlController extends Controller
                 // $logs["door_status"] = $door_status == 'true' ? 0 : 1;
 
                 $logs["log_time"] = $log_time;
-                DeviceSensorLogs::create($logs);
-
+                try {
+                    DeviceSensorLogs::create($logs);
+                } catch (\Exception $e) {
+                }
                 $deviceModel = Device::where("serial_number", $device_serial_number);
 
                 if (count($deviceModel->clone()->get()) == 0) {
@@ -141,32 +149,89 @@ class ApiAlarmControlController extends Controller
                 $row["door_open_status"] = $door_status;
                 //smoke_alarm
                 if ($smoke_alarm == 1) {
-                    $row["smoke_alarm_start_datetime"] = $log_time;
+
                     $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+
+                    $row = [];
+                    $row["smoke_alarm_status"] = $smoke_alarm;
+                    $row["smoke_alarm_start_datetime"] = $log_time;
+                    $deviceModel->clone()->update($row);
                 } else if ($smoke_alarm == 0) {
+                    $row = [];
+                    $row["smoke_alarm_status"] = $smoke_alarm;
                     $row["smoke_alarm_end_datetime"] = $log_time;
+
+                    $deviceModel->clone()->where("smoke_alarm_status", 1)->update($row);
+                }
+                //fire_alarm_status
+                if ($fire_alarm == 1) {
+
+                    $message[] =  $this->SendWhatsappNotification("fire Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+
+
+
+                    $row = [];
+                    $row["fire_alarm_status"] = $fire_alarm;
+                    $row["fire_alarm_start_datetime"] = $log_time;
+                    $deviceModel->clone()->update($row);
+                } else if ($fire_alarm == 0) {
+
+
+                    $row = [];
+                    $row["fire_alarm_status"] = $fire_alarm;
+                    $row["fire_alarm_end_datetime"] = $log_time;
+
+                    $deviceModel->clone()->where("fire_alarm_status", 1)->update($row);
                 }
                 //water_leakage
                 if ($water_leakage == 1) {
-                    $row["water_alarm_start_datetime"] = $log_time;
+
                     $message[] = $this->SendWhatsappNotification("Water Leakage ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+
+                    $row = [];
+                    $row["water_alarm_status"] = $water_leakage;
+                    $row["water_alarm_start_datetime"] = $log_time;
+                    $deviceModel->clone()->update($row);
                 } else if ($water_leakage == 0) {
+
+
+                    $row = [];
+                    $row["water_alarm_status"] = $water_leakage;
                     $row["water_alarm_end_datetime"] = $log_time;
+
+                    $deviceModel->clone()->where("water_alarm_status", 1)->update($row);
                 }
                 //power_failure
                 if ($power_failure == 1) {
-                    $row["power_alarm_start_datetime"] = $log_time;
+
                     $message[] = $this->SendWhatsappNotification("Power OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+
+                    $row = [];
+                    $row["power_alarm_status"] = $power_failure;
+                    $row["power_alarm_start_datetime"] = $log_time;
+                    $deviceModel->clone()->update($row);
                 } else if ($power_failure == 0) {
+
+
+                    $row = [];
+                    $row["power_alarm_status"] = $power_failure;
                     $row["power_alarm_end_datetime"] = $log_time;
+
+                    $deviceModel->clone()->where("power_alarm_status", 1)->update($row);
                 }
                 //door_status
                 if ($door_status == 1) {
                     $row["door_open_start_datetime"] = $log_time;
                     $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
                 } else  if ($door_status == 0) {
+
+
+
+                    $row = [];
+                    $row["door_open_status"] = $door_status;
                     $row["door_open_end_datetime"] = $log_time;
-                    $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+
+                    $deviceModel->clone()->where("door_open_status", 1)->update($row);
                 }
 
 
@@ -174,7 +239,7 @@ class ApiAlarmControlController extends Controller
 
                 // Device::where("serial_number", $device_serial_number)
                 //     ->update($row);
-                $deviceModel->clone()->update($row);
+
                 //return $message;
 
                 return $this->response('Successfully Updated', null, true);
