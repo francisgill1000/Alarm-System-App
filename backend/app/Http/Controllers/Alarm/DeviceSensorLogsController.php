@@ -197,8 +197,8 @@ class DeviceSensorLogsController extends Controller
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
                 ->where(function ($query) use ($request) {
-                    $query->orWhere("temparature", "!=", "0.0");
-                    $query->orWhere("temparature", "!=", "NaN");
+                    $query->Where("temparature", "!=", "0.0");
+                    $query->Where("temparature", "!=", "NaN");
                 })
 
                 ->whereDate("log_time", $date)->max('temparature')
