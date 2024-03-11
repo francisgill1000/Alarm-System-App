@@ -1,10 +1,13 @@
 <?php
 
 use App\Http\Controllers\Alarm\Api\ApiAlarmControlController;
+use App\Http\Controllers\Alarm\Api\ApiNurseCallingControlController;
 use App\Http\Controllers\Alarm\DeviceSensorLogsController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\AnnouncementsCategoriesController;
 use App\Models\Alarm\DeviceSensorLogs;
+use App\Models\NurseCallingLogs;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // announcement
@@ -13,6 +16,16 @@ use Illuminate\Support\Facades\Route;
 // Route::get('announcement/search/{key}', [AnnouncementController::class, 'search']);
 //Route::get('alarm_device_status', [ApiAlarmControlController::class, 'LogDeviceStatus']);
 Route::post('alarm_device_status', [ApiAlarmControlController::class, 'LogDeviceStatus']);
+Route::post('nursecalling_device_status', [ApiNurseCallingControlController::class, 'ApiLogDeviceStatus']);
+
+Route::get('/getNurseDeviceLogs', function (Request $request) {
+
+
+    return NurseCallingLogs::orderBy("log_time", "DESC")->orderBy("log_time", "DESC")->take(100)->get();;;
+});
+
+
+
 //Route::get('announcement/employee/{id}', [AnnouncementController::class, 'getAnnouncement']);
 
 Route::get('alarm_dashboard_get_temparature_latest', [DeviceSensorLogsController::class, 'getDeviceLatestTemperature']);

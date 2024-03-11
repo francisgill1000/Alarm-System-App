@@ -59,14 +59,6 @@ class ApiAlarmControlController extends Controller
 
             if ($device_serial_number != '') {
 
-                // if ($request->filled("message")) {
-                //     $message = $request->message;
-
-                //     if(strrpos($message, "Temperature:"))
-                //     {
-
-                //     }
-                // }
 
 
                 if ($request->filled("temperature")) {
@@ -112,10 +104,7 @@ class ApiAlarmControlController extends Controller
                 $logs["power_failure"] = $power_failure;
                 $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
 
-                // $logs["smoke_alarm"] = $smoke_alarm == 'true' ? 1 : 0;
-                // $logs["water_leakage"] = $water_leakage == 'true' ? 1 : 0;
-                // $logs["power_failure"] = $power_failure == 'true' ? 1 : 0;
-                // $logs["door_status"] = $door_status == 'true' ? 0 : 1;
+
 
                 $logs["log_time"] = $log_time;
                 try {
@@ -140,10 +129,7 @@ class ApiAlarmControlController extends Controller
                 }
 
 
-                // if ($fire_alarm == 1) {
-                //     $row["fire_alarm_status"] = 1;
-                //     $row["fire_alarm_start_datetime"] = $log_time;
-                // }
+
                 $row["smoke_alarm_status"] = $smoke_alarm;
                 $row["water_alarm_status"] = $water_leakage;
                 $row["power_alarm_status"] = $power_failure;
