@@ -157,10 +157,7 @@ class DeviceSensorLogsController extends Controller
             ->where("temparature", '>', 0)
             ->where("temparature",  "!=", "NaN")
 
-            ->where(function ($query) use ($request) {
-                $query->orWhere("temparature", "!=", "0.0");
-                $query->orWhere("temparature", "!=", "NaN");
-            })
+
 
             ->whereDate("log_time", $date)
             ->orderBy("log_time", "DESC")
