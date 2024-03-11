@@ -38,7 +38,7 @@ class ApiAlarmControlController extends Controller
             $water_leakage = -1;
             $power_failure = -1;
             $door_status = -1;
-            $file_alarm = -1;
+            $fire_alarm = -1;
             $log_time = date('Y-m-d H:i:s');
 
             $max_temparature = 30;
@@ -77,8 +77,8 @@ class ApiAlarmControlController extends Controller
                 if ($request->filled("humidity")) {
                     $humidity = $request->humidity == 'NaN' ? 0 : $request->humidity;
                 }
-                if ($request->filled("file_alarm")) {
-                    $file_alarm = $request->file_alarm;
+                if ($request->filled("fire_alarm")) {
+                    $fire_alarm = $request->fire_alarm;
                 }
 
                 if ($request->filled("smokeStatus")) {
@@ -104,7 +104,7 @@ class ApiAlarmControlController extends Controller
 
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
-                $logs["file_alarm"] = $file_alarm;
+                $logs["fire_alarm"] = $fire_alarm;
                 $logs["humidity"] = $humidity;
                 $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
 
