@@ -155,6 +155,7 @@ class DeviceSensorLogsController extends Controller
             ->where("serial_number", $request->device_serial_number)
 
             ->where("temparature", '>', 0)
+            ->where("temparature",  "!=", "NaN")
 
             ->where(function ($query) use ($request) {
                 $query->orWhere("temparature", "!=", "0.0");
