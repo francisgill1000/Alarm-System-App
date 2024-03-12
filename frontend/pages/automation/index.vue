@@ -637,21 +637,21 @@ export default {
     this.preloader = false;
     this.id = this.$auth?.user?.company?.id;
     this.getDataFromApi();
-    // if (!this.$auth.user.branch_id) {
-    //   let branch_header = [
-    //     {
-    //       text: "Branch",
-    //       align: "left",
-    //       sortable: true,
-    //       key: "branch_id", //sorting
-    //       value: "branch.branch_name", //edit purpose
+    if (!this.$auth.user.branch_id) {
+      let branch_header = [
+        {
+          text: "Branch",
+          align: "left",
+          sortable: true,
+          key: "branch_id", //sorting
+          value: "branch.branch_name", //edit purpose
 
-    //       filterable: true,
-    //       filterSpecial: true,
-    //     },
-    //   ];
-    //   this.headers_table.splice(1, 0, ...branch_header);
-    // }
+          filterable: true,
+          filterSpecial: true,
+        },
+      ];
+      this.headers_table.splice(1, 0, ...branch_header);
+    }
 
     this.getbranchesList();
   },

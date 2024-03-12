@@ -626,10 +626,6 @@ export default {
     },
 
     store() {
-      this.payload.managers = this.managers.filter(
-        (e) => (e.email != "" || e.whatsapp != "") && e.name != ""
-      );
-
       this.payload.mediums = [];
       if (this.email) {
         this.payload.mediums.push("Email");
@@ -641,7 +637,17 @@ export default {
       this.managers.forEach((element) => {
         element.company_id = this.$auth.user.company_id;
         element.branch_id = this.payload.branch_id;
+        if (!this.email) {
+          element.email = "";
+        }
+        if (!this.whatsapp) {
+          element.whatsapp_number = "";
+        }
       });
+
+      this.payload.managers = this.managers.filter(
+        (e) => (e.email != "" || e.whatsapp != "") && e.name != ""
+      );
 
       if (this.editItemPayload) {
         this.$axios

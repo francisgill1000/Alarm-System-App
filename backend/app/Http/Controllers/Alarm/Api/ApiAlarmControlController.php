@@ -137,7 +137,7 @@ class ApiAlarmControlController extends Controller
                 //smoke_alarm
                 if ($smoke_alarm == 1) {
 
-                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] =  $this->SendWhatsappNotification("Smoke Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
                     $row = [];
                     $row["smoke_alarm_status"] = $smoke_alarm;
@@ -153,7 +153,7 @@ class ApiAlarmControlController extends Controller
                 //fire_alarm_status
                 if ($fire_alarm == 1) {
 
-                    $message[] =  $this->SendWhatsappNotification("fire Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] =  $this->SendWhatsappNotification("fire Detection",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
 
 
@@ -173,7 +173,7 @@ class ApiAlarmControlController extends Controller
                 //water_leakage
                 if ($water_leakage == 1) {
 
-                    $message[] = $this->SendWhatsappNotification("Water Leakage ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] = $this->SendWhatsappNotification("Water Leakage ",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
                     $row = [];
                     $row["water_alarm_status"] = $water_leakage;
@@ -191,7 +191,7 @@ class ApiAlarmControlController extends Controller
                 //power_failure
                 if ($power_failure == 1) {
 
-                    $message[] = $this->SendWhatsappNotification("Power OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] = $this->SendWhatsappNotification("Power OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
                     $row = [];
                     $row["power_alarm_status"] = $power_failure;
@@ -209,7 +209,7 @@ class ApiAlarmControlController extends Controller
                 //door_status
                 if ($door_status == 1) {
                     $row["door_open_start_datetime"] = $log_time;
-                    $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first()->company_id, $log_time);
+                    $message[] =  $this->SendWhatsappNotification("Door Open",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
                 } else  if ($door_status == 0) {
 
 
@@ -227,7 +227,7 @@ class ApiAlarmControlController extends Controller
                 // Device::where("serial_number", $device_serial_number)
                 //     ->update($row);
 
-                //return $message;
+
 
                 return $this->response('Successfully Updated', null, true);
             }
@@ -240,11 +240,13 @@ class ApiAlarmControlController extends Controller
         return $this->response('Data error', null, false);
     }
 
-    public function SendWhatsappNotification($issue, $room_name, $company_id, $date)
+    public function SendWhatsappNotification($issue, $room_name, $model1, $date)
     {
 
+        $company_id = $model1->company_id;
+        $branch_id = $model1->branch_id;
 
-        $reports = ReportNotification::where("company_id", $company_id)->get();
+        $reports = ReportNotification::where("company_id", $model1->company_id)->where("branch_id", $model1->branch_id)->get();
 
         foreach ($reports as $model) {
             $id = $model["id"];
@@ -255,55 +257,59 @@ class ApiAlarmControlController extends Controller
 
             // try {
 
-            $model = ReportNotification::with(["managers", "company.company_mail_content"])->where("id", $id)
+            $model = ReportNotification::with(["managers.branch",  "company.company_mail_content"])->where("id", $id)
 
 
-                ->with("managers", function ($query) use ($company_id) {
+                ->with("managers", function ($query) use ($company_id, $branch_id) {
                     $query->where("company_id", $company_id);
+                    $query->where("branch_id", $branch_id);
                 })
 
                 ->first();
 
-
-            if (in_array("Email", $model->mediums)) {
-
-
-
-                foreach ($model->managers as $key => $value) {
-                    $body_content1 = "📊 *{$issue} Notification <br/>";
-
-                    $body_content1 = " Hello, {$value->name} <br/>";
-                    $body_content1 .= " Company:  {$model->company->name}<br/>";
-                    $body_content1 .= "This is Notifing you about {$issue} status <br/>";
-                    $body_content1 .= " Date:  $date<br/>";
-                    $body_content1 .= "Room Name: *{$room_name}<br/><br/><br/><br/>";
-
-                    $body_content1 .= "*Xtreme Guard*<br/>";
-
-                    $data = [
-                        'subject' => "{$issue} Notification - {$date}",
-                        'body' => $body_content1,
-                    ];
+            if ($model)
+                if (in_array("Email", $model->mediums)) {
 
 
 
-                    $body_content1 = new EmailContentDefault($data);
+                    foreach ($model->managers as $key => $value) {
 
-                    if ($value->email != '') {
-                        Mail::to($value->email)
-                            ->send($body_content1);
+                        $branch_name = $value->branch->branch_name;
+
+                        $body_content1 = "📊 *{$issue} Notification <br/>";
+
+                        $body_content1 = " Hello, {$value->name} <br/>";
+                        $body_content1 .= " Company:  {$model->company->name}<br/>";
+                        $body_content1 .= "This is Notifing you about {$issue} status <br/>";
+                        $body_content1 .= " Date:  $date<br/>";
+                        $body_content1 .= "Room Name: {$room_name}<br/>";
+                        $body_content1 .= "Branch: {$branch_name}<br/><br/><br/><br/>";
+                        $body_content1 .= "*Xtreme Guard*<br/>";
+
+                        $data = [
+                            'subject' => "{$issue} Notification - {$date}",
+                            'body' => $body_content1,
+                        ];
 
 
-                        $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
+
+                        $body_content1 = new EmailContentDefault($data);
+
+                        if ($value->email != '') {
+                            Mail::to($value->email)
+                                ->send($body_content1);
+
+
+                            $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
 
 
 
-                        ReportNotificationLogs::create($data);
+                            ReportNotificationLogs::create($data);
+                        }
                     }
+                } else {
+                    echo "[" . $date . "] Cron: $script_name. No emails are configured";
                 }
-            } else {
-                echo "[" . $date . "] Cron: $script_name. No emails are configured";
-            }
 
             //wahtsapp with attachments
             if (in_array("Whatsapp", $model->mediums)) {
@@ -318,9 +324,10 @@ class ApiAlarmControlController extends Controller
                         $body_content1 = "*Hello, {$manager->name}*\n\n";
                         $body_content1 .= "*Company:  {$model->company->name}*\n\n";
                         $body_content1 .= "This is Notifing you about {$issue} status \n\n";
-                        $body_content1 .= "*Date:* $date\n\n";
-                        $body_content1 .= "Room Name: *{$room_name}*\n\n";
-
+                        $body_content1 .= "*Date:  $date\n\n";
+                        $body_content1 .= "Room Name:  {$room_name}*\n\n";
+                        $body_content1 .= "Branch:  {$room_name}*\n\n";
+                        $body_content1 .= "Branch:  {$branch_name}*\n\n";
                         $body_content1 .= "*Xtreme Guard*\n";
 
 
