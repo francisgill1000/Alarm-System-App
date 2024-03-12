@@ -6,7 +6,7 @@
       </v-snackbar>
     </div>
 
-    <!-- <v-autocomplete
+    <v-autocomplete
       class="pb-0"
       v-model="payload.branch_id"
       :items="branchesList"
@@ -17,21 +17,21 @@
       item-text="branch_name"
       label="Branch"
     >
-    </v-autocomplete> -->
+    </v-autocomplete>
 
-    <!-- <span
+    <span
       v-if="errors && errors.branch_id && errors.branch_id[0]"
       class="error--text"
       >{{ errors.branch_id[0] }}</span
-    > -->
+    >
     <v-text-field
       class="pb-4"
       :hide-details="!payload.subject"
       v-model="payload.subject"
-      placeholder="Name"
+      placeholder="Notification Name"
       outlined
       dense
-      label="Name"
+      label="Notification Name"
     ></v-text-field>
     <span v-if="errors && errors.subject" class="error--text"
       >{{ errors.subject[0] }}
@@ -465,7 +465,6 @@ export default {
 
     errors: [],
     branchesList: [],
-    branch_id: "0",
   }),
 
   created() {
@@ -641,9 +640,9 @@ export default {
 
       this.managers.forEach((element) => {
         element.company_id = this.$auth.user.company_id;
-        element.branch_id = 0; //this.payload.branch_id;
+        element.branch_id = this.payload.branch_id;
       });
-      this.payload.branch_id = 0;
+
       if (this.editItemPayload) {
         this.$axios
           .put("/report_notification/" + this.editItemPayload.id, this.payload)
