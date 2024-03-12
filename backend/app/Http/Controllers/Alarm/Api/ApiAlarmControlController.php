@@ -281,7 +281,7 @@ class ApiAlarmControlController extends Controller
                         $body_content1 = " Hello, {$value->name} <br/>";
                         $body_content1 .= " Company:  {$model->company->name}<br/>";
                         $body_content1 .= "This is Notifing you about {$issue} status <br/>";
-                        $body_content1 .= " Date:  $date<br/>";
+                        $body_content1 .= "Date:  $date<br/>";
                         $body_content1 .= "Room Name: {$room_name}<br/>";
                         $body_content1 .= "Branch: {$branch_name}<br/><br/><br/><br/>";
                         $body_content1 .= "*Xtreme Guard*<br/>";
@@ -324,10 +324,10 @@ class ApiAlarmControlController extends Controller
                         $body_content1 = "*Hello, {$manager->name}*\n\n";
                         $body_content1 .= "*Company:  {$model->company->name}*\n\n";
                         $body_content1 .= "This is Notifing you about {$issue} status \n\n";
-                        $body_content1 .= "*Date:  $date\n\n";
-                        $body_content1 .= "Room Name:  {$room_name}*\n\n";
-                        $body_content1 .= "Branch:  {$room_name}*\n\n";
-                        $body_content1 .= "Branch:  {$branch_name}*\n\n";
+                        $body_content1 .= "Date:  $date\n\n";
+                        $body_content1 .= "Room Name:  {$room_name}\n\n";
+                        $body_content1 .= "Branch:  {$room_name}\n\n";
+                        $body_content1 .= "Branch:  {$branch_name}\n\n";
                         $body_content1 .= "*Xtreme Guard*\n";
 
 
