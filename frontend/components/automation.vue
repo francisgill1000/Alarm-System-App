@@ -6,7 +6,7 @@
       </v-snackbar>
     </div>
 
-    <v-autocomplete
+    <!-- <v-autocomplete
       class="pb-0"
       v-model="payload.branch_id"
       :items="branchesList"
@@ -17,27 +17,27 @@
       item-text="branch_name"
       label="Branch"
     >
-    </v-autocomplete>
+    </v-autocomplete> -->
 
-    <span
+    <!-- <span
       v-if="errors && errors.branch_id && errors.branch_id[0]"
       class="error--text"
       >{{ errors.branch_id[0] }}</span
-    >
+    > -->
     <v-text-field
       class="pb-4"
       :hide-details="!payload.subject"
       v-model="payload.subject"
-      placeholder="Subject"
+      placeholder="Name"
       outlined
       dense
-      label="Subject"
+      label="Name"
     ></v-text-field>
     <span v-if="errors && errors.subject" class="error--text"
       >{{ errors.subject[0] }}
     </span>
 
-    <v-autocomplete
+    <!-- <v-autocomplete
       style="display: none"
       class="pb-1"
       label="Report Type"
@@ -52,7 +52,7 @@
     </v-autocomplete>
     <span v-if="errors && errors.frequency" class="error--text">{{
       errors.frequency[0]
-    }}</span>
+    }}</span> -->
 
     <!-- <v-autocomplete
       class="pb-2"
@@ -68,7 +68,7 @@
       label="Week Day"
     >
     </v-autocomplete> -->
-    <v-autocomplete
+    <!-- <v-autocomplete
       class="pb-2"
       v-if="payload.frequency == 'Weekly'"
       :hide-details="!payload.day"
@@ -95,7 +95,7 @@
       item-value="id"
       label="Date"
     >
-    </v-autocomplete>
+    </v-autocomplete> -->
 
     <!-- <v-menu
       v-if="payload.frequency == 'Monthly'"
@@ -137,7 +137,7 @@
       errors.date[0]
     }}</span>
 
-    <TimePickerCommon
+    <!-- <TimePickerCommon
       style="display: none"
       label=""
       :default_value="payload.time"
@@ -145,7 +145,7 @@
     />
     <span v-if="errors && errors.time" class="error--text">{{
       errors.time[0]
-    }}</span>
+    }}</span> -->
 
     <v-divider></v-divider>
 
@@ -190,6 +190,7 @@
       ></v-text-field>
 
       <v-text-field
+        v-if="email"
         dense
         outlined
         type="email"
@@ -198,6 +199,7 @@
       ></v-text-field>
 
       <v-text-field
+        v-if="whatsapp"
         dense
         outlined
         v-model="item.whatsapp_number"
@@ -458,11 +460,12 @@ export default {
         .toISOString()
         .substr(0, 10),
       company_id: 0,
+      branch_id: 0,
     },
 
     errors: [],
     branchesList: [],
-    branch_id: "",
+    branch_id: "0",
   }),
 
   created() {
@@ -481,7 +484,7 @@ export default {
       })
       .then(({ data }) => {
         this.branchesList = data;
-        this.branch_id = this.$auth.user.branch_id || "";
+        this.branch_id = this.$auth.user.branch_id || "0";
       });
     this.payload.company_id = this.$auth?.user?.company?.id;
     let reports = [
@@ -625,7 +628,7 @@ export default {
 
     store() {
       this.payload.managers = this.managers.filter(
-        (e) => e.email != "" && e.name != ""
+        (e) => (e.email != "" || e.whatsapp != "") && e.name != ""
       );
 
       this.payload.mediums = [];
@@ -638,9 +641,9 @@ export default {
 
       this.managers.forEach((element) => {
         element.company_id = this.$auth.user.company_id;
-        element.branch_id = this.payload.branch_id;
+        element.branch_id = 0; //this.payload.branch_id;
       });
-
+      this.payload.branch_id = 0;
       if (this.editItemPayload) {
         this.$axios
           .put("/report_notification/" + this.editItemPayload.id, this.payload)

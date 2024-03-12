@@ -45,7 +45,7 @@ class UpdateRequest extends FormRequest
             'reports.min' => 'Atleast 1 Report must be selected',
             'mediums.min' => 'Atleast 1 Medium must be selected',
             'tos.min' => 'Atleast 1 Email must be selected',
-            'managers.min' => 'Atleast 1 Manager must be selected',
+            //'managers.min' => 'Atleast 1 Manager must be selected',
         ];
     }
 }

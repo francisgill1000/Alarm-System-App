@@ -23,7 +23,7 @@ class StoreRequest extends FormRequest
             'day' => 'nullable',
             'date' => 'nullable',
             'company_id' => 'required',
-            'branch_id' => 'required',
+            'branch_id' => 'nullable',
             'frequency' => 'required',
             'time' => 'required',
             'reports' => 'array|min:1|max:5',
@@ -53,7 +53,7 @@ class StoreRequest extends FormRequest
             'reports.min' => 'Atleast 1 Report must be selected',
             'mediums.min' => 'Atleast 1 Medium must be selected',
             'tos.min' => 'Atleast 1 Email must be selected',
-            'managers.min' => 'Atleast 1 Manager must be selected',
+            //'managers.min' => 'Atleast 1 Manager must be selected',
         ];
     }
 }

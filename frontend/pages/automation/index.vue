@@ -98,7 +98,7 @@
       >
         <v-card>
           <v-card-title dense class="popup_background">
-            {{ editItemPayload ? "Edit" : "New" }} Automation
+            {{ editItemPayload ? "Edit" : "New" }} Notification
             <v-spacer></v-spacer>
             <v-icon @click="dialogNew = false" outlined dark>
               mdi mdi-close-circle
@@ -116,7 +116,7 @@
       </v-navigation-drawer>
       <v-card class="mb-5 mt-2" elevation="0">
         <v-toolbar class="rounded-md" dense flat>
-          <v-toolbar-title><span> Automation List</span></v-toolbar-title>
+          <v-toolbar-title><span> Notifications List</span></v-toolbar-title>
           <span>
             <v-btn
               dense
@@ -145,7 +145,7 @@
 
           <v-spacer></v-spacer>
 
-          <span>
+          <!-- <span>
             <v-btn
               v-if="can(`automation_contnet_access`)"
               x-small
@@ -157,7 +157,7 @@
             >
               Email Content
             </v-btn>
-          </span>
+          </span> -->
           <span>
             <v-btn
               v-if="can('automation_create')"
@@ -535,7 +535,7 @@ export default {
       },
 
       {
-        text: "Subject",
+        text: "Name",
         align: "left",
         sortable: true,
         key: "subject",
@@ -543,24 +543,24 @@ export default {
         filterable: true,
         filterSpecial: false,
       },
-      {
-        text: "Type",
-        align: "left",
-        sortable: true,
-        key: "frequency",
-        value: "frequency",
-        filterable: true,
-        filterSpecial: true,
-      },
-      {
-        text: "Time",
-        align: "left",
-        sortable: true,
-        key: "time",
-        value: "time",
-        filterable: true,
-        filterSpecial: false,
-      },
+      // {
+      //   text: "Type",
+      //   align: "left",
+      //   sortable: true,
+      //   key: "frequency",
+      //   value: "frequency",
+      //   filterable: true,
+      //   filterSpecial: true,
+      // },
+      // {
+      //   text: "Time",
+      //   align: "left",
+      //   sortable: true,
+      //   key: "time",
+      //   value: "time",
+      //   filterable: true,
+      //   filterSpecial: false,
+      // },
       {
         text: "Manager1",
         align: "left",
@@ -637,21 +637,21 @@ export default {
     this.preloader = false;
     this.id = this.$auth?.user?.company?.id;
     this.getDataFromApi();
-    if (!this.$auth.user.branch_id) {
-      let branch_header = [
-        {
-          text: "Branch",
-          align: "left",
-          sortable: true,
-          key: "branch_id", //sorting
-          value: "branch.branch_name", //edit purpose
+    // if (!this.$auth.user.branch_id) {
+    //   let branch_header = [
+    //     {
+    //       text: "Branch",
+    //       align: "left",
+    //       sortable: true,
+    //       key: "branch_id", //sorting
+    //       value: "branch.branch_name", //edit purpose
 
-          filterable: true,
-          filterSpecial: true,
-        },
-      ];
-      this.headers_table.splice(1, 0, ...branch_header);
-    }
+    //       filterable: true,
+    //       filterSpecial: true,
+    //     },
+    //   ];
+    //   this.headers_table.splice(1, 0, ...branch_header);
+    // }
 
     this.getbranchesList();
   },
