@@ -29,84 +29,79 @@ class ApiNurseCallingControlController extends Controller
 
 
 
-        try {
-            Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
+        // try {
+        Storage::append("logs/nurse-calling-system/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
 
-            $switch1 = -1;
-            $switch2 = -1;
+        $switch1 = -1;
+        $switch2 = -1;
 
-            $log_time = date('Y-m-d H:i:s');
+        $log_time = date('Y-m-d H:i:s');
 
 
 
-            $curl = curl_init();
+        $curl = curl_init();
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://alarmbackend.xtremeguard.org/api/alarm_device_status',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => '{
-    "serialNumber": "' . $request->serialNumber . '",
-    
-    "alarm_status":1,
-    
-     
-     
-    "time": 147444
-}',
-                CURLOPT_HTTPHEADER => array(
-                    'Content-Type: application/json'
-                ),
-            ));
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://alarmbackend.xtremeguard.org/api/alarm_device_status',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+            "serialNumber": "' . $request->serialNumber . '",    
+            "alarm_status":1, 
+                }',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json'
+            ),
+        ));
 
-            $response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-            curl_close($curl);
-            echo $response;
+        curl_close($curl);
+        echo $response;
 
 
 
 
 
-            $device_serial_number = $request->serialNumber;
-            $switch1_status = $request->switch1_status;
-            $switch2_status = $request->switch2_status;
+        $device_serial_number = $request->serialNumber;
+        $switch1_status = $request->switch1_status;
+        $switch2_status = $request->switch2_status;
 
 
-            if ($device_serial_number != '') {
+        if ($device_serial_number != '') {
 
-                $logs = [];
-                $logs["serial_number"] = $device_serial_number;
+            $logs = [];
+            $logs["serial_number"] = $device_serial_number;
 
-                if ($request->filled("switch1_status")) {
+            if ($request->filled("switch1_status")) {
 
-                    $logs["switch1_status"] = $request->switch1_status;
-                }
-
-                if ($request->filled("switch2_status")) {
-                    $logs["switch2_status"] = $request->switch2_status;
-                }
-
-
-                $logs["log_time"] = $log_time;
-
-
-
-                NurseCallingLogs::create($logs);
-
-
-                return $this->response('Successfully Updated', null, true);
+                $logs["switch1_status"] = $request->switch1_status;
             }
-        } catch (\Exception $e) {
-            Storage::append("logs/nurse-calling-system-error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . $e->getMessage());
 
-            return  $e->getMessage();
+            if ($request->filled("switch2_status")) {
+                $logs["switch2_status"] = $request->switch2_status;
+            }
+
+
+            $logs["log_time"] = $log_time;
+
+
+
+            NurseCallingLogs::create($logs);
+
+
+            return $this->response('Successfully Updated', null, true);
         }
+        // } catch (\Exception $e) {
+        //     Storage::append("logs/nurse-calling-system-error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . $e->getMessage());
+
+        //     return  $e->getMessage();
+        // }
 
         return $this->response('Data error', null, false);
     }
