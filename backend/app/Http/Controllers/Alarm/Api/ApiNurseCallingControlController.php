@@ -39,6 +39,8 @@ class ApiNurseCallingControlController extends Controller
 
 
 
+
+
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -62,8 +64,6 @@ class ApiNurseCallingControlController extends Controller
         $response = curl_exec($curl);
 
         curl_close($curl);
-        echo $response;
-
 
 
 
@@ -102,6 +102,9 @@ class ApiNurseCallingControlController extends Controller
 
         //     return  $e->getMessage();
         // }
+
+
+
 
         return $this->response('Data error', null, false);
     }
