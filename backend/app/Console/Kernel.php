@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $monthYear = date("M-Y");
+        $monthYear = date("d-m-Y");
 
 
         $schedule
@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel
             // ->everyThirtyMinutes()
             ->dailyAt("12:00")
 
-            ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+            ->appendOutputTo(storage_path("logs/fire-alarm-deleted-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 
 
 
