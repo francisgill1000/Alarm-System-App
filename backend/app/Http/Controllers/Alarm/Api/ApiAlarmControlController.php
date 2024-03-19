@@ -323,7 +323,7 @@ class ApiAlarmControlController extends Controller
                                     ->send($body_content1);
 
 
-                                $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email];
+                                $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email, "subject" => $issue];
 
 
 
@@ -386,7 +386,8 @@ class ApiAlarmControlController extends Controller
                                 "branch_id" => $manager->branch_id,
                                 "notification_id" => $manager->notification_id,
                                 "notification_manager_id" => $manager->id,
-                                "whatsapp_number" => $manager->whatsapp_number
+                                "whatsapp_number" => $manager->whatsapp_number,
+                                "subject" => $issue
                             ];
 
                             ReportNotificationLogs::create($data);
