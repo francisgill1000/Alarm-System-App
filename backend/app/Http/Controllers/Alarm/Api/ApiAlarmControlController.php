@@ -280,6 +280,8 @@ class ApiAlarmControlController extends Controller
                         $notificationSentLogs = ReportNotificationLogs::where("notification_id", $value->notification_id)
                             ->where("notification_manager_id", $value->id)
                             ->where("email", $value->email)
+                            ->where("subject", $issue)
+
                             ->orderBy("created_at", "DESC")->first();
 
                         if ($notificationSentLogs) {
@@ -291,7 +293,7 @@ class ApiAlarmControlController extends Controller
                         }
 
 
-                        if ($minutesDifference >   5) { // 
+                        if ($minutesDifference >=   15) { // 
 
 
 
@@ -341,6 +343,7 @@ class ApiAlarmControlController extends Controller
                     //wait 5 minutes to send notification
                     $notificationSentLogs = ReportNotificationLogs::where("notification_id", $manager->notification_id)
                         ->where("notification_manager_id", $manager->id)
+                        ->where("subject", $issue)
                         ->where("whatsapp_number", $manager->whatsapp_number)
                         ->orderBy("created_at", "DESC")->first();
                     $minutesDifference = 1000; //minutes
@@ -353,10 +356,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if ($minutesDifference >   5) { // 
-
-
-
+                    if ($minutesDifference >=   15) { // 
 
                         if ($manager->whatsapp_number != '') {
 
@@ -369,7 +369,7 @@ class ApiAlarmControlController extends Controller
                             $body_content1 .= "This is Notifing you about {$issue} status \n\n";
                             $body_content1 .= "Date:  $date\n\n";
                             $body_content1 .= "Room Name:  {$room_name}\n\n";
-                            $body_content1 .= "Branch:  {$room_name}\n\n";
+
                             $body_content1 .= "Branch:  {$branch_name}\n\n";
                             $body_content1 .= "*Xtreme Guard*\n";
 
