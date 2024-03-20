@@ -883,6 +883,7 @@ export default {
     };
   },
   created() {
+    console.log("process.env.BACKEND_URL2", process.env.BACKEND_URL2);
     this.updateTopmenu();
 
     this.$store.commit("loginType", this.$auth.user.user_type);
@@ -1010,12 +1011,13 @@ export default {
       this.audio = new Audio(
         process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
       );
+
       this.playAudioOnUserInteraction();
       // document.addEventListener("click", this.playAudioOnUserInteraction);
       // var elem = this.$refs.myBtn;
       // elem.click();
       ////////// this.$refs.myBtn.click();
-      //var prevented = elem.dispatchEvent(new Event("change")); // Fire event
+      ////var prevented = elem.dispatchEvent(new Event("change")); // Fire event
     },
     playAudioOnUserInteraction() {
       this.audio.play();
