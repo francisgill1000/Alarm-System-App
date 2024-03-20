@@ -62,6 +62,7 @@ class StoreRequest extends FormRequest
             'water_enabled' => 'nullable',
             'acpower_enabled' => 'nullable',
             'door_enabled' => 'nullable',
+            'temperature_threshold' => 'required',
 
         ];
     }

@@ -124,15 +124,32 @@
           <v-col md="12">
             <v-text-field
               class="pb-0"
-              :hide-details="!payload.device_id"
-              v-model="payload.device_id"
+              :hide-details="!payload.serial_number"
+              v-model="payload.serial_number"
               placeholder="Serial Number"
               outlined
               dense
               label="Serial Number *"
             ></v-text-field>
-            <span v-if="errors && errors.device_id" class="error--text"
-              >{{ errors.device_id[0] }}
+            <span v-if="errors && errors.serial_number" class="error--text"
+              >{{ errors.serial_number[0] }}
+            </span>
+          </v-col>
+          <v-col md="12">
+            <v-autocomplete
+              class="pb-0"
+              :hide-details="!payload.temperature_threshold"
+              v-model="payload.temperature_threshold"
+              placeholder="Temperature Threshold"
+              outlined
+              dense
+              label="Temperature Threshold"
+              :items="getTemperatureList()"
+            ></v-autocomplete>
+            <span
+              v-if="errors && errors.temperature_threshold"
+              class="error--text"
+              >{{ errors.temperature_threshold[0] }}
             </span>
           </v-col>
           <v-col md="12">
@@ -368,13 +385,21 @@
         <template v-slot:item.location="{ item }">
           {{ caps(item.location) }}
         </template>
+        <template v-slot:item.temperature_threshold="{ item }">
+          {{
+            item.temperature_threshold
+              ? item.temperature_threshold + "°C"
+              : "---"
+          }}
+        </template>
+
         <template v-slot:item.device_id="{ item }">
           {{ item.serial_number }}
           <div class="secondary-value">{{ item.model_number }}</div>
         </template>
         <template v-slot:item.smoke_alarm_status="{ item }">
           <v-icon :color="item.smoke_alarm_status == 0 ? '' : 'error'"
-            >mdi mdi-alarm-light
+            >mdi mdi-bell
           </v-icon>
           <div class="secondary-value" v-if="item.smoke_alarm_status == 1">
             {{ $dateFormat.format4(item.smoke_alarm_start_datetime) }}
@@ -383,7 +408,7 @@
 
         <template v-slot:item.water_alarm_status="{ item }">
           <v-icon :color="item.water_alarm_status == 0 ? '' : 'error'"
-            >mdi mdi-alarm-light
+            >mdi mdi-bell
           </v-icon>
           <div class="secondary-value" v-if="item.water_alarm_status == 1">
             {{ $dateFormat.format4(item.water_alarm_start_datetime) }}
@@ -391,7 +416,7 @@
         </template>
         <template v-slot:item.power_alarm_status="{ item }">
           <v-icon :color="item.power_alarm_status == 0 ? '' : 'error'"
-            >mdi mdi-alarm-light
+            >mdi mdi-bell
           </v-icon>
           <div class="secondary-value" v-if="item.power_alarm_status == 1">
             {{ $dateFormat.format4(item.power_alarm_start_datetime) }}
@@ -399,7 +424,7 @@
         </template>
         <template v-slot:item.door_open_status="{ item }">
           <v-icon :color="item.door_open_status == 0 ? '' : 'error'"
-            >mdi mdi-alarm-light
+            >mdi mdi-bell
           </v-icon>
           <div class="secondary-value" v-if="item.door_open_status == 1">
             {{ $dateFormat.format4(item.door_open_start_datetime) }}
@@ -611,12 +636,19 @@ export default {
         filterable: false,
       },
       {
-        text: "Time zone",
-        align: "left",
+        text: "Threshold",
+        align: "center",
         sortable: false,
-        value: "utc_time_zone",
+        value: "temperature_threshold",
         filterable: false,
       },
+      // {
+      //   text: "Time zone",
+      //   align: "left",
+      //   sortable: false,
+      //   value: "utc_time_zone",
+      //   filterable: false,
+      // },
       // {
       //   text: "Model Number",
       //   align: "left",
@@ -650,7 +682,7 @@ export default {
       {
         text: "AC Power Alarm",
         align: "center",
-        width: "100px",
+
         sortable: false,
         value: "power_alarm_status",
         filterable: false,
@@ -748,7 +780,7 @@ export default {
     }, 1000 * 5);*/
 
     setInterval(() => {
-      if (this.$route.name == "device") {
+      if (this.$route.name == "alarm-rooms") {
         this.getDataFromApi();
       }
     }, 1000 * 60);
@@ -1201,6 +1233,14 @@ export default {
       this.isFilter = false;
       this.getDataFromApi();
     },
+    getTemperatureList() {
+      let Array = [];
+      for (let index = 0; index < 100; index++) {
+        Array.push(index);
+      }
+
+      return Array;
+    },
     async getDataFromApi(
       url = this.endpoint,
       filter_column = "",
@@ -1332,7 +1372,7 @@ export default {
       this.payload.company_id = this.$auth.user.company_id;
       if (this.editedIndex == -1) this.payload.status_id = 2;
       this.payload.ip = "0.0.0.0";
-      this.payload.serial_number = this.payload.device_id;
+      this.payload.serial_number = this.payload.serial_number;
       this.payload.port = "0000";
 
       delete this.payload.status;

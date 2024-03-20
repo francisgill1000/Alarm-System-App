@@ -50,6 +50,7 @@ class UpdateRequest extends FormRequest
             'water_enabled' => 'required',
             'acpower_enabled' => 'required',
             'door_enabled' => 'required',
+            'temperature_threshold' => 'required',
         ];
     }
 }

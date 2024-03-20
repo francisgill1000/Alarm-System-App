@@ -35,10 +35,8 @@ class CheckDeviceHealth extends Command
     public function handle()
     {
 
-
-        $return = (new DeviceController())->checkDevicesHealthCompanyId();
-        echo $return;
-        info($return);
+        //make offline devices
+        echo   Device::where("company_id", ">", 0)->update(["status_id" => 0]);
 
 
         // $devices = Device::where("device_type", "!=", "Mobile")
