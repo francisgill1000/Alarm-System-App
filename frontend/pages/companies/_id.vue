@@ -62,6 +62,7 @@
                           color="grey"
                           readonly
                           dense
+                          filled
                           outlined
                           v-model="company_payload.company_code"
                         ></v-text-field>
@@ -72,6 +73,7 @@
                         <span class="text-danger">*</span>
                         <v-text-field
                           color="grey"
+                          filled
                           readonly
                           dense
                           outlined
@@ -91,6 +93,7 @@
                           color="grey"
                           readonly
                           dense
+                          filled
                           outlined
                           v-model="user_payload.email"
                         ></v-text-field>

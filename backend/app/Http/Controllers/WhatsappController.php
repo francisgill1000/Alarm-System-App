@@ -182,7 +182,7 @@ class WhatsappController extends Controller
             }
         }
         // print_r($data);
-        $response = Http::withoutVerifying()->get(env('WHATSAPP_URL'), $data);
+        $response = Http::timeout(3600)->withoutVerifying()->get(env('WHATSAPP_URL'), $data);
 
         // You can check the response status and get the response content as needed
         if ($response->successful()) {
