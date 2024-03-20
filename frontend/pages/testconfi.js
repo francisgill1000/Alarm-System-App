@@ -1,299 +1,562 @@
-<?php
+<template>
+  <div class="mobileBGColor111 bg-body">
+    <v-dialog persistent v-model="dialogWhatsapp" width="600px">
+      <v-card>
+        <v-card-title
+          dense
+          class="white--text"
+          style="background-color: #6946dd; color: #fff !important"
+        >
+          Whatsapp Verification
+          <v-spacer></v-spacer>
+          <v-icon @click="dialogWhatsapp = false" outlined dark color="white">
+            mdi mdi-close-circle
+          </v-icon>
+        </v-card-title>
+        <v-card-text>
+          <div class="row g-0">
+            <div class="col-lg-12">
+              <div class="card-body p-md-5 mx-md-4">
+                <v-row class="pb-5">
+                  <v-col md="12" cols="12" class="text-center">
+                    <h2>MyTime2Cloud</h2>
+                  </v-col>
+                </v-row>
 
-namespace App\Http\Controllers;
+                <h5>
+                  Two Step Whatsapp OTP Verification
+                  <v-icon dark color="green" fill>mdi-whatsapp</v-icon>
+                </h5>
+                <p>
+                  We sent a verification code to your mobile number. Enter the
+                  Code from the mobile in the filed below
+                </p>
+                <h2 style="font-size: 30px">
+                  {{ maskMobileNumber }}
+                </h2>
+                <br />
+                <!-- <v-form ref="form" method="post" v-model="whatsappFormValid" lazy-validation> -->
+                <label
+                  for=""
+                  class="pb-5"
+                  style="font-weight: bold; font-size: 20px"
+                  >Type your 6 Digit Security Code</label
+                >
+                <div class="form-outline mb-4">
+                  <v-otp-input
+                    v-model="otp"
+                    length="6"
+                    :rules="requiredRules"
+                  ></v-otp-input>
+                </div>
 
-use App\Http\Controllers\Controller;
-use App\Models\AssignedDepartmentEmployee;
-use App\Models\CompanyBranch;
-use App\Models\Role;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Validation\ValidationException;
+                <div class="text-center pt-1 mb-5 pb-1">
+                  <span v-if="msg" class="error--text">
+                    {{ msg }}
+                  </span>
+                  <v-btn
+                    :loading="loading"
+                    @click="checkOTP(otp)"
+                    class="btn btn-block fa-lg mt-1 mb-3"
+                    style="background-color: #6946dd; color: #fff"
+                  >
+                    Verify OTP
+                  </v-btn>
+                  <!-- <v-btn :loading="loading" @click="checkOTP(otp)"
+                      class="btn btn-primary btn-block text-white fa-lg primary mt-1 mb-3 btntext">
+                      Verify OTP
+                    </v-btn> -->
+                </div>
 
-class AuthController extends Controller
-{
+                <div
+                  class="d-flex align-items-center justify-content-center pb-4"
+                ></div>
+                <!-- </v-form> -->
+              </div>
+            </div>
+          </div>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialogForgotPassword" width="400px" height="500px">
+      <v-card>
+        <v-card-title dense class="popup_background">
+          Forgot Password
+          <v-spacer></v-spacer>
+          <v-icon @click="dialogForgotPassword = false" outlined dark>
+            mdi mdi-close-circle
+          </v-icon>
+        </v-card-title>
+        <v-card-text>
+          <ForgotPassword></ForgotPassword>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-snackbar v-model="snackbar" top="top" color="error" elevation="24">
+      {{ snackbarMessage }}
+    </v-snackbar>
 
-    public function loginwithOTP(Request $request)
-    {
-        try {
-            // Check database connection
-            DB::connection()->getPdo();
-        } catch (\Exception $e) {
-            throw ValidationException::withMessages([
-                'email' => ['Database is down'],
-            ]);
-        }
+    <v-row class="" style="height: 100%">
+      <v-col xs="12" sm="12" md="12" lg="5" style="padding: 0px">
+        <div
+          class="card-body p-md-5 mx-md111111-4"
+          style="
+            padding: 3rem !important;
+            max-width: 500px;
+            margin: auto;
+            text-align: center;
+          "
+        >
+          <div style="min-height: 100px">
+            <div style="width: 100%" class="text-center">
+              <v-img
+                class="text-center"
+                style="
+                  width: 250px;
+                  padding: 0px;
+                  margin: auto;
+                  text-align: center;
+                "
+                src="/logo22.png"
+              ></v-img>
+            </div>
+            <h3 class="pb-7 pt-15">
+              Welcome To
+              <span style="font-size: 20px"> Xtreme Guard </span>
+            </h3>
+          </div>
+          <div>
+            <v-form
+              ref="form"
+              method="post"
+              v-model="valid"
+              lazy-validation
+              autocomplete="off"
+            >
+              <div class="form-outline">
+                <v-text-field
+                  role="presentation"
+                  label="Email"
+                  v-model="credentials.email"
+                  :hide-details="false"
+                  id="form2Example11"
+                  autofill="false"
+                  required
+                  dense
+                  outlined
+                  type="email"
+                  prepend-inner-icon="mdi-account"
+                  append-icon="mdi-at"
+                  autocomplete="off"
+                  aria-autocomplete="none"
+                ></v-text-field>
+              </div>
 
+              <div class="form-outline">
+                <v-text-field
+                  role="presentation"
+                  label="Password"
+                  dense
+                  outlined
+                  autocomplete="off"
+                  prepend-inner-icon="mdi-lock  "
+                  :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="show_password ? 'text' : 'password'"
+                  v-model="credentials.password"
+                  class="input-group--focused"
+                  @click:append="show_password = !show_password"
+                ></v-text-field>
+              </div>
 
-        $user = User::with('company', 'company.contact', 'employee')->where('email', $request->email)
-            ->with("company:id,user_id,name,location,logo,company_code,expiry,contact_number,enable_whatsapp_otp")
-            ->select()
-            ->first();
+              <v-row>
+                <v-col md="6">
+                  <!-- <v-checkbox value="red" disabled>
+                    <template v-slot:label>
+                      <label style="">Remember&nbsp;Password</label>
+                    </template>
+                  </v-checkbox> -->
+                </v-col>
+                <v-col md="6" class="text-right pt-6">
+                  <!-- <nuxt-link to="/reset-password"
+                                  >Forgot password?</nuxt-link
+                                > -->
+                  <v-btn
+                    text
+                    @click="openForgotPassword"
+                    style="font-weight: normal"
+                    >Forgot password?</v-btn
+                  >
+                </v-col>
+              </v-row>
 
+              <div class="text-center pt-1 mb-5 pb-1">
+                <span v-if="msg" class="error--text111" style="color: #ff9f87">
+                  {{ msg }}
+                </span>
+                <v-btn
+                  :loading="loading"
+                  @click="login()"
+                  class="btn primary btn-black btn-block mt-1 mb-3 p-4 btntext"
+                  style="width: 100%; height: 48px"
+                >
+                  Login
+                </v-btn>
+              </div>
+            </v-form>
+          </div>
+          <div class="text-center">Don't Have an Account? Contact Admin</div>
 
+          <v-row class="text-center" style="font-size: 13px">
+            <v-col class="pa-5">
+              For Technical Support :
+              <a
+                target="_blank"
+                href="https://wa.me/971529048025?text=Hello Xtreme Guard. I need your support."
+                ><v-icon color="black">mdi-whatsapp</v-icon></a
+              >
+              <a
+                style="text-decoration: none; color: black"
+                href="tel:+971529048025"
+                >+971 52 904 8025</a
+              ></v-col
+            >
+          </v-row>
+          <v-row class="text-center" style="font-size: 13px">
+            <v-col class="pa-5">
+              <a
+                style="text-decoration: none; color: black"
+                href="mailto:support@xtremeguard.org"
+                >support@xtremeguard.org</a
+              ></v-col
+            >
+          </v-row>
+        </div>
+      </v-col>
+      <v-col
+        xs="12"
+        sm="12"
+        md="12"
+        lg="7"
+        style=""
+        class="hide-on-mobile d-none d-lg-flex"
+      >
+        <div class="about-content">
+          <h3>About Xtreme Guard</h3>
+          <div style="font-weight: 300">
+            Xtreme Guard is an innovative and comprehensive platform.
+            <br />In today's technology-driven era, Securing server rooms
+            requires a multifaceted approach, and incorporating advanced
+            security systems is essential for ensuring the safety and
+            reliability of critical infrastructure. This content will detail the
+            importance of humidity and temperature monitoring alongside fire
+            alarms, smoke alarms, water leakage alarms, power-off alarms, and
+            door open status monitors for comprehensive server room protection.
+          </div>
+          <h3 class="pt-10">Features</h3>
+          <ul style="font-weight: 300">
+            <li>Temparature Monitoring</li>
+            <li>Humidity Monitoring</li>
+            <li>Fire/Smoke Detective Alarm Systems</li>
 
-        if ($user == null) {
-            return Response::json([
-                'enable_whatsapp_otp' => 0,
-                'user_id' => "",
-                'message' => 'Invalid Login details1',
-                'status' => true
-            ], 200);
-        }
-        $user->user_type = $this->getUserType($user);
+            <li>Water Leakage Alarm Systems</li>
+            <li>Power-Off Alarm Systems</li>
+            <li>Door Open Status Monitoring</li>
+          </ul>
+          <v-row class="text-left pt-10">
+            <v-col class="pa-5">
+              <h3>Technical Support</h3>
 
+              <a
+                style="font-weight: 300"
+                target="_blank"
+                href="https://wa.me/971529048025?text=Hello XtremeGuard. I need your support."
+                ><v-icon color="white">mdi-whatsapp</v-icon></a
+              >
 
-        // return [$user->enable_whatsapp_otp, $user->company->enable_whatsapp_otp];
+              <a
+                style="color: #fff; text-decoration: none; font-weight: 300"
+                href="tel:+971529048025"
+                >+971 52 904 8025</a
+              >
+              <br />
+              <a
+                style="text-decoration: none; color: #fff; font-weight: 300"
+                href="mailto:support@xtremeguard.org"
+                >support@xtremeguard.org</a
+              >
+            </v-col>
+          </v-row>
+        </div>
+      </v-col>
+    </v-row>
+  </div>
+</template>
 
-        if ($user->enable_whatsapp_otp == 1 && $user->company->enable_whatsapp_otp == 1) {
-            $mobile_number = $user->user_type == 'employee' ? $user->employee->whatsapp_number : $user->company->contact->whatsapp;
+<script>
+import ForgotPassword from "../components/ForgotPassword.vue";
+export default {
+  layout: "login",
+  components: { ForgotPassword },
+  data: () => ({
+    dialogForgotPassword: false,
+    maskMobileNumber: "",
+    whatsappFormValid: true,
+    logo: "/ideaHRMS-final-blue.svg",
+    valid: true,
+    loading: false,
+    snackbar: false,
+    snackbarMessage: "",
 
+    show_password: false,
+    msg: "",
+    requiredRules: [(v) => !!v || "Required"],
+    emailRules: [
+      (v) => !!v || "E-mail is required",
+      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+    ],
 
+    passwordRules: [(v) => !!v || "Password is required"],
 
-            if ($mobile_number != '')
-                $this->generateOTP($mobile_number, $user);
-            else {
-                return Response::json([
-                    'enable_whatsapp_otp' => $user->enable_whatsapp_otp,
-                    'user_id' => '',
-                    'message' =>  'Mobile Number is not exist',
-                    'status' => false
-                ], 200);
-            }
-            return Response::json([
-                'enable_whatsapp_otp' => $user->enable_whatsapp_otp,
-                'user_id' => $user->id,
-                'message' => 'OTP Is generated',
-                'mobile_number' => $mobile_number,
-                'status' => true
-            ], 200);
-        } else {
-            return Response::json([
-                'enable_whatsapp_otp' => 0,
-                'user_id' => $user->id,
-                'message' => 'Invalid Login Details2',
-                'status' => true
-            ], 200);
-        }
-    }
-    public function generateOTP($mobile_number, $user)
-    {
-        try {
-            $random_number = mt_rand(100000, 999999);
-            $user = User::with(["company"])->find($user->id);
-            $user->otp_whatsapp = $random_number;
+    dialogWhatsapp: false,
+    otp: "",
+    userId: "",
+    credentials: {
+      email: "",
+      password: "",
+      source: "admin",
+    },
+  }),
+  created() {
+    // this.$store.commit("dashboard/resetState", null);
+    this.$store.dispatch("dashboard/resetState");
+    this.$store.dispatch("resetState");
 
-            if ($user->save()) {
-                $msg          = "";
+    this.verifyToken();
+  },
+  mounted() {
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 1000 * 60 * 15); //15 minutes
 
-                $msg .= "\n";
-                $msg .= "Dear  $user->email, \n";
+    this.$store.dispatch("dashboard/resetState");
+    this.$store.dispatch("resetState");
+  },
+  methods: {
+    openForgotPassword() {
+      this.dialogForgotPassword = true;
+    },
+    verifyToken() {
+      if (this.$route.query.email && this.$route.query.password) {
+        this.email = this.$route.query.email;
+        this.password = this.$route.query.password;
 
-                $msg .= "\n";
-                $msg .= "--------------- \n";
-                $msg .= "Your Login OTP  \n";
-                $msg .= "--------------- \n";
-                $msg .= "\n";
-                $msg .= "$random_number \n\n\n";
-                $msg .= "Best regards \n";
-                $msg .= "MyTime2Cloud \n";
+        this.loginWithOTP();
+      }
+    },
+    hideMobileNumber(inputString) {
+      // Check if the input is a valid string
+      if (typeof inputString !== "string" || inputString.length < 4) {
+        return inputString; // Return input as is if it's not a valid string
+      }
 
+      // Use a regular expression to match all but the last 3 digits
+      var regex = /^(.*)(\d{5})$/;
+      var matches = inputString.match(regex);
 
+      if (matches) {
+        var prefix = matches[1]; // Text before the last 3 digits
+        var lastDigits = matches[2]; // Last 3 digits
+        var maskedPrefix = "*".repeat(prefix.length); // Create a string of asterisks of the same length as the prefix
+        return maskedPrefix + lastDigits;
+      } else {
+        return inputString; // Return input as is if there are fewer than 3 digits
+      }
+    },
 
-                $data = [
-                    'to'           =>   $mobile_number,
-                    'message'      => $msg,
-                    'company'      =>  $user->company ?? false,
-                    'instance_id'  => $user->company->whatsapp_instance_id,
-                    'access_token' => $user->company->whatsapp_access_token,
-                    'type'         => 'Login',
-                    'userName'        => $user->email ?? "",
-                ];
+    handleInputChange() {},
+    // mxVerify(res) {
+    //   this.reCaptcha = res;
+    //   this.showGRC = this.reCaptcha ? false : true;
+    // },
+    checkOTP(otp) {
+      if (otp == "") {
+        alert("Enter OTP");
+        return;
+      }
+      let payload = {
+        userId: this.userId,
+      };
+      this.$axios
+        .post(`check_otp/${otp}`, payload)
+        .then(({ data }) => {
+          if (!data.status) {
+            alert("Invalid OTP. Please try again");
+          } else {
+            this.login();
+          }
+        })
+        .catch((err) => console.log(err));
+    },
 
+    loginWithOTP() {
+      if (this.$refs.form.validate()) {
+        this.loading = true;
+        this.$store.commit("email", this.credentials.email);
+        this.$store.commit("password", this.credentials.password);
 
-                //if (app()->isProduction()) 
-                {
-                    (new WhatsappController())->sentOTP($data);
+        this.$axios
+          .post("loginwith_otp", this.credentials)
+          .then(({ data }) => {
+            if (!data.status) {
+              //alert("OTP Verification: " + data.message);
+              alert("Invalid Login Deails");
+            } else if (data.user_id) {
+              if (data.enable_whatsapp_otp == 1) {
+                this.dialogWhatsapp = true;
+                this.userId = data.user_id;
+                if (data.mobile_number) {
+                  this.maskMobileNumber = this.hideMobileNumber(
+                    data.mobile_number
+                  );
                 }
-                return $this->response('updated.' . $data, null, true);
+
+                this.loading = false;
+              } else {
+                this.login();
+              }
+            } else {
+              this.snackbar = true;
+              this.snackbarMessage = "Invalid Login Details";
+              //alert("Invalid Login Deails");
             }
-        } catch (\Throwable $th) {
-            return $this->response($th, null, true);
-        }
-    }
-    public function verifyOTP(Request $request, $otp)
-    {
-        try {
-            $user = User::find($request->userId);
-            if ($user->otp_whatsapp == $otp) {
-                // $user->is_verified = 1;
-                // $user->save();
-                return $this->response('updated.', $user, true);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        this.snackbar = true;
+        this.snackbarMessage = "Invalid Emaild and Password";
+      }
+      this.loading = false;
+    },
+    login() {
+      if (this.$refs.form.validate()) {
+        this.$store.commit("email", this.credentials.email);
+        this.$store.commit("password", this.credentials.password);
+
+        this.msg = "";
+        this.loading = true;
+        this.$auth
+          .loginWith("local", { data: this.credentials })
+          .then(({ data }) => {
+            // console.log("$auth.user", data, this.$auth.user);
+
+            if (data.user.branch_id == 0 && data.user.is_master == false) {
+              this.snackbar = true;
+              this.snackbarMessage =
+                "You do not have Permission to access this page";
+              this.msg = "You do not have Permission to access this page";
+
+              // window.location.href = process.env.EMPLOYEE_APP_URL;
+              // this.$router.push("/login");
+              return false;
             }
-            // $user->is_verified = 0;
-            // $user->save();
-            return $this->response('updated.', null, false);
-        } catch (\Throwable $th) {
-            return $this->response($th, null, false);
-        }
-    }
-    public function login(Request $request)
-    {
-        try {
-            // Check database connection
-            DB::connection()->getPdo();
-        } catch (\Exception $e) {
-            throw ValidationException::withMessages([
-                'email' => ['Database is down'],
-            ]);
-        }
 
-        $user = User::where('email', $request->email)
-            ->with("company:id,user_id,name,location,logo,company_code,expiry")
-            ->select(
-                // "id",
-                // "email",
-                // "password",
-                // "is_master",
-                // "role_id",
-                // "company_id",
-                // "employee_role_id",
-                // "can_login",
-                // "web_login_access",
-                // "mobile_app_login_access",
-            )
-            ->first();
+            if (
+              this.$auth.user.role_id == 0 &&
+              this.$auth.user.user_type == "employee"
+            ) {
+              window.location.href = process.env.EMPLOYEE_APP_URL;
+              return "";
+            }
 
-        $this->throwErrorIfFail($request, $user);
-
-        // @params User Id, action,type,companyId.
-        $this->recordActivity($user->id, "Login", "Authentication", $user->company_id, $user->user_type);
-
-        $user->user_type = $this->getUserType($user);
-
-        // $user->branch_array = [1,   5];
-
-        if ($user->branch_id == 0 &&  $user->is_master === false && $request->filled("source")) {
-            throw ValidationException::withMessages([
-                'email' => ["You do not have permission to Access this Page"],
-            ]);
-        }
-
-
-
-        unset($user->company);
-        unset($user->employee);
-        unset($user->assigned_permissions);
-
-        return [
-            'token' => $user->createToken('myApp')->plainTextToken,
-            'user' => $user,
-        ];
-    }
-
-    public function me(Request $request)
-    {
-        $user = $request->user();
-
-
-        $user->load(["company", "role:id,name,role_type"]);
-        $user->user_type = $this->getUserType($user);
-        //$user->branch_array = [1,   5];
-        $user->permissions = $user->assigned_permissions ? $user->assigned_permissions->permission_names : [];
-        unset($user->assigned_permissions);
-
-        return ['user' => $user];
-    }
-
-    public function getUserType($user)
-    {
-        if ($user->company_id > 0) {
-
-            if ($user->user_type === "company")  return $user->user_type;
-
-            $branchesArray = CompanyBranch::where('user_id', $user->id)->select('id', 'branch_name', "logo as branch_logo")->first();
-
-            if ($branchesArray) {
-                $user->branch_name = $branchesArray->branch_name;
-                $user->branch_logo = $branchesArray->logo;
-                $user->branch_id = $branchesArray->id; //$user->id;
-
-                $user->load(["employee" => function ($q) {
-                    // :id,employee_id,system_user_id,user_id"
-
-                    $q->select(
-                        "id",
-                        "first_name",
-                        "last_name",
-                        "profile_picture",
-                        "employee_id",
-                        "system_user_id",
-                        "joining_date",
-                        "user_id",
-                        "overtime",
-                        "display_name",
-                        "display_name",
-                        "branch_id",
-                        "leave_group_id",
-                        "reporting_manager_id",
-                    );
-
-                    $q->withOut(["user", "department", "designation", "sub_department", "branch"]);
-                }]);
-                return "branch";
-            };
-
-            $user->load(["employee" => function ($q) {
-                // :id,employee_id,system_user_id,user_id"
-
-                $q->select(
-                    "id",
-                    "first_name",
-                    "last_name",
-                    "profile_picture",
-                    "employee_id",
-                    "system_user_id",
-                    "joining_date",
-                    "user_id",
-                    "overtime",
-                    "display_name",
-                    "display_name",
-                    "branch_id",
-                    "leave_group_id",
-                    "reporting_manager_id",
-                );
-
-                $q->withOut(["user", "department", "designation", "sub_department", "branch"]);
-            }]);
-            return "employee";
-        } else {
-            return $user->role_id > 0 ? "user" : "master";
-        }
-    }
-
-    public function logout(Request $request)
-    {
-        return false;
-        // $request->user()->tokens()->delete();
-    }
-
-    public function throwErrorIfFail($request, $user)
-    {
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-        } else if ($user->company_id > 0 && $user->company->expiry < now()) {
-            throw ValidationException::withMessages([
-                'email' => ['Subscription has been expired.'],
-            ]);
-        } else if (!$user->web_login_access && !$user->is_master) {
-            throw ValidationException::withMessages([
-                'email' => ['Login access is disabled. Please contact your admin.'],
-            ]);
-        }
-    }
+            setTimeout(() => (this.loading = false), 2000);
+          })
+          .catch(({ response }) => {
+            if (!response) {
+              return false;
+            }
+            let { status, data, statusText } = response;
+            this.msg = status == 422 ? data.message : statusText;
+            setTimeout(() => (this.loading = false), 2000);
+          });
+      } else {
+        this.snackbar = true;
+        this.snackbarMessage = "Invalid Emaild and Password";
+      }
+    },
+  },
+};
+</script>
+<style>
+body,
+html {
+  height: 100%;
 }
+
+.bg-body {
+  padding-top: 5%;
+
+  height: 100%;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+</style>
+
+<style scoped>
+.about-content {
+  padding-left: 30%;
+  padding-top: 1%;
+  color: #fff;
+
+  padding-right: 15%;
+}
+.btntext {
+  color: #6946dd;
+  font-weight: bold;
+  font-size: 22px;
+}
+@media (max-width: 1200px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+@media (min-width: 1300px) {
+  .bg-body {
+    background-image: url("../static/login/bgimage3.png") !important;
+  }
+  .gradient-form {
+    height: 100vh !important;
+  }
+
+  .bgimage2 {
+    background-color: #fff;
+    background-image: url("../static/login/bgimage.png");
+    background-size: cover;
+  }
+
+  .loginForm {
+    width: 100%;
+    position: absolute;
+    top: 10%;
+    left: 5%;
+  }
+}
+@media (max-width: 700px) {
+  .hide-on-mobile {
+    display: none;
+  }
+
+  .loginForm {
+    width: 100%;
+    position: absolute;
+    top: 10%;
+    left: 0%;
+  }
+  body {
+    width: 100%;
+    max-width: 100%;
+    background-color: #6946dd;
+  }
+}
+</style>
