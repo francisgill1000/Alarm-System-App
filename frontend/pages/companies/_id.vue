@@ -26,10 +26,10 @@
                 <v-icon left> mdi-domain </v-icon>
                 <span>Profile</span>
               </v-tab>
-              <v-tab>
+              <!-- <v-tab>
                 <v-icon left> fab fa-wpforms </v-icon>
                 <span>License</span>
-              </v-tab>
+              </v-tab> -->
               <v-tab>
                 <v-icon left> mdi-account </v-icon>
                 <span>Contact</span>
@@ -38,18 +38,18 @@
                 <v-icon left> mdi-earth </v-icon>
                 <span>Location</span>
               </v-tab>
-              <v-tab>
+              <!-- <v-tab>
                 <v-icon left> mdi-file </v-icon>
                 <span>Documents</span>
-              </v-tab>
+              </v-tab> -->
               <v-tab>
                 <v-icon left> mdi-lock </v-icon>
                 <span>Password</span>
               </v-tab>
-              <v-tab>
+              <!-- <v-tab>
                 <v-icon left> mdi-whatsapp </v-icon>
                 <span>Whatsapp Settings</span>
-              </v-tab>
+              </v-tab> -->
 
               <v-tab-item>
                 <v-card flat>
@@ -166,8 +166,7 @@
                           >{{ errors.expiry[0] }}</span
                         >
                       </v-col>
-                    </v-row>
-                    <v-row>
+
                       <v-col cols="3" md="3" sm="3">
                         <label class="col-form-label">Max Branches</label>
                         <span class="text-danger">*</span>
@@ -185,7 +184,7 @@
                         >
                       </v-col>
 
-                      <v-col cols="3" md="3" sm="3">
+                      <!-- <v-col cols="3" md="3" sm="3">
                         <label class="col-form-label">Max Employees</label>
                         <span class="text-danger">*</span>
                         <v-text-field
@@ -200,7 +199,7 @@
                           class="text-danger mt-2"
                           >{{ errors.max_employee[0] }}</span
                         >
-                      </v-col>
+                      </v-col> -->
 
                       <v-col cols="3" md="3" sm="3">
                         <label class="col-form-label">Max Devices</label>
@@ -291,7 +290,7 @@
                 </v-card>
               </v-tab-item>
 
-              <v-tab-item>
+              <!-- <v-tab-item>
                 <v-card flat>
                   <v-card-text>
                     <v-row>
@@ -463,13 +462,13 @@
                     </v-row>
                   </v-card-text>
                 </v-card>
-              </v-tab-item>
+              </v-tab-item> -->
 
               <v-tab-item>
                 <v-card flat>
                   <v-card-text>
                     <v-row>
-                      <v-col cols="6">
+                      <v-col cols="3">
                         <label class="col-form-label">
                           Contact Person Name
                         </label>
@@ -486,7 +485,7 @@
                         >
                       </v-col>
 
-                      <v-col cols="6">
+                      <v-col cols="3">
                         <label class="col-form-label">
                           Contact Person Number
                         </label>
@@ -503,7 +502,7 @@
                         >
                       </v-col>
 
-                      <v-col cols="6">
+                      <v-col cols="3">
                         <label class="col-form-label">
                           Contact Person Position
                         </label>
@@ -520,7 +519,7 @@
                         >
                       </v-col>
 
-                      <v-col cols="6">
+                      <v-col cols="3">
                         <label class="col-form-label">
                           Contact Person Whatsapp (with Country Code ex:
                           919999988888)
@@ -620,14 +619,14 @@
                 </v-card>
               </v-tab-item>
 
-              <v-tab-item>
+              <!-- <v-tab-item>
                 <Document />
-              </v-tab-item>
+              </v-tab-item> -->
 
               <v-tab-item>
                 <v-container>
                   <v-row>
-                    <v-col cols="12">
+                    <v-col cols="4">
                       <label class="col-form-label"
                         >Current Password
                         <span class="text-danger">*</span></label
@@ -653,7 +652,9 @@
                         "
                       ></v-text-field>
                     </v-col>
-                    <v-col md="12" sm="12" cols="12" dense>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="4" dense>
                       <label class="col-form-label"
                         >Password <span class="text-danger">*</span></label
                       >
@@ -672,8 +673,9 @@
                         "
                       ></v-text-field>
                     </v-col>
-
-                    <v-col md="12" sm="12" cols="12" dense>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="4" dense>
                       <label class="col-form-label"
                         >Confirm Password
                         <span class="text-danger">*</span></label
@@ -699,7 +701,9 @@
                         "
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12">
+                  </v-row>
+                  <v-row>
+                    <v-col cols="4">
                       <div class="text-right">
                         <v-btn
                           v-if="can('setting_company_change_password_access')"

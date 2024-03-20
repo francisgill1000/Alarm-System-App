@@ -215,7 +215,12 @@
       </span>
 
       <v-spacer></v-spacer>
-
+      <span style="font-size: 30px; color: #fff; padding-right: 75px">
+        <div>
+          <v-icon color="black" size="35">mdi-clock-outline</v-icon>
+          <span style="color: black; font-size: 30px"> {{ currentTime }}</span>
+        </div>
+      </span>
       <v-menu
         nudge-bottom="50"
         transition="scale-transition"
@@ -266,6 +271,7 @@
       <!-- <button type="button" @click="playAudioOnUserInteraction" ref="myBtn">
         Click Me!
       </button> -->
+
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
@@ -750,6 +756,7 @@ import employee_top_menu from "../menus/employee_modules_top.json";
 export default {
   data() {
     return {
+      currentTime: "00:00:00",
       notificationsMenuItems: [
         {
           title: "Leaves Pending (0)",
@@ -892,6 +899,10 @@ export default {
     this.setSubLeftMenuItems("dashboard", "/dashboard", false);
     this.logo_src = require("@/static/logo.png");
     this.pendingNotificationsCount = 0;
+    setInterval(() => {
+      const now = new Date();
+      this.currentTime = now.toLocaleTimeString([], { hour12: false });
+    }, 1000);
   },
 
   mounted() {

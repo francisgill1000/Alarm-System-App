@@ -12,13 +12,13 @@
           position: fixed;
           top: -7px;
           z-index: 9999;
-          margin-left: 20%;
-          width: 50%;
+          margin-left: 5%;
+          width: 80%;
         "
       >
         <v-sheet
           class="mx-auto"
-          max-width="100%"
+          max-width="80%"
           style="background-color: transparent"
         >
           <v-slide-group multiple show-arrows>
