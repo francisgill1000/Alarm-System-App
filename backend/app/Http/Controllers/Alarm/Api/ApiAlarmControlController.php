@@ -129,23 +129,26 @@ class ApiAlarmControlController extends Controller
 
                     if ($temparature >= $deviceObj['temperature_threshold']) {
 
+                        $ignore15Minutes = false;
 
 
-                        $message[] =  $this->SendWhatsappNotification("Threshold Temperature Alarm is  ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
                         if ($deviceObj['temparature_alarm_status'] == 0) {
                             $row = [];
                             $row["temparature_alarm_status"] = 1;
                             $row["temparature_alarm_start_datetime"] = $log_time;
                             $row["temparature_alarm_end_datetime"] = null;
                             $deviceModel->clone()->update($row);
+                            $ignore15Minutes = true;
                         }
+
+                        $message[] =  $this->SendWhatsappNotification("Threshold Temperature Alarm is  ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $deviceObj['temparature_alarm_status'], ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']], $ignore15Minutes);
                     } else {
 
 
 
                         if ($deviceObj['temparature_alarm_status'] == 1) {
-
-                            $message[] =  $this->SendWhatsappNotification("Threshold Temperature Alarm is  OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
+                            $ignore15Minutes = true;
+                            $message[] =  $this->SendWhatsappNotification("Threshold Temperature Alarm is  OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
                             $row = [];
                             $row["temparature_alarm_status"] = 0;
 
@@ -176,8 +179,8 @@ class ApiAlarmControlController extends Controller
 
                 //smoke_alarm
                 if ($smoke_alarm == 1) {
+                    $ignore15Minutes = false;
 
-                    $message[] =  $this->SendWhatsappNotification("Smoke Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
                     if ($deviceObj['smoke_alarm_status'] == 0) {
                         $row = [];
                         $row["smoke_alarm_status"] = $smoke_alarm;
@@ -185,6 +188,7 @@ class ApiAlarmControlController extends Controller
                         $row["smoke_alarm_end_datetime"] = null;
                         $deviceModel->clone()->update($row);
                     }
+                    $message[] =  $this->SendWhatsappNotification("Smoke Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($smoke_alarm == 0) {
 
 
@@ -194,45 +198,47 @@ class ApiAlarmControlController extends Controller
                         $row["smoke_alarm_status"] = $smoke_alarm;
                         $row["smoke_alarm_end_datetime"] = $log_time;
 
-
+                        $ignore15Minutes = true;
                         $deviceModel->clone()->where("smoke_alarm_status", 1)->update($row);
-                        $message[] =  $this->SendWhatsappNotification("Smoke Alarm is OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                        $message[] =  $this->SendWhatsappNotification("Smoke Alarm is OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                     }
                 }
                 //fire_alarm_status
                 if ($fire_alarm == 1) {
 
+                    $ignore15Minutes = false;
 
 
-                    $message[] =  $this->SendWhatsappNotification("Fire Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
                     if ($deviceObj['fire_alarm_status'] == 0) {
-
+                        $ignore15Minutes = true;
                         $row = [];
                         $row["fire_alarm_status"] = $fire_alarm;
                         $row["fire_alarm_start_datetime"] = $log_time;
                         $row["fire_alarm_end_datetime"] = null;
                     }
                     $deviceModel->clone()->update($row);
+                    $message[] =  $this->SendWhatsappNotification("Fire Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($fire_alarm == 0) {
 
                     if ($deviceObj['fire_alarm_status'] == 1) {
                         $row = [];
                         $row["fire_alarm_status"] = $fire_alarm;
                         $row["fire_alarm_end_datetime"] = $log_time;
-
+                        $ignore15Minutes = true;
 
 
                         $deviceModel->clone()->update($row);
-                        $message[] =  $this->SendWhatsappNotification("Fire Alarm is off",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                        $message[] =  $this->SendWhatsappNotification("Fire Alarm is off",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time,  $ignore15Minutes);
                     }
                 }
                 //water_leakage
                 if ($water_leakage == 1) {
+                    $ignore15Minutes = false;
 
-                    $message[] = $this->SendWhatsappNotification("Water Leakage Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
 
                     if ($deviceObj['water_alarm_status'] == 0) {
+                        $ignore15Minutes = true;
                         $row = [];
                         $row["water_alarm_status"] = $water_leakage;
                         $row["water_alarm_start_datetime"] = $log_time;
@@ -240,6 +246,7 @@ class ApiAlarmControlController extends Controller
 
                         $deviceModel->clone()->update($row);
                     }
+                    $message[] = $this->SendWhatsappNotification("Water Leakage Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($water_leakage == 0) {
 
                     if ($deviceObj['water_alarm_status'] == 1) {
@@ -248,24 +255,26 @@ class ApiAlarmControlController extends Controller
                         $row["water_alarm_end_datetime"] = $log_time;
 
 
-
+                        $ignore15Minutes = true;
 
                         $deviceModel->clone()->update($row);
-                        $message[] =  $this->SendWhatsappNotification("Water Leakage Alarm is off",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                        $message[] =  $this->SendWhatsappNotification("Water Leakage Alarm is off",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                     }
                 }
                 //power_failure
                 if ($power_failure == 1) {
+                    $ignore15Minutes = false;
 
-                    $message[] = $this->SendWhatsappNotification("Power Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
                     if ($deviceObj['power_alarm_status'] == 0) {
                         $row = [];
                         $row["power_alarm_status"] = $power_failure;
                         $row["power_alarm_start_datetime"] = $log_time;
                         $row["power_alarm_end_datetime"] = null;
-
+                        $ignore15Minutes = true;
                         $deviceModel->clone()->update($row);
                     }
+
+                    $message[] = $this->SendWhatsappNotification("Power Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else if ($power_failure == 0) {
 
                     if ($deviceObj['power_alarm_status'] == 1) {
@@ -273,28 +282,31 @@ class ApiAlarmControlController extends Controller
                         $row["power_alarm_status"] = $power_failure;
                         $row["power_alarm_end_datetime"] = $log_time;
 
-
+                        $ignore15Minutes = true;
 
                         $deviceModel->clone()->update($row);
-                        $message[] =  $this->SendWhatsappNotification("Power Alarm is OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                        $message[] =  $this->SendWhatsappNotification("Power Alarm is OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                     }
                     // $deviceModel->clone()->where("power_alarm_status", 1)->update($row);
                 }
                 //door_status
                 if ($door_status == 1) {
-                    $message[] =  $this->SendWhatsappNotification("Door Open Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                    $ignore15Minutes = false;
+
                     if ($deviceObj['door_open_status'] == 0) {
                         $row = [];
                         $row["door_open_status"] = $door_status;
                         $row["door_open_start_datetime"] = $log_time;
                         $row["door_open_end_datetime"] = null;
-
+                        $ignore15Minutes = true;
                         $deviceModel->clone()->update($row);
                     }
+
+                    $message[] =  $this->SendWhatsappNotification("Door Open Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                 } else  if ($door_status == 0) {
 
                     if ($deviceObj['door_open_status'] == 1) {
-
+                        $ignore15Minutes = true;
                         $row = [];
                         $row["door_open_status"] = $door_status;
                         $row["door_open_end_datetime"] = $log_time;
@@ -302,7 +314,7 @@ class ApiAlarmControlController extends Controller
                         $deviceModel->clone()->update($row);
 
 
-                        $message[] =  $this->SendWhatsappNotification("Door Open  Alarm is off",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time);
+                        $message[] =  $this->SendWhatsappNotification("Door Open  Alarm is off",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
                     }
                 }
 
@@ -325,7 +337,7 @@ class ApiAlarmControlController extends Controller
         return $this->response('Data error', null, false);
     }
 
-    public function SendWhatsappNotification($issue, $room_name, $model1, $date, $tempArray = [])
+    public function SendWhatsappNotification($issue, $room_name, $model1, $date,  $ignore15Minutes, $tempArray = [])
     {
         $company_id = $model1->company_id;
         $branch_id = $model1->branch_id;
@@ -385,7 +397,7 @@ class ApiAlarmControlController extends Controller
                         }
 
 
-                        if ($minutesDifference >=   15) { // 
+                        if ($minutesDifference >=   15 || $ignore15Minutes) { // 
 
 
 

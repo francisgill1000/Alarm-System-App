@@ -12,6 +12,7 @@ use DatePeriod;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log as Logger;
+use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Type\Integer;
 
 class DeviceSensorLogsController extends Controller
@@ -442,16 +443,21 @@ class DeviceSensorLogsController extends Controller
 
     public function deleteOldLogs()
     {
+
+        $logs = [];
         try {
 
             //delete duplicate 5 days before old logs 
-            $this->deleteOld5DaysLogs();
+            $logs[] = $this->deleteOld5DaysLogs();
         } catch (\Exception $e) {
         }
         try {
-            $this->deleteOneMonthOldLogs();
+            $logs[] = $this->deleteOneMonthOldLogs();
         } catch (\Exception $e) {
         }
+
+        Storage::put("logs/deleted-logs-count-" . date("Y-m-d") . ".logs", json_encode($logs));
+        return json_encode($logs);
     }
     public function deleteOneMonthOldLogs()
     {
