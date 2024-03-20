@@ -888,7 +888,7 @@ export default {
     this.$store.commit("loginType", this.$auth.user.user_type);
     this.getCompanyDetails();
     this.setMenus();
-    this.setSubLeftMenuItems("dashboard", "/dashboard2", false);
+    this.setSubLeftMenuItems("dashboard", "/dashboard", false);
     this.logo_src = require("@/static/logo.png");
     this.pendingNotificationsCount = 0;
   },
@@ -1083,7 +1083,7 @@ export default {
       // Handle inactivity
       this.handleInactivity = () => {
         // Perform actions when the user is inactive
-        this.$router.push(`/dashboard2`);
+        //this.$router.push(`/dashboard`);
         // For example, you could redirect the user, show a message, etc.
       };
 
