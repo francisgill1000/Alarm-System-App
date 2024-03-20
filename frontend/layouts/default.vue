@@ -909,6 +909,11 @@ export default {
     setInterval(() => {
       this.loadNotificationMenu();
     }, 1000 * 60 * 2);
+    const now = new Date();
+    console.log("reloadCount", now.toLocaleTimeString([], { hour12: false }));
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000 * 60 * 15);
     //this.company_menus = [];
 
     let menu_name = this.$route.name;

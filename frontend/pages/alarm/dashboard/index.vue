@@ -16,10 +16,70 @@
           width: 50%;
         "
       >
-        <v-bottom-navigation
+        <v-sheet
+          class="mx-auto"
+          max-width="100%"
+          style="background-color: transparent"
+        >
+          <v-slide-group multiple show-arrows>
+            <v-bottom-navigation
+              :value="topMenu"
+              color="primary"
+              style="
+                width: 100%;
+                box-shadow: none;
+                background: transparent;
+                background-color: transparent;
+              "
+              elevation="0"
+            >
+              <v-btn
+                :key="index"
+                v-if="device.serial_number != null"
+                @click="ChangeDevice(device.serial_number)"
+                v-for="(device, index) in devicesList"
+                style="width: auto; max-width: 100%"
+                width="auto"
+              >
+                <span style="font-size: 15px">{{ device.name }}</span>
+              </v-btn>
+            </v-bottom-navigation>
+          </v-slide-group>
+        </v-sheet>
+        <!-- <v-sheet
+          class="mx-auto"
+          max-width="500"
+          style="background: transparent"
+        >
+          <v-slide-group multiple show-arrows>
+            <v-slide-item
+              v-for="(device, index) in devicesList"
+              :key="index"
+              v-slot="{ active, toggle }"
+              v-if="device.serial_number != null"
+              color="primary"
+            >
+              <v-btn
+                :value="topMenu"
+                @click="ChangeDevice(device.serial_number)"
+                style="width: auto; max-width: 100%"
+                width="auto"
+                class="mx-2"
+                :input-value="topMenu"
+                active-class="purple white--text"
+                depressed
+                text
+                plain
+              >
+                <span style="font-size: 15px">{{ device.name }}</span>
+              </v-btn>
+            </v-slide-item>
+          </v-slide-group>
+        </v-sheet> -->
+        <!-- <v-bottom-navigation
           :value="topMenu"
           color="primary"
-          style="width: 100%; box-shadow: none; background: transparent"
+          style="width: 50%; box-shadow: none; background: transparent"
           elevation="0"
         >
           <v-btn
@@ -32,7 +92,7 @@
           >
             <span style="font-size: 15px">{{ device.name }}</span>
           </v-btn>
-        </v-bottom-navigation>
+        </v-bottom-navigation> -->
       </v-col>
     </v-row>
     <v-row>
