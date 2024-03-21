@@ -118,7 +118,7 @@ class ApiAlarmControlController extends Controller
 
                 $deviceObj = $deviceModel->clone()->get();
                 //update live status 
-                $deviceModel->clone()->update(["status_id" => 1]);
+                $deviceModel->clone()->update(["status_id" => 1, "last_live_datetime" => date("Y-m-d H:i:s")]);
                 if (count($deviceObj) == 0) {
                     return $this->response('Device Information is not available', null, false);
                 }
