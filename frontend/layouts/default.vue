@@ -183,7 +183,7 @@
 
       <v-spacer></v-spacer>
 
-      <span style="100%;display: none">
+      <span style="width: 100%; display: none">
         <template
           v-if="
             getLoginType == 'company' ||
@@ -890,7 +890,8 @@ export default {
     };
   },
   created() {
-    console.log("process.env.BACKEND_URL2", process.env.BACKEND_URL2);
+    this.verifyAlarmStatus();
+    //console.log("process.env.BACKEND_URL2", process.env.BACKEND_URL2);
     this.updateTopmenu();
 
     this.$store.commit("loginType", this.$auth.user.user_type);
@@ -910,17 +911,17 @@ export default {
     //   this.palysound();
     // }, 5000);
 
-    setTimeout(() => {
-      this.loadNotificationMenu();
-      this.verifyAlarmStatus();
-    }, 1000 * 10);
+    // setTimeout(() => {
+    //   // this.loadNotificationMenu();
+    //   this.verifyAlarmStatus();
+    // }, 1000 * 10);
 
     setInterval(() => {
       this.verifyAlarmStatus();
-    }, 1000 * 60 * 1);
-    setInterval(() => {
-      this.loadNotificationMenu();
-    }, 1000 * 60 * 2);
+    }, 1000 * 10);
+    // setInterval(() => {
+    //   this.loadNotificationMenu();
+    // }, 1000 * 60 * 2);
     const now = new Date();
     console.log("reloadCount", now.toLocaleTimeString([], { hour12: false }));
     setTimeout(() => {
