@@ -36,12 +36,12 @@ class ApiAlarmControlController extends Controller
 
             $temparature = -1;
             $humidity = -1;
-            $fire_alarm = -1;
+
             $smoke_alarm = -1;
             $water_leakage = -1;
             $power_failure = -1;
             $door_status = -1;
-            $fire_alarm = -1;
+            $fire_alarm = 0;
             $log_time = date('Y-m-d H:i:s');
 
             $max_temparature = '';
