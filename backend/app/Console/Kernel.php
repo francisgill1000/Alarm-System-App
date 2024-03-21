@@ -24,35 +24,43 @@ class Kernel extends ConsoleKernel
     {
         $monthYear = date("d-m-Y");
 
+        try {
+            $schedule
+                ->command('task:alarm_update_company_ids')
+                // ->everyThirtyMinutes()
+                ->everyMinute()
+                //->withoutOverlapping()
+                ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        } catch (\Exception $e) {
+        }
+        try {
+            $schedule
+                ->command('task:delete_old_logs')
+                // ->everyThirtyMinutes()
+                ->dailyAt("12:00")
 
-        $schedule
-            ->command('task:alarm_update_company_ids')
-            // ->everyThirtyMinutes()
-            ->everyMinute()
-            //->withoutOverlapping()
-            ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+                ->appendOutputTo(storage_path("logs/fire-alarm-deleted-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        } catch (\Exception $e) {
+        }
+        try {
+            $schedule
+                ->command('task:check_device_health')
+                // ->everyThirtyMinutes()
+                ->everyThirtyMinutes()
 
-        $schedule
-            ->command('task:delete_old_logs')
-            // ->everyThirtyMinutes()
-            ->dailyAt("12:00")
-
-            ->appendOutputTo(storage_path("logs/fire-alarm-deleted-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
-
-        $schedule
-            ->command('task:check_device_health')
-            // ->everyThirtyMinutes()
-            ->everyThirtyMinutes()
-
-            ->appendOutputTo(storage_path("logs/device-offline-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+                ->appendOutputTo(storage_path("logs/device-offline-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
 
 
-
-        $schedule
-            ->command('task:db_backup')
-            ->dailyAt('6:00')
-            ->appendOutputTo(storage_path("logs/db_backup.log"))
-            ->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        } catch (\Exception $e) {
+        }
+        try {
+            $schedule
+                ->command('task:db_backup')
+                ->dailyAt('6:00')
+                ->appendOutputTo(storage_path("logs/db_backup.log"))
+                ->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        } catch (\Exception $e) {
+        }
     }
 
     /**

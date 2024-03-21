@@ -41,6 +41,11 @@ Route::get('/test/getSensorLogs', function (Request $request) {
         echo '#: ' . $log["id"] . '-' .  ' serial_number: ' . $log["serial_number"] . ' - Time: ' . $log["log_time"] .  ' - Temparature: ' . $log["temparature"] .  ' - Humidity: ' . $log["humidity"] . '<br/>';
     }
 });
+Route::get('/test/deleteOldLogs', function (Request $request) {
+
+
+    return (new DeviceSensorLogsController)->deleteOldLogs();
+});
 Route::get('/test/getLogs', function (Request $request) {
 
 

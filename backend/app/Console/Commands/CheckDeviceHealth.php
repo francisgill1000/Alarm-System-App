@@ -36,7 +36,7 @@ class CheckDeviceHealth extends Command
     {
 
         //make offline devices
-        echo   Device::where("company_id", ">", 0)->update(["status_id" => 0]);
+        echo   Device::where("company_id", ">", 0)->update(["status_id" => 2]);
 
 
         // $devices = Device::where("device_type", "!=", "Mobile")
