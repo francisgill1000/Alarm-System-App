@@ -465,7 +465,7 @@ class DeviceSensorLogsController extends Controller
         //Fetch 30minutes logs and keep one record for every 30 minutes with alarm
         //Deleting records which has no alarm vaue 
 
-        $date =  date("Y-m-01", strtotime('-30 days'));
+        $date =  date("Y-m-d", strtotime('-30 days'));
         $startTime = new DateTime($date . " 00:00:00"); // Current date and time
         $endTime = new DateTime($date . " 23:59:59");; // Display for the next 24 hours
 
@@ -504,7 +504,7 @@ class DeviceSensorLogsController extends Controller
                     AlarmDeviceSensorLogs::whereIn("id", $deleteIds)->delete();
 
 
-                //$finalDuplicateIds = array_merge($finalDuplicateIds, $deleteIds);
+                $finalDuplicateIds = array_merge($finalDuplicateIds, $deleteIds);
             }
         }
 
@@ -519,7 +519,7 @@ class DeviceSensorLogsController extends Controller
 
         //delete duplicate 5 days before old logs 
 
-        $date = date("Y-m-01", strtotime('-5 days'));
+        $date = date("Y-m-d", strtotime('-5 days'));
         $return = [];
 
 
@@ -561,7 +561,7 @@ class DeviceSensorLogsController extends Controller
 
 
 
-            //$finalDuplicateIds = array_merge($finalDuplicateIds, $duplicateCombinations);
+            $finalDuplicateIds = array_merge($finalDuplicateIds, $duplicateCombinations);
 
             // }
         }
