@@ -123,6 +123,7 @@ export default {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
     console.log("this.$route.name", this.$route.name);
+    this.getDataFromApi();
     setInterval(() => {
       if (this.$route.name == "alarm-dashboard") {
         this.getDataFromApi();
