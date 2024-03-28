@@ -62,11 +62,11 @@ export default {
           type: "column",
           data: [],
         },
-        {
-          name: "",
-          type: "line",
-          data: [],
-        },
+        // {
+        //   name: "",
+        //   type: "line",
+        //   data: [],
+        // },
       ],
       chartOptions: {
         plotOptions: {
@@ -178,7 +178,7 @@ export default {
       data.forEach((item) => {
         this.chartOptions.series[0]["data"][counter] = item.count; //parseInt(item.count);
 
-        this.chartOptions.series[1]["data"][counter] = item.count;
+        //this.chartOptions.series[1]["data"][counter] = item.count;
 
         this.chartOptions.labels[counter] = item.hour;
         counter++;

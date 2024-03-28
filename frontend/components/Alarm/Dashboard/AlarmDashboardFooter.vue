@@ -8,10 +8,10 @@
     </v-overlay>
     <v-row>
       <v-col lg="3" md="3" sm="12" xs="12">
-        <v-row style="width: 100%; height: 250px">
+        <v-row style="width: 100%; height: 200px">
           <v-card class="py-2" style="width: 100%">
-            <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
-              <h3 style="text-align: left">Smoke/Fire Alarm</h3>
+            <v-col lg="12" md="12" style="text-align: left; padding-top: 0px">
+              <span style="text-align: left">Smoke/Fire Alarm</span>
 
               <v-row style="font-size: 20px">
                 <v-col cols="4">
@@ -21,7 +21,7 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8">
+                <v-col cols="8" style="text-align: center">
                   <div>Status</div>
                   <div class="green--text">
                     <div v-if="device.smoke_alarm_status == 0">Normal</div>
@@ -43,7 +43,7 @@
         </v-row>
       </v-col>
       <v-col lg="3" md="3" sm="12" xs="12">
-        <v-row style="width: 100%; height: 250px">
+        <v-row style="width: 100%; height: 200px">
           <v-card class="py-2" style="width: 100%">
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">Water Leakage Alarm</h3>
@@ -78,7 +78,7 @@
         </v-row>
       </v-col>
       <v-col lg="3" md="3" sm="12" xs="12">
-        <v-row style="width: 100%; height: 250px">
+        <v-row style="width: 100%; height: 200px">
           <v-card class="py-2" style="width: 100%">
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">A/C Power Failure Alarm</h3>
@@ -112,9 +112,25 @@
           </v-card>
         </v-row>
       </v-col>
-      <v-col lg="3" md="3" sm="12" xs="12">
-        <v-row style="width: 100%; height: 250px">
-          <v-card class="py-2" style="width: 100%">
+      <v-col
+        lg="3"
+        md="3"
+        sm="12"
+        xs="12"
+        style="padding-right: 0px; margin-right: 0px"
+      >
+        <v-row
+          style="
+            width: 100%;
+            height: 200px;
+            padding-right: 0px;
+            margin-right: 0px;
+          "
+        >
+          <v-card
+            class="py-2"
+            style="width: 100%; padding-right: 0px; margin-right: 0px"
+          >
             <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
               <h3 style="text-align: left">Door Open Status</h3>
 

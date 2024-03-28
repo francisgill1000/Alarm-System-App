@@ -172,7 +172,7 @@
       app
       :style="$nuxt.$route.name == 'index' ? 'z-index: 100000' : ''"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" style="color: #fff" />
       <span
         class="text-overflow"
         style="cursor: pointer"
@@ -217,8 +217,10 @@
       <v-spacer></v-spacer>
       <span style="font-size: 30px; color: #fff; padding-right: 75px">
         <div>
-          <v-icon color="black" size="35">mdi-clock-outline</v-icon>
-          <span style="color: black; font-size: 30px"> {{ currentTime }}</span>
+          <v-icon color="white" size="35" style="color: #fff"
+            >mdi-clock-outline</v-icon
+          >
+          <span style="font-size: 30px; color: #fff"> {{ currentTime }}</span>
         </div>
       </span>
       <v-menu
@@ -233,14 +235,14 @@
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon color="red" v-bind="attrs" v-on="on">
-            <v-avatar size="35" style="border: 1px solid #6946dd">
+            <v-avatar size="35" style="border: 1px solid #fff">
               <v-img class="company_logo" :src="getLogo"></v-img>
             </v-avatar>
           </v-btn>
         </template>
 
         <v-list light nav dense>
-          <v-list-item-group color="primary">
+          <v-list-item-group color="white">
             <v-list-item
               v-if="this.$auth && this.$auth.user.user_type == 'company'"
               @click="goToCompany()"
@@ -278,7 +280,7 @@
         plan
         @click="gotoHomePage()"
         class="mr-3"
-        ><v-icon class="violet--text" style="text-align: center"
+        ><v-icon class="white--text" style="text-align: center"
           >mdi-view-dashboard</v-icon
         ></v-btn
       >
@@ -288,7 +290,7 @@
         plan
         @click="goToSettings()"
         class="mr-3"
-        ><v-icon class="violet--text" style="text-align: center"
+        ><v-icon class="white--text" style="text-align: center"
           >mdi-settings</v-icon
         ></v-btn
       >
@@ -401,6 +403,7 @@
         v-model="alarmNotificationStatus"
         transition="dialog-top-transition"
         max-width="800"
+        style="z-index: 9999"
       >
         <!-- <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary" v-bind="attrs" v-on="on">From the top</v-btn>
@@ -607,7 +610,13 @@
 
     <v-main
       class="main_bg"
-      :style="miniVariant ? 'padding-left: 60px;' : 'padding-left: 140px;'"
+      :style="
+        miniVariant && drawer
+          ? 'padding-left: 60px;'
+          : !drawer
+          ? 'padding-left: 5px;'
+          : 'padding-left: 140px;'
+      "
     >
       <v-container style="max-width: 100%">
         <nuxt />
@@ -918,7 +927,7 @@ export default {
 
     setInterval(() => {
       this.verifyAlarmStatus();
-    }, 1000 * 10);
+    }, 1000 * 4);
     // setInterval(() => {
     //   this.loadNotificationMenu();
     // }, 1000 * 60 * 2);
@@ -969,6 +978,7 @@ export default {
   watch: {},
   computed: {
     changeColor() {
+      return "#04253b"; //background color
       return "#ecf0f4"; //this.$store.state.color;
     },
 
@@ -1450,10 +1460,39 @@ header a,
 header i {
   color: black !important;
 }
-
-.theme--dark.v-bottom-navigation .v-btn:not(.v-btn--active) {
-  color: black !important;
+.header-devices-menu-selected {
+  color: #fff !important;
 }
+.header-devices-menu {
+  color: red !important;
+}
+/*
+.theme--dark.v-bottom-navigation .v-btn:not(.v-btn--active) {
+  
+  color: red !important;
+}
+.v-item-group.v-bottom-navigation .v-btn .v-btn__content > *:not(.v-icon) {
+  color: red !important;
+}
+.header-devices-menu-selected span {
+  color: red !important;
+}
+.header-devices-menu-selected .v-btn__content span {
+  color: orange !important;
+}
+
+.header-devices-menu .v-btn--active {
+  color: red !important;
+}
+.header-devices-menu {
+  color: green !important;
+}
+.theme--light.v-bottom-navigation .v-btn:not(.v-btn--active) {
+  color: yellow !important;
+}
+.theme--light.v-bottom-navigation .v-btn--active {
+  color: yellow !important;
+}*/
 .theme--dark.v-bottom-navigation .v-btn--active {
   background: rgb(105, 70, 221);
   color: #fff !important;
@@ -1920,6 +1959,20 @@ body {
 
 .no-border:before {
   border-color: #fff !important;
+}
+</style>
+
+<style>
+.theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+  border-color: #fff !important;
+}
+
+.no-border:before {
+  border-color: #fff !important;
+}
+
+.v-toolbar__content .mdi-menu {
+  color: #fff !important;
 }
 </style>
 

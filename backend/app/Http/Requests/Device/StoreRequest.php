@@ -57,7 +57,7 @@ class StoreRequest extends FormRequest
             'utc_time_zone' => 'required',
             'branch_id' => 'nullable',
             //'camera_save_images' => 'required'
-
+            'serial_number' => 'required',
             'smoke_enabled' => 'nullable',
             'water_enabled' => 'nullable',
             'acpower_enabled' => 'nullable',

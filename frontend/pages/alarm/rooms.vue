@@ -1371,13 +1371,14 @@ export default {
 
       this.payload.company_id = this.$auth.user.company_id;
       if (this.editedIndex == -1) this.payload.status_id = 2;
-      this.payload.ip = "0.0.0.0";
-      this.payload.serial_number = this.payload.serial_number;
-      this.payload.port = "0000";
+      payload.ip = "0.0.0.0";
+      payload.device_id = this.payload.serial_number;
 
-      delete this.payload.status;
-      delete this.payload.company;
-      delete this.payload.company_branch;
+      payload.port = "0000";
+
+      delete payload.status;
+      delete payload.company;
+      delete payload.company_branch;
 
       this.loading = true;
       if (this.editedIndex == -1) {

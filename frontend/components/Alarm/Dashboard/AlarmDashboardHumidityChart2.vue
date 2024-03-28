@@ -54,11 +54,11 @@ export default {
           type: "column",
           data: [],
         },
-        {
-          name: " ",
-          type: "line",
-          data: [],
-        },
+        // {
+        //   name: " ",
+        //   type: "line",
+        //   data: [],
+        // },
       ],
       chartOptions: {
         plotOptions: {
@@ -68,7 +68,7 @@ export default {
         },
         colors: ["#00b0f0", "#FF8000"],
         chart: {
-          height: 350,
+          height: 240,
           type: "line",
           toolbar: {
             show: false,
@@ -160,7 +160,7 @@ export default {
       data.forEach((item) => {
         this.chartOptions.series[0]["data"][counter] = item.count; //parseInt(item.count);
 
-        this.chartOptions.series[1]["data"][counter] = item.count;
+        // this.chartOptions.series[1]["data"][counter] = item.count;
 
         this.chartOptions.labels[counter] = item.hour;
         counter++;

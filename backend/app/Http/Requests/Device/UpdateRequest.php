@@ -29,7 +29,7 @@ class UpdateRequest extends FormRequest
         return [
             'name' => ['required', 'min:2', 'max:50'],
             'short_name' => ['required', 'nullable', 'min:3', 'max:4'],
-            'device_id' => ['required', 'min:3', 'max:100'],
+            // 'device_id' => ['required', 'min:3', 'max:100'],
             'location' => ['nullable', 'min:2', 'max:300'],
             'company_id' => ['required', 'min:1', 'integer'],
             'status_id' => ['required', 'min:1', 'integer'],
