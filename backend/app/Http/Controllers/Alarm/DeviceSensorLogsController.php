@@ -518,7 +518,7 @@ class DeviceSensorLogsController extends Controller
 
         //delete duplicate 5 days before old logs 
 
-        $date = date("Y-m-d", strtotime('-5 days'));
+        $date = date("Y-m-d", strtotime('-3 days'));
         $return = [];
 
 
