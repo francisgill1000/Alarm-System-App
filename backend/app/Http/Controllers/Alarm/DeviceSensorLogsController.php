@@ -334,7 +334,7 @@ class DeviceSensorLogsController extends Controller
     {
         $date = date("Y-m-d H:i:s");
 
-        $model = AlarmDeviceSensorLogs::where("company_id", 0)->distinct('serial_number');
+        $model = AlarmDeviceSensorLogs::where("company_id", 0); //->distinct('serial_number');
 
 
         // $model->whereHas('device', function ($query) {
