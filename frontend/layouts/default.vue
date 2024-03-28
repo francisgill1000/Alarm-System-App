@@ -896,6 +896,7 @@ export default {
       inactivityTimeout: null,
       alarmNotificationStatus: false,
       audio: null,
+      timmerStatus: true,
     };
   },
   created() {
@@ -916,6 +917,11 @@ export default {
   },
 
   mounted() {
+    setTimeout(() => {
+      this.audio = new Audio(
+        process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
+      );
+    }, 2000);
     // setTimeout(() => {
     //   this.palysound();
     // }, 5000);
@@ -926,7 +932,7 @@ export default {
     // }, 1000 * 10);
 
     setInterval(() => {
-      this.verifyAlarmStatus();
+      if (this.timmerStatus == true) this.verifyAlarmStatus();
     }, 1000 * 4);
     // setInterval(() => {
     //   this.loadNotificationMenu();
@@ -1211,6 +1217,7 @@ export default {
       };
       //this.pendingNotificationsCount = 0;
       let pendingcount = 0;
+      this.timmerStatus = false;
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
           this.notificationAlarmDevices = data;
@@ -1222,6 +1229,8 @@ export default {
 
           this.stopsound();
         }
+
+        this.timmerStatus = true;
       });
     },
 
