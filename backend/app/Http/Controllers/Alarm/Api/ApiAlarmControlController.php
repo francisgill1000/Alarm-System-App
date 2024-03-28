@@ -425,7 +425,7 @@ class ApiAlarmControlController extends Controller
                             $body_content1 .= "*Xtreme Guard*<br/>";
 
                             $data = [
-                                'subject' => "{$issue} Notification - {$date}",
+                                'subject' => "{$issue} Notification",
                                 'body' => $body_content1,
                             ];
 
