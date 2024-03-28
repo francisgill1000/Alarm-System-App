@@ -114,7 +114,7 @@ class ApiAlarmControlController extends Controller
 
                 $logs["log_time"] = $log_time;
                 try {
-                    DeviceSensorLogs::create($logs);
+                    $insertedRecord = DeviceSensorLogs::create($logs);
 
                     //(new DeviceSensorLogsController)->updateCompanyIds();
                 } catch (\Exception $e) {
@@ -129,6 +129,14 @@ class ApiAlarmControlController extends Controller
                 }
                 $name = $deviceModel->clone()->first()->name;
                 $deviceObj = $deviceObj[0];
+
+                try {
+                    //update company_id;
+                    DeviceSensorLogs::where("id", $insertedRecord["id"])->update(["company_id" => $deviceObj["company_id"]]);
+                } catch (\Exception $e) {
+                }
+
+
 
                 if ($deviceObj['temperature_threshold'] > 0) {
 
