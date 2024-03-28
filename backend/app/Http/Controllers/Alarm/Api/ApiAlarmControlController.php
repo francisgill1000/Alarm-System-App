@@ -114,7 +114,7 @@ class ApiAlarmControlController extends Controller
                 try {
                     DeviceSensorLogs::create($logs);
 
-                    (new DeviceSensorLogsController)->updateCompanyIds();
+                    //(new DeviceSensorLogsController)->updateCompanyIds();
                 } catch (\Exception $e) {
                 }
                 $deviceModel = Device::where("serial_number", $device_serial_number);
