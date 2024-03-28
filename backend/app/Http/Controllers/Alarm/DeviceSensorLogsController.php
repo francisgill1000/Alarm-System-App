@@ -337,9 +337,9 @@ class DeviceSensorLogsController extends Controller
         $model = AlarmDeviceSensorLogs::where("company_id", 0)->distinct('serial_number');
 
 
-        $model->whereHas('device', function ($query) {
-            $query->where('company_id', '!=', 0);
-        });
+        // $model->whereHas('device', function ($query) {
+        //     $query->where('company_id', '!=', 0);
+        // });
 
         $model->take(100);
         $model->with("device:device_id,company_id,location,device_type");
