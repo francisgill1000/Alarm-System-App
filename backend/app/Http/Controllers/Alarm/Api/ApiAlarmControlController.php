@@ -141,14 +141,14 @@ class ApiAlarmControlController extends Controller
                             $ignore15Minutes = true;
                         }
 
-                        $message[] =  $this->SendWhatsappNotification($name . " - Threshold Temperature Alarm is  ON",   $name, $deviceModel->clone()->first(), $log_time, $deviceObj['temparature_alarm_status'], ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']], $ignore15Minutes);
+                        $message[] =  $this->SendWhatsappNotification($name . " -   Temperature Alarm is  ON",   $name, $deviceModel->clone()->first(), $log_time, $deviceObj['temparature_alarm_status'], ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']], $ignore15Minutes);
                     } else {
 
 
 
                         if ($deviceObj['temparature_alarm_status'] == 1) {
                             $ignore15Minutes = true;
-                            $message[] =  $this->SendWhatsappNotification($name . " - Threshold Temperature Alarm is  OFF",   $name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
+                            $message[] =  $this->SendWhatsappNotification($name . " -  Temperature Alarm is  OFF",   $name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
                             $row = [];
                             $row["temparature_alarm_status"] = 0;
 
@@ -411,7 +411,9 @@ class ApiAlarmControlController extends Controller
                             $body_content1 .= "This is Notifing you about {$issue} status <br/>";
 
                             if (isset($tempArray["temparature"])) {
-                                $body_content1 .= "Temperature:  {$tempArray["temparature"]}<br/>";
+                                if ($tempArray["temparature"] != 'nan°C') {
+                                    $body_content1 .= "Temperature:  {$tempArray["temparature"]}°C<br/>";
+                                }
                             }
                             if (isset($tempArray["max_temparature"])) {
                                 $body_content1 .= "Threshold:  {$tempArray["max_temparature"]}<br/>";
@@ -468,7 +470,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if ($minutesDifference >=   15) { // 
+                    if ($minutesDifference >=   15   || $ignore15Minutes) { // 
 
                         if ($manager->whatsapp_number != '') {
 
@@ -480,7 +482,9 @@ class ApiAlarmControlController extends Controller
                             $body_content1 .= "Company:  {$model->company->name}\n\n";
                             $body_content1 .= "This is Notifing you about *{$issue}* status \n\n";
                             if (isset($tempArray["temparature"])) {
-                                $body_content1 .= "Temperature:  {$tempArray["temparature"]}°C\n\n";
+                                if ($tempArray["temparature"] != 'nan°C') {
+                                    $body_content1 .= "Temperature:  {$tempArray["temparature"]}°C\n\n";
+                                }
                             }
                             if (isset($tempArray["max_temparature"])) {
                                 $body_content1 .= "*Threshold:  {$tempArray["max_temparature"]}°C*\n\n";
