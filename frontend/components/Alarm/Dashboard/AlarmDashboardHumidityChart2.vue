@@ -137,6 +137,7 @@ export default {
     },
     getDataFromApi() {
       if (!this.device_serial_number) return;
+      this.key = 1;
       // const data = await this.$store.dispatch("dashboard/every_hour_count");
       this.$axios
         .get("alarm_dashboard_get_humidity_hourly_data", {
