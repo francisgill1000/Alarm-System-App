@@ -95,9 +95,20 @@ class ApiAlarmControlController extends Controller
                 if ($temparature == "NaN") {
                     $temparature = 0;
                 }
+                if ($temparature == "nan") {
+                    $temparature = 0;
+                }
+                if (strtolower($temparature) == "nan") {
+                    $temparature = 0;
+                }
+                if (strtolower($humidity) == "nan") {
+                    $temparature = 0;
+                }
                 if ($humidity == "NaN") {
                     $humidity = 0;
                 }
+
+
 
 
                 $logs["serial_number"] = $device_serial_number;
@@ -138,7 +149,9 @@ class ApiAlarmControlController extends Controller
 
 
 
-                if ($deviceObj['temperature_threshold'] > 0) {
+                if ($deviceObj['temperature_threshold'] > 0 && $temparature != 'nan') {
+
+                    $temparature = floatval($temparature);
 
                     if ($temparature >= $deviceObj['temperature_threshold']) {
 
