@@ -30,7 +30,7 @@ class ApiAlarmControlController extends Controller
     public function LogDeviceStatus(Request $request)
     {
 
-
+        $message = [];
 
         try {
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
@@ -47,7 +47,7 @@ class ApiAlarmControlController extends Controller
 
             $max_temparature = '';
             $max_humidity = '';
-            $message = [];
+
             // try {
 
             //     $json = file_get_contents(Storage::path('alarm_rules.json'));
@@ -340,7 +340,7 @@ class ApiAlarmControlController extends Controller
                 return $this->response('Successfully Updated', $message, true);
             }
         } catch (\Exception $e) {
-            Storage::append("logs/alarm_error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . $e->getMessage());
+            Storage::append("logs/alarm_error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . json_encode($e));
 
             return  $e->getMessage();
         }
