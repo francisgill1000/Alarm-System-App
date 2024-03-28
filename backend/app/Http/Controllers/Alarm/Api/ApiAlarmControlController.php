@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Alarm\Api;
 
 use App\Console\Commands\SendWhatsappNotification;
+use App\Http\Controllers\Alarm\DeviceSensorLogsController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\WhatsappController;
 use App\Mail\DbBackupMail;
@@ -112,6 +113,8 @@ class ApiAlarmControlController extends Controller
                 $logs["log_time"] = $log_time;
                 try {
                     DeviceSensorLogs::create($logs);
+
+                    (new DeviceSensorLogsController)->updateCompanyIds();
                 } catch (\Exception $e) {
                 }
                 $deviceModel = Device::where("serial_number", $device_serial_number);
