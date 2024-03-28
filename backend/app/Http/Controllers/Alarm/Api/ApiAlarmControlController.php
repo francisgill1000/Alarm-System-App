@@ -141,7 +141,15 @@ class ApiAlarmControlController extends Controller
                             $ignore15Minutes = true;
                         }
 
-                        $message[] =  $this->SendWhatsappNotification($name . " -   Temperature Alarm is  ON",   $name, $deviceModel->clone()->first(), $log_time, $deviceObj['temparature_alarm_status'], ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']], $ignore15Minutes);
+                        $message[] =  $this->SendWhatsappNotification(
+                            $name . " -   Temperature Alarm is  ON",
+                            $name,
+                            $deviceModel->clone()->first(),
+                            $log_time,
+
+                            $ignore15Minutes,
+                            ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]
+                        );
                     } else {
 
 
@@ -326,7 +334,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                return $this->response('Successfully Updated', null, true);
+                return $this->response('Successfully Updated', $message, true);
             }
         } catch (\Exception $e) {
             Storage::append("logs/alarm_error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . $e->getMessage());
