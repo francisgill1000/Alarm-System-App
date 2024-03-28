@@ -47,7 +47,7 @@ class ApiAlarmControlController extends Controller
 
             $max_temparature = '';
             $max_humidity = '';
-
+            $message = [];
             // try {
 
             //     $json = file_get_contents(Storage::path('alarm_rules.json'));
