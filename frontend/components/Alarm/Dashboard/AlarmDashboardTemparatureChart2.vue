@@ -134,6 +134,11 @@ export default {
     this.chartOptions.series = this.series;
     // setTimeout(() => {
     this.getDataFromApi();
+    setInterval(() => {
+      if (this.$route.name == "alarm-dashboard") {
+        this.getDataFromApi();
+      }
+    }, 1000 * 30);
 
     console.log("Mounted");
     /// }, 2000);

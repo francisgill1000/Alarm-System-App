@@ -122,9 +122,12 @@ export default {
   mounted() {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
-    /// setTimeout(() => {
-    this.getDataFromApi();
-    // }, 2000);
+    console.log("this.$route.name", this.$route.name);
+    setInterval(() => {
+      if (this.$route.name == "alarm-dashboard") {
+        this.getDataFromApi();
+      }
+    }, 1000 * 30);
   },
 
   methods: {
