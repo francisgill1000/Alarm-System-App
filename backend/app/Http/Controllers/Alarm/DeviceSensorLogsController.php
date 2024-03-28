@@ -293,7 +293,7 @@ class DeviceSensorLogsController extends Controller
             $finalarray[] = [
                 "date" => $date,
                 "hour" => $i,
-                "count" => $model // $model == null ? 0 : round((int)$model, 2),
+                "count" =>   $model == null ? 0 : round((float)$model, 2),
 
             ];
         }
@@ -322,7 +322,7 @@ class DeviceSensorLogsController extends Controller
             $finalarray[] = [
                 "date" => $date,
                 "hour" => $i,
-                "count" => $model //$model == null ? 0 : round((int) $model, 2),
+                "count" =>  $model == null ? 0 : round((float) $model, 2),
 
             ];
         }
