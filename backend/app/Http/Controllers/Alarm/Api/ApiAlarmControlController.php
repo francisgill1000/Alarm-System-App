@@ -30,6 +30,8 @@ class ApiAlarmControlController extends Controller
     public function LogDeviceStatus(Request $request)
     {
 
+        return false;
+
         $message = [];
 
         try {
