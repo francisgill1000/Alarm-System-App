@@ -521,9 +521,9 @@ export default {
       // }
     },
     getDataFromApi(reset = 0) {
-      if (reset == 1) {
-        this.keyChart2++;
-      }
+      // if (reset == 1) {
+      //   this.keyChart2++;
+      // }
       try {
         if (
           this.device_serial_number == "" ||
