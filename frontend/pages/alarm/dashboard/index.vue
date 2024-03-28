@@ -233,7 +233,7 @@
                     ><span class="pl-5">Today Humidity</span></v-col
                   >
                   <v-col cols="4" class="pull-right"
-                    ><v-icon @click="getDataFromApi(0)" style="float: right"
+                    ><v-icon @click="getDataFromApi()" style="float: right"
                       >mdi mdi-reload</v-icon
                     >
                   </v-col>
@@ -434,7 +434,7 @@ export default {
 
     setInterval(() => {
       if (this.$route.name == "alarm-dashboard") {
-        this.getDataFromApi(0);
+        this.getDataFromApi(1);
       }
     }, 1000 * 30);
   },
@@ -498,10 +498,6 @@ export default {
         this.keyChart2++;
 
         this.getDataFromApi(1);
-
-        setTimeout(() => {
-          this.getDataFromApi(1);
-        }, 5000);
         //console.log(this.device_serial_number, " this.device_serial_number");
       } catch (e) {}
     },

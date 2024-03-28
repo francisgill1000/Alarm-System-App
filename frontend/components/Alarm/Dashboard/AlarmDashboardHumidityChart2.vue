@@ -128,7 +128,7 @@ export default {
       if (this.$route.name == "alarm-dashboard") {
         this.getDataFromApi();
       }
-    }, 1000 * 30);
+    }, 1000 * 20);
   },
 
   methods: {
