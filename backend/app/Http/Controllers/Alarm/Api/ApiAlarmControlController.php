@@ -337,7 +337,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                return $this->response('Successfully Updated', $message, true);
+                return $this->response('Successfully Updated', null, true);
             }
         } catch (\Exception $e) {
             Storage::append("logs/alarm_error/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()) . ' \n' . json_encode($e));
