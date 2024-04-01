@@ -303,32 +303,35 @@ class DeviceSensorLogsController extends Controller
     }
     public function getTemparatureHourlyData($company_id, $device_serial_number, $date)
     {
-        $finalarray = [];
+        $finalArray = [];
 
+        // Assuming $date is defined somewhere before this block
+        $date = date('Y-m-d');
+
+        // Fetch hourly averages in a single query
+        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw('HOUR(log_time) as hour, AVG(temperature) as avg_temperature')
+            ->where('company_id', $company_id)
+            ->where('serial_number', $device_serial_number)
+            ->where('temperature', '!=', 'NaN')
+            ->whereDate('log_time', $date)
+            ->groupBy('hour')
+            ->get();
+
+        // Initialize $finalArray with default values
         for ($i = 0; $i < 24; $i++) {
-
-            $j = $i;
-
-            $j = $i <= 9 ? "0" . $i : $i;
-
-            // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
-            $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
-                ->where("serial_number", $device_serial_number)
-                ->where("temparature", "!=", "NaN")
-                ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
-                ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
-                ->avg("temparature");
-
-            $finalarray[] = [
+            $finalArray[$i] = [
                 "date" => $date,
                 "hour" => $i,
-                "count" =>  $model == null ? 0 : round((float) $model, 2),
-
+                "count" => 0,
             ];
         }
 
+        // Update $finalArray with fetched averages
+        foreach ($hourlyAverages as $average) {
+            $finalArray[$average->hour]["count"] = round((float) $average->avg_temperature, 2);
+        }
 
-        return  $finalarray;
+        return $finalArray;
     }
     public function UpdateCompanyIds()
     {
