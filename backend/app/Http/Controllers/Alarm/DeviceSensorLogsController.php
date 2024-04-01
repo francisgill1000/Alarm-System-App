@@ -309,10 +309,10 @@ class DeviceSensorLogsController extends Controller
         $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
-        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("SUBSTRING(log_time, 12, 2) AS hour, AVG(temperature) AS avg_temperature")
+        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(temparature) AS avg_temperature")
             ->where('company_id', $company_id)
             ->where('serial_number', $device_serial_number)
-            ->where('temperature', '!=', 'NaN')
+            ->where('temparature', '!=', 'NaN')
             ->whereDate('log_time', $date)
             ->groupBy('hour')
             ->get();
@@ -333,6 +333,32 @@ class DeviceSensorLogsController extends Controller
         }
 
         return $finalArray;
+        // $finalarray = [];
+
+        // for ($i = 0; $i < 24; $i++) {
+
+        //     $j = $i;
+
+        //     $j = $i <= 9 ? "0" . $i : $i;
+
+        //     // $date = date('Y-m-d'); //, strtotime(date('Y-m-d') . '-' . $i . ' days'));
+        //     $model = AlarmDeviceSensorLogs::where('company_id', $company_id)
+        //         ->where("serial_number", $device_serial_number)
+        //         ->where("temparature", "!=", "NaN")
+        //         ->where('log_time', '>=', $date . ' ' . $j . ':00:00')
+        //         ->where('log_time', '<=', $date  . ' ' . $j . ':59:59')
+        //         ->avg("temparature");
+
+        //     $finalarray[] = [
+        //         "date" => $date,
+        //         "hour" => $i,
+        //         "count" =>  $model == null ? 0 : round((float) $model, 2),
+
+        //     ];
+        // }
+
+
+        // return  $finalarray;
     }
     public function UpdateCompanyIds()
     {
