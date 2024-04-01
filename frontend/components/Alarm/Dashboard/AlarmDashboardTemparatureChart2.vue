@@ -154,6 +154,9 @@ export default {
       ).render();
     } catch (error) {}
     this.getDataFromApi();
+    setTimeout(() => {
+      this.getDataFromApi();
+    }, 4000);
   },
 
   methods: {

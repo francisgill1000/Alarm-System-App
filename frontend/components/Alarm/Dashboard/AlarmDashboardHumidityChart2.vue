@@ -66,7 +66,7 @@ export default {
             columnWidth: "10%",
           },
         },
-        colors: ["#00b0f0", "#FF8000"],
+        colors: ["#0071bd", "#FF8000"],
         chart: {
           height: 350,
           type: "line",
@@ -138,6 +138,9 @@ export default {
     } catch (error) {}
 
     this.getDataFromApi();
+    setTimeout(() => {
+      this.getDataFromApi();
+    }, 4000);
   },
 
   methods: {
