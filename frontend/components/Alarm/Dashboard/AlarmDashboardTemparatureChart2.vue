@@ -138,7 +138,7 @@ export default {
       if (this.$route.name == "alarm-dashboard") {
         this.getDataFromApi();
       }
-    }, 1000 * 60);
+    }, 1000 * 60 * 15);
 
     console.log("Mounted");
     /// }, 2000);
@@ -153,7 +153,7 @@ export default {
         this.chartOptions
       ).render();
     } catch (error) {}
-    this.getDataFromApi();
+    // this.getDataFromApi();
     setTimeout(() => {
       this.getDataFromApi();
     }, 3000);

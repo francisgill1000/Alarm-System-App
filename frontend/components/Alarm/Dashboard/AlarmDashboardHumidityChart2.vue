@@ -128,7 +128,7 @@ export default {
       if (this.$route.name == "alarm-dashboard") {
         this.getDataFromApi();
       }
-    }, 1000 * 60);
+    }, 1000 * 60 * 15);
 
     try {
       new ApexCharts(
@@ -137,10 +137,9 @@ export default {
       ).render();
     } catch (error) {}
 
-    this.getDataFromApi();
     setTimeout(() => {
       this.getDataFromApi();
-    }, 5000);
+    }, 6000);
   },
 
   methods: {
@@ -149,6 +148,13 @@ export default {
     },
     getDataFromApi() {
       if (!this.device_serial_number) return;
+
+      try {
+        new ApexCharts(
+          document.querySelector("#" + this.name),
+          this.chartOptions
+        ).render();
+      } catch (error) {}
       this.key = 1;
       // const data = await this.$store.dispatch("dashboard/every_hour_count");
       this.$axios
