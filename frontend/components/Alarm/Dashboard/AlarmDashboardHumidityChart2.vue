@@ -68,7 +68,7 @@ export default {
         },
         colors: ["#0071bd", "#FF8000"],
         chart: {
-          height: 350,
+          height: 220,
           type: "line",
           toolbar: {
             show: false,
@@ -136,7 +136,9 @@ export default {
         this.chartOptions
       ).render();
     } catch (error) {}
-
+    setTimeout(() => {
+      this.getDataFromApi();
+    }, 6000);
     setTimeout(() => {
       this.getDataFromApi();
     }, 4000);

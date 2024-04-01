@@ -77,7 +77,7 @@ export default {
         colors: ["#c00000", "#efb700"],
 
         chart: {
-          height: 350,
+          height: 220,
           type: "line",
           toolbar: {
             show: false,
@@ -156,7 +156,11 @@ export default {
     // this.getDataFromApi();
     setTimeout(() => {
       this.getDataFromApi();
-    }, 2000);
+    }, 8000);
+
+    setTimeout(() => {
+      this.getDataFromApi();
+    }, 6000);
   },
 
   methods: {
@@ -192,12 +196,13 @@ export default {
     renderChart(data) {
       let counter = 0;
 
-      data.forEach((item) => {
-        this.chartOptions.series[0]["data"][counter] = item.count; //parseInt(item.count);
+      this.chartOptions.series[0]["data"] = [];
+      data.forEach((item, index) => {
+        this.chartOptions.series[0]["data"][index] = item.count; //parseInt(item.count);
 
         //this.chartOptions.series[1]["data"][counter] = item.count;
 
-        this.chartOptions.labels[counter] = item.hour;
+        this.chartOptions.labels[index] = item.hour;
         counter++;
       });
       try {
