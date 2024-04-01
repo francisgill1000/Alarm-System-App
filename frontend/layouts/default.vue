@@ -900,7 +900,7 @@ export default {
     };
   },
   created() {
-    this.verifyAlarmStatus();
+    // this.verifyAlarmStatus();
     //console.log("process.env.BACKEND_URL2", process.env.BACKEND_URL2);
     this.updateTopmenu();
 

@@ -156,7 +156,7 @@ export default {
     this.getDataFromApi();
     setTimeout(() => {
       this.getDataFromApi();
-    }, 4000);
+    }, 3000);
   },
 
   methods: {
