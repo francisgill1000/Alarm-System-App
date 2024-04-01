@@ -12,7 +12,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "",
-    title: "Xtremeguard",
+    title: "Temperature - Xtremeguard",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -108,15 +108,24 @@ export default {
           logout: false,
           user: { url: "me", method: "get", propertyName: false },
         },
-        maxAge: 86400, // 24 hours
+        //maxAge: 86400, // 24 hours
+        refreshToken: true,
+
+        token: {
+          //property: "tokens.access.token",
+          global: true,
+          type: "Bearer",
+          maxAge: 60 * 60 * 24 * 365, // 8 Hours
+        },
+
+        autoLogout: false,
       },
     },
 
-    redirect: {
-      logout: "/login",
-    },
+    // redirect: {
+    //   logout: "/login",
+    // },
   },
-
   router: {
     middleware: ["auth"],
   },
@@ -141,12 +150,12 @@ export default {
 
   pwa: {
     manifest: {
-      name: "MyTime 2 Cloud",
-      short_name: "MyTime 2 Cloud",
+      name: "Temperature - Xtremeguard",
+      short_name: "Xtremeguard",
       lang: "en",
     },
     icon: {
-      source: "icon-515x512.png", // Path to your app icon
+      source: "app-favicon.png", // Path to your app icon
     },
   },
 
@@ -179,6 +188,15 @@ export default {
   build: {
     transpile: ["vuetify/lib", "tiptap-vuetify", "vue-apexchart"],
     interval: 500,
+    extend(config, ctx) {
+      config.module.rules.push({
+        test: /\.(ogg|mp3|wav|mpe?g)$/i,
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]",
+        },
+      });
+    },
   },
 
   server: {
