@@ -280,7 +280,9 @@ class DeviceSensorLogsController extends Controller
         $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
-        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("HOUR(log_time) as hour, AVG(humidity) as avg_humidity")
+        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(humidity) AS avg_humidity")
+
+
             ->where('company_id', $company_id)
             ->where('serial_number', $device_serial_number)
             ->where('humidity', '!=', 'NaN')
