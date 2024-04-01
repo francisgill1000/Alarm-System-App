@@ -4,7 +4,7 @@
       style="z-index: 9999"
       v-model="from_menu"
       :close-on-content-click="false"
-      :nudge-left="0"
+      :nudge-left="50"
       transition="scale-transition"
       offset-y
       min-width="auto"

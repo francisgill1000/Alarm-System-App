@@ -342,7 +342,7 @@
                   <v-col cols="5" style="text-align: center">
                     <img
                       title="Max"
-                      src="../../../static/up.png"
+                      src="../../../static/up-blue.png"
                       style="width: 70px"
                     />
                   </v-col>
@@ -359,7 +359,11 @@
                       >
                         Max
                       </div> -->
-                      <div title="Max" class="bold text-h4 green--text">
+                      <div
+                        title="Max"
+                        class="bold text-h4"
+                        style="color: #0071bd"
+                      >
                         <span v-html="humidity_max"></span>
                       </div>
                       <span
