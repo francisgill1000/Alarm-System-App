@@ -309,7 +309,7 @@ class DeviceSensorLogsController extends Controller
         $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
-        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw('HOUR(log_time) as hour, AVG(temperature) as avg_temperature')
+        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("SUBSTRING(log_time, 12, 2) AS hour, AVG(temperature) AS avg_temperature")
             ->where('company_id', $company_id)
             ->where('serial_number', $device_serial_number)
             ->where('temperature', '!=', 'NaN')
@@ -328,7 +328,8 @@ class DeviceSensorLogsController extends Controller
 
         // Update $finalArray with fetched averages
         foreach ($hourlyAverages as $average) {
-            $finalArray[$average->hour]["count"] = round((float) $average->avg_temperature, 2);
+            $hour = (int)$average->hour;
+            $finalArray[$hour]["count"] = round((float) $average->avg_temperature, 2);
         }
 
         return $finalArray;
