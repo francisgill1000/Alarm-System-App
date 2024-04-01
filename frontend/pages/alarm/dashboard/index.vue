@@ -116,7 +116,7 @@
               <v-card class="py-2" style="width: 100%">
                 <v-row>
                   <v-col cols="8"
-                    ><span class="pl-5" style="font-size: 18px"
+                    ><span class="pl-5" style="font-size: 16px"
                       >Today Temperature</span
                     ></v-col
                   >
@@ -137,7 +137,7 @@
                       class="align-items-center justify-content-center pt-10"
                       ><img
                         src="../../../static/alarm-icons/temperature.png"
-                        width="100px"
+                        width="65px"
                     /></v-col>
                     <v-col cols="10">
                       <AlarmDashboardTemparatureChart1
@@ -157,44 +157,78 @@
           <v-col lg="2" md="2" sm="12" xs="12">
             <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
-                <h3 class="pl-5">Today</h3>
-                <div
-                  lg="12"
-                  md="12"
-                  style="text-align: center; padding-top: 0px; margin-top: -5px"
-                >
-                  <div style="text-align: center; font-size: 20px">Min</div>
-                  <div class="bold text-h4 green--text">
-                    <span v-html="temperature_min"></span>
-                  </div>
-                  <span
-                    style="font-size: 10px"
-                    v-if="temperature_min_date_time != '---'"
-                  >
-                    At : {{ temperature_min_date_time }}
-                  </span>
-                </div>
+                <span class="pl-5">Today Temperature </span>
 
+                <v-row>
+                  <v-col cols="5" style="text-align: center">
+                    <img
+                      title="Min"
+                      src="../../../static/down.png"
+                      style="width: 70px"
+                    />
+                  </v-col>
+
+                  <v-col cols="7">
+                    <div
+                      lg="12"
+                      md="12"
+                      style="
+                        text-align: center;
+                        padding-top: 25px;
+                        margin-top: -5px;
+                      "
+                    >
+                      <!-- <div style="text-align: center; font-size: 20px">Min</div> -->
+                      <div class="bold text-h4 red--text">
+                        <span v-html="temperature_min"></span>
+                      </div>
+                      <span
+                        title="Min"
+                        style="font-size: 10px"
+                        v-if="temperature_min_date_time != '---'"
+                      >
+                        At : {{ temperature_min_date_time }}
+                      </span>
+                    </div></v-col
+                  >
+                </v-row>
+
+                <v-row>
+                  <v-col cols="5" style="text-align: center">
+                    <img
+                      title="Max"
+                      src="../../../static/up.png"
+                      style="width: 70px"
+                    />
+                  </v-col>
+
+                  <v-col cols="7" style="text-align: center">
+                    <div
+                      class="pt-5"
+                      lg="12"
+                      md="12"
+                      style="text-align: center; padding-top: 25px"
+                    >
+                      <!-- <div
+                        style="text-align: center; color: red; font-size: 20px"
+                      >
+                        Max
+                      </div> -->
+                      <div title="Max" class="bold text-h4 green--text">
+                        <span v-html="temperature_max"></span>
+                      </div>
+                      <span
+                        style="font-size: 10px"
+                        v-if="temperature_max_date_time != '---'"
+                      >
+                        At : {{ temperature_max_date_time }}</span
+                      >
+                    </div>
+                  </v-col>
+                </v-row>
                 <div
-                  class="pt-5"
-                  lg="12"
-                  md="12"
-                  style="text-align: center; padding-top: 0px"
+                  style="font-size: 10px; text-align: center; padding-top: 10px"
                 >
-                  <div style="text-align: center; color: red; font-size: 20px">
-                    Max
-                  </div>
-                  <div class="bold text-h4 red--text">
-                    <span v-html="temperature_max"></span>
-                  </div>
-                  <span
-                    style="font-size: 10px"
-                    v-if="temperature_max_date_time != '---'"
-                  >
-                    At : {{ temperature_max_date_time }}</span
-                  >
-                </div>
-                <div style="font-size: 10px; text-align: center">
                   Last Fire Alarm: {{ fire_alarm_start_datetime }}
                 </div>
               </v-card>
@@ -249,7 +283,7 @@
                       class="align-items-center justify-content-center pt-10"
                       ><img
                         src="../../../static/alarm-icons/humidity.png"
-                        width="100px"
+                        width="65px"
                     /></v-col>
                     <v-col cols="10">
                       <AlarmDashboardHumidityChart1
@@ -269,7 +303,81 @@
           <v-col lg="2" md="2" sm="12" xs="12">
             <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
-                <h3 class="pl-5">Today</h3>
+                <span class="pl-5">Today Humidity</span>
+
+                <v-row>
+                  <v-col cols="5" style="text-align: center">
+                    <img
+                      title="Min"
+                      src="../../../static/down.png"
+                      style="width: 70px"
+                    />
+                  </v-col>
+
+                  <v-col cols="7">
+                    <div
+                      lg="12"
+                      md="12"
+                      style="
+                        text-align: center;
+                        padding-top: 25px;
+                        margin-top: -5px;
+                      "
+                    >
+                      <!-- <div style="text-align: center; font-size: 20px">Min</div> -->
+                      <div title="Min" class="bold text-h4 red--text">
+                        <span v-html="humidity_min"></span>
+                      </div>
+                      <span
+                        style="font-size: 10px"
+                        v-if="humidity_min_date_time != '---'"
+                      >
+                        At : {{ humidity_min_date_time }}
+                      </span>
+                    </div></v-col
+                  >
+                </v-row>
+
+                <v-row>
+                  <v-col cols="5" style="text-align: center">
+                    <img
+                      title="Max"
+                      src="../../../static/up.png"
+                      style="width: 70px"
+                    />
+                  </v-col>
+
+                  <v-col cols="7" style="text-align: center">
+                    <div
+                      class="pt-5"
+                      lg="12"
+                      md="12"
+                      style="text-align: center; padding-top: 25px"
+                    >
+                      <!-- <div
+                        style="text-align: center; color: red; font-size: 20px"
+                      >
+                        Max
+                      </div> -->
+                      <div title="Max" class="bold text-h4 green--text">
+                        <span v-html="humidity_max"></span>
+                      </div>
+                      <span
+                        style="font-size: 10px"
+                        v-if="humidity_max_date_time != '---'"
+                      >
+                        At : {{ humidity_max_date_time }}</span
+                      >
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-row>
+          </v-col>
+          <!-- <v-col lg="2" md="2" sm="12" xs="12">
+            <v-row style="width: 100%; height: 260px">
+              <v-card class="py-2" style="width: 100%">
+                <span class="pl-5">Today</span>
                 <div
                   lg="12"
                   md="12"
@@ -308,10 +416,10 @@
                 </div>
               </v-card>
             </v-row>
-          </v-col>
+          </v-col> -->
           <v-col lg="7" md="7" sm="12" xs="12" class="pr-0">
             <v-row style="width: 100%; height: 260px">
-              <v-card class="py-2" style="width: 100%">
+              <v-card class="py-0" style="width: 100%">
                 <v-col
                   lg="12"
                   md="12"
@@ -320,7 +428,7 @@
                   <AlarmDashboardHumidityChart2
                     :branch_id="branch_id"
                     :name="'AlarmDashboardHumidityChart2'"
-                    :height="'200'"
+                    :height="'240'"
                     :device_serial_number="device_serial_number"
                     :key="keyChart2"
                   />

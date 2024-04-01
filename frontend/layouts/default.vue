@@ -1983,6 +1983,16 @@ body {
 .v-toolbar__content .mdi-menu {
   color: #fff !important;
 }
+
+.apexcharts-text .apexcharts-yaxis-title-text,
+.apexcharts-yaxis-title-text,
+.apexcharts-title-text {
+  font-weight: normal !important;
+  font-family: "Roboto", sans-serif !important;
+  color: black !important;
+  font-size: 16px !important;
+  padding-top: 5px;
+}
 </style>
 
 <!-- <link rel="stylesheet" href="../static/css/textbox-label-style.css" /> -->

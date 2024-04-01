@@ -22,7 +22,7 @@
                   />
                 </v-col>
                 <v-col cols="8" style="text-align: center">
-                  <div>Status</div>
+                  <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.smoke_alarm_status == 0">Normal</div>
                     <div v-else style="color: red">Warning</div>
@@ -45,10 +45,10 @@
       <v-col lg="3" md="3" sm="12" xs="12">
         <v-row style="width: 100%; height: 200px">
           <v-card class="py-2" style="width: 100%">
-            <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
-              <h3 style="text-align: left">Water Leakage Alarm</h3>
+            <v-col lg="12" md="12" style="text-align: left; padding-top: 0px">
+              <span style="text-align: left">Water Leakage Alarm</span>
 
-              <v-row style="font-size: 20px">
+              <v-row style="font-size: 20px; text-align: center">
                 <v-col cols="4">
                   <img
                     class="pa-10"
@@ -57,7 +57,7 @@
                   />
                 </v-col>
                 <v-col cols="8">
-                  <div>Status</div>
+                  <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.water_alarm_status == 0">Normal</div>
                     <div v-else style="color: red">Warning</div>
@@ -80,8 +80,8 @@
       <v-col lg="3" md="3" sm="12" xs="12">
         <v-row style="width: 100%; height: 200px">
           <v-card class="py-2" style="width: 100%">
-            <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
-              <h3 style="text-align: left">A/C Power Failure Alarm</h3>
+            <v-col lg="12" md="12" style="text-align: left; padding-top: 0px">
+              <span style="text-align: left">A/C Power Failure Alarm</span>
 
               <v-row style="font-size: 20px">
                 <v-col cols="4">
@@ -91,8 +91,8 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8">
-                  <div>Status</div>
+                <v-col cols="8" style="text-align: center">
+                  <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.power_alarm_status == 0">Normal</div>
                     <div v-else style="color: red">Warning</div>
@@ -131,8 +131,8 @@
             class="py-2"
             style="width: 100%; padding-right: 0px; margin-right: 0px"
           >
-            <v-col lg="12" md="12" style="text-align: center; padding-top: 0px">
-              <h3 style="text-align: left">Door Open Status</h3>
+            <v-col lg="12" md="12" style="text-align: left; padding-top: 0px">
+              <span style="text-align: left">Door Open Status</span>
 
               <v-row style="font-size: 20px">
                 <v-col cols="4">
@@ -142,8 +142,8 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8">
-                  <div>Status</div>
+                <v-col cols="8" style="text-align: center">
+                  <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.door_open_status == 0">Closed</div>
                     <div v-else style="color: red">Open</div>

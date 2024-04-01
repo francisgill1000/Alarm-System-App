@@ -24,7 +24,7 @@
             float: right;
             z-index: 9999;
             height: 5px;
-            padding-top: 7px;
+            padding-top: 16px;
           "
           outlined
           v-model="from_date"
@@ -133,12 +133,12 @@ export default {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
     // setTimeout(() => {
-    this.getDataFromApi();
+    ////this.getDataFromApi();
     setInterval(() => {
       if (this.$route.name == "alarm-dashboard") {
         this.getDataFromApi();
       }
-    }, 1000 * 30);
+    }, 1000 * 60);
 
     console.log("Mounted");
     /// }, 2000);
@@ -147,6 +147,13 @@ export default {
       "AlarmDashboard/alarm_temperature_chart2_date",
       this.from_date
     );
+    try {
+      new ApexCharts(
+        document.querySelector("#" + this.name),
+        this.chartOptions
+      ).render();
+    } catch (error) {}
+    this.getDataFromApi();
   },
 
   methods: {
@@ -200,9 +207,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.apexcharts-canvas {
-  width: 100%;
-}
-</style>

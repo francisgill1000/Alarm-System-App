@@ -60,7 +60,7 @@ export default {
         centralLabel: this.humidity_latest + "%",
         hasNeedle: true,
         arcDelimiters: [50, 75, 99],
-        arcColors: ["#008450", "#EFB700", "#B81D13"],
+        arcColors: ["#0071bd", "#a9dcf4", "#cc86ec"],
       };
 
       this.loading = false;
