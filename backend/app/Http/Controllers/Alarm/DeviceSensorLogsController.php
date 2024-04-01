@@ -277,7 +277,7 @@ class DeviceSensorLogsController extends Controller
         $finalArray = [];
 
         // Assuming $date is defined somewhere before this loop
-        $date = date('Y-m-d');
+        // $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
         $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(humidity) AS avg_humidity")
@@ -337,7 +337,7 @@ class DeviceSensorLogsController extends Controller
         $finalArray = [];
 
         // Assuming $date is defined somewhere before this block
-        $date = date('Y-m-d');
+        // $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
         $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(temparature) AS avg_temperature")
