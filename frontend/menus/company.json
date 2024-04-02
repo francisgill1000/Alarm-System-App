@@ -8,7 +8,7 @@
     "module": "dashboard"
   },
   {
-    "icon": "mdi-account-tie",
+    "icon": "mdi mdi-temperature-celsius",
     "title": "Temperature Reports",
     "to": "/alarm/temperatureLogs",
     "menu": "employee_access",
@@ -32,7 +32,7 @@
     "module": "leftmenu"
   },
   {
-    "icon": "mdi-account-tie",
+    "icon": "mdi mdi-temperature-celsius",
     "title": "Temperature Reports",
     "to": "/alarm/temperatureLogs",
     "menu": "leftmenu",
