@@ -163,11 +163,15 @@ export default ({ app }, inject) => {
       // Create a new Date object for today's date
       var today = new Date(inputdate);
 
+      console.log("today", today);
+
       // Get the day, month, year, and day of the week
       var day = today.getDate();
       var month = today.getMonth() + 1; // Month is zero-based, so add 1
       var year = today.getFullYear();
       var dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+
+      console.log("datodayyOfWeek", dayOfWeek);
 
       // Ensure day and month are formatted with leading zeros if needed
       day = (day < 10 ? "0" : "") + day;

@@ -922,7 +922,7 @@ export default {
 
       day = (day < 10 ? "0" : "") + day;
       month = (month < 10 ? "0" : "") + month;
-      const formattedDateTime = day + "-" + month + "-" + year;
+      const formattedDateTime = month + "-" + day + "-" + year;
 
       this.currentTime = now.toLocaleTimeString([], { hour12: false });
       this.todayDate =
