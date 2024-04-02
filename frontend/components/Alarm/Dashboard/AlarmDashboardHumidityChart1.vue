@@ -11,13 +11,15 @@
     </div>
     <VueGauge
       v-if="!loading"
-      :options="options"
+      :options="VueGaugeoptions"
       :refid="name"
       :id="name"
-      style="height: 180px"
+      style="width: 200px; margin-top: 0px"
     />
 
-    <span style="font-size: 14px">Updated at : {{ humidity_date_time }}</span>
+    <div style="font-size: 12px; margin-top: -50px">
+      Updated at : {{ humidity_date_time }}
+    </div>
   </div>
 </template>
 
@@ -40,13 +42,12 @@ export default {
       display_title: "Recent 7 days Attendance",
       date_from: "",
       date_to: "",
-      options: {
+      VueGaugeoptions: {
         needleValue: 0,
         centralLabel: "0",
         hasNeedle: true,
-        arcDelimiters: [50, 75, 99],
-        arcColors: ["#008450", "#EFB700", "#B81D13"],
-        chartWidth: 400,
+        arcDelimiters: [60, 80, 99],
+        arcColors: ["#0071bd", "#a9dcf4", "#cc86ec"],
       },
 
       key: 50,
@@ -55,12 +56,17 @@ export default {
   watch: {},
   mounted() {
     setTimeout(() => {
-      this.options = {
+      this.VueGaugeoptions = {
         needleValue: this.humidity_latest,
         centralLabel: this.humidity_latest + "%",
         hasNeedle: true,
-        arcDelimiters: [50, 75, 99],
+        arcDelimiters: [60, 80, 99],
         arcColors: ["#0071bd", "#a9dcf4", "#cc86ec"],
+        chartWidth: 350,
+
+        label: {
+          show: true, // Display labels
+        },
       };
 
       this.loading = false;

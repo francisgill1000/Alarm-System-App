@@ -21,7 +21,7 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8" style="text-align: center">
+                <v-col cols="8" style="text-align: center; font-size: 16px">
                   <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.smoke_alarm_status == 0">Normal</div>
@@ -56,7 +56,7 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8">
+                <v-col cols="8" style="text-align: center; font-size: 16px">
                   <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.water_alarm_status == 0">Normal</div>
@@ -91,7 +91,7 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8" style="text-align: center">
+                <v-col cols="8" style="text-align: center; font-size: 16px">
                   <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.power_alarm_status == 0">Normal</div>
@@ -142,7 +142,7 @@
                     style="width: 160px"
                   />
                 </v-col>
-                <v-col cols="8" style="text-align: center">
+                <v-col cols="8" style="text-align: center; font-size: 16px">
                   <div style="font-size: 13px">Status</div>
                   <div class="green--text">
                     <div v-if="device.door_open_status == 0">Closed</div>
@@ -243,7 +243,9 @@ export default {
   methods: {
     getPriorityColor(status) {
       if (status == 1) {
-        return "color:red";
+        return "color:red;font-weight:500";
+      } else {
+        return " font-weight:500";
       }
     },
 

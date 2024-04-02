@@ -17,7 +17,7 @@
         "
       >
         <!-- <div color="#FFF">{{ topMenu }}</div> -->
-        <v-sheet
+        <!-- <v-sheet
           class="mx-auto"
           max-width="80%"
           style="background-color: transparent"
@@ -54,7 +54,7 @@
               </v-btn>
             </v-bottom-navigation>
           </v-slide-group>
-        </v-sheet>
+        </v-sheet> -->
         <!-- <v-sheet
           class="mx-auto"
           max-width="500"
@@ -107,10 +107,67 @@
     <v-row>
       <v-col
         cols="12"
-        class="pt-5"
+        class="pt-0"
         style="padding-right: 0px; margin-right: 0px"
       >
-        <v-row style="width: 101%; margin-right: 0px">
+        <v-row justify="end">
+          <v-col cols="3" class="pb-0">
+            <span style="float: left; width: 200px">
+              <v-select
+                style="z-index: 9999"
+                @change="ChangeDevice(device_serial_number)"
+                v-model="device_serial_number"
+                :items="devicesList"
+                dense
+                small
+                outlined
+                hide-details
+                class="ma-2"
+                label="Room"
+                item-value="serial_number"
+                item-text="name"
+              ></v-select>
+            </span>
+            <span style="float: left">
+              <v-menu
+                style="z-index: 9999"
+                v-model="from_menu"
+                :close-on-content-click="false"
+                :nudge-left="50"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    style="
+                      width: 230px;
+                      float: right;
+                      z-index: 9999;
+                      height: 5px;
+                      padding-top: 8px;
+                    "
+                    outlined
+                    v-model="from_date"
+                    v-bind="attrs"
+                    v-on="on"
+                    dense
+                    class="custom-text-box shadow-none"
+                    label="Date Filter"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  no-title
+                  scrollable
+                  v-model="from_date"
+                  @input="from_menu = false"
+                  @change="getDataFromApi()"
+                ></v-date-picker>
+              </v-menu>
+            </span>
+          </v-col>
+        </v-row>
+        <v-row style="width: 101%; margin-right: 0px" class="pt-0">
           <v-col lg="3" md="3" sm="12" xs="12">
             <v-row style="width: 100%; height: 260px">
               <v-card class="py-2" style="width: 100%">
@@ -137,9 +194,9 @@
                       class="align-items-center justify-content-center pt-10"
                       ><img
                         src="../../../static/alarm-icons/temperature.png"
-                        width="65px"
+                        width="70px"
                     /></v-col>
-                    <v-col cols="10">
+                    <v-col cols="10" class="pa-0">
                       <AlarmDashboardTemparatureChart1
                         :branch_id="branch_id"
                         :name="'AlarmDashboardTemparatureChart1'"
@@ -227,7 +284,7 @@
                   </v-col>
                 </v-row>
                 <div
-                  style="font-size: 10px; text-align: center; padding-top: 10px"
+                  style="font-size: 12px; text-align: center; padding-top: 10px"
                 >
                   Last Fire Alarm: {{ fire_alarm_start_datetime }}
                 </div>
@@ -244,9 +301,10 @@
                 >
                   <AlarmDashboardTemparatureChart2
                     :name="'AlarmDashboardTemparatureChart2'"
-                    :height="'240'"
+                    :height="'230'"
                     :device_serial_number="device_serial_number"
                     :key="keyChart2"
+                    :from_date="from_date"
                   />
                 </v-col>
               </v-card> </v-row
@@ -283,9 +341,9 @@
                       class="align-items-center justify-content-center pt-10"
                       ><img
                         src="../../../static/alarm-icons/humidity.png"
-                        width="65px"
+                        width="70px"
                     /></v-col>
-                    <v-col cols="10">
+                    <v-col cols="10" class="pa-0">
                       <AlarmDashboardHumidityChart1
                         :branch_id="branch_id"
                         :name="'AlarmDashboardHumidityChart1'"
@@ -432,9 +490,10 @@
                   <AlarmDashboardHumidityChart2
                     :branch_id="branch_id"
                     :name="'AlarmDashboardHumidityChart2'"
-                    :height="'240'"
+                    :height="'230'"
                     :device_serial_number="device_serial_number"
                     :key="keyChart2"
+                    :from_date="from_date"
                   />
                 </v-col>
               </v-card> </v-row
@@ -474,6 +533,8 @@ export default {
   },
   data() {
     return {
+      from_date: "",
+      from_menu: false,
       selectedDeviceIndex: 0,
       audioSrc: null,
       topMenu: 0,
@@ -512,7 +573,7 @@ export default {
         smoke_alarm_status: 0,
         smoke_alarm_start_datetime: 0,
       },
-      devicesList: {},
+      devicesList: [],
     };
   },
   watch: {
@@ -523,6 +584,10 @@ export default {
     //     this.getDataFromApi(1);
     //   } catch (e) {}
     // },
+
+    from_date(val) {
+      // this.keyChart2++;
+    },
   },
   mounted() {
     // if (this.$auth.user.user_type == "employee") {
@@ -551,6 +616,9 @@ export default {
     }, 1000 * 30);
   },
   async created() {
+    const today = new Date();
+
+    this.from_date = today.toISOString().slice(0, 10);
     if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
       alert("You do not have permission to access this branch");
       //this.$router.push("/login");
@@ -613,6 +681,7 @@ export default {
         //console.log(this.device_serial_number, " this.device_serial_number");
       } catch (e) {}
     },
+
     can(per) {
       return this.$pagePermission.can(per, this);
     },

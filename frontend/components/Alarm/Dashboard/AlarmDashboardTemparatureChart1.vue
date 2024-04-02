@@ -11,15 +11,15 @@
     </div>
     <VueGauge
       v-if="!loading"
-      :options="options"
+      :options="VueGaugeoptions"
       :refid="name"
       :id="name"
-      style="height: 180px"
+      style="width: 200px; margin-top: 0px"
     />
 
-    <span style="font-size: 14px"
-      >Updated at : {{ temperature_date_time }}</span
-    >
+    <div style="font-size: 12px; margin-top: -50px">
+      Updated at : {{ temperature_date_time }}
+    </div>
   </div>
 </template>
 
@@ -42,13 +42,12 @@ export default {
       display_title: "Recent 7 days Attendance",
       date_from: "",
       date_to: "",
-      options: {
+      VueGaugeoptions: {
         needleValue: 0,
         centralLabel: "0",
         hasNeedle: true,
         arcDelimiters: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
-        chartWidth: 400,
       },
 
       key: 1,
@@ -57,12 +56,16 @@ export default {
   watch: {},
   mounted() {
     setTimeout(() => {
-      this.options = {
+      this.VueGaugeoptions = {
         needleValue: this.temperature_latest,
-        centralLabel: this.temperature_latest + " C",
+        centralLabel: this.temperature_latest + "°C",
         hasNeedle: true,
         arcDelimiters: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
+        chartWidth: 350,
+        label: {
+          show: true, // Display labels
+        },
       };
 
       this.loading = false;

@@ -221,6 +221,7 @@
             >mdi-clock-outline</v-icon
           >
           <span style="font-size: 30px; color: #fff"> {{ currentTime }}</span>
+          <span style="font-size: 16px; color: #fff">{{ todayDate }}</span>
         </div>
       </span>
       <v-menu
@@ -766,6 +767,7 @@ export default {
   data() {
     return {
       currentTime: "00:00:00",
+      todayDate: "---",
       notificationsMenuItems: [
         {
           title: "Leaves Pending (0)",
@@ -910,9 +912,21 @@ export default {
     this.setSubLeftMenuItems("dashboard", "/dashboard", false);
     this.logo_src = require("@/static/logo.png");
     this.pendingNotificationsCount = 0;
+
     setInterval(() => {
       const now = new Date();
+      // Get the day, month, year, and day of the week
+      var day = now.getDate();
+      var month = now.getMonth() + 1; // Month is zero-based, so add 1
+      var year = now.getFullYear();
+
+      day = (day < 10 ? "0" : "") + day;
+      month = (month < 10 ? "0" : "") + month;
+      const formattedDateTime = day + "-" + month + "-" + year;
+
       this.currentTime = now.toLocaleTimeString([], { hour12: false });
+      this.todayDate =
+        this.$dateFormat.format_date_with_dayname(formattedDateTime);
     }, 1000);
   },
 
@@ -1992,6 +2006,10 @@ body {
   color: black !important;
   font-size: 16px !important;
   padding-top: 5px;
+}
+
+.apexcharts-text {
+  font-family: "Roboto", sans-serif !important;
 }
 </style>
 

@@ -1,6 +1,6 @@
 <template>
   <div style="width: 100%">
-    <v-menu
+    <!-- <v-menu
       style="z-index: 9999"
       v-model="from_menu"
       :close-on-content-click="false"
@@ -34,19 +34,19 @@
         @input="from_menu = false"
         @change="getDataFromApi()"
       ></v-date-picker>
-    </v-menu>
-    <div v-id="key > 1" :id="name" style="width: 100%; margin-top: -10px"></div>
+    </v-menu> -->
+    <div :id="name" style="width: 100%; margin-top: 0px" class="pt-2"></div>
   </div>
 </template>
 
 <script>
 // import VueApexCharts from 'vue-apexcharts'
 export default {
-  props: ["name", "height", "branch_id", "device_serial_number"],
+  props: ["name", "height", "branch_id", "device_serial_number", "from_date"],
   data() {
     return {
       key: 1,
-      from_date: "",
+      // from_date: "",
       from_menu: false,
       series: [
         {
@@ -63,7 +63,26 @@ export default {
       chartOptions: {
         plotOptions: {
           bar: {
-            columnWidth: "10%",
+            columnWidth: "20%",
+            colors: {
+              ranges: [
+                {
+                  from: 0,
+                  to: 60,
+                  color: "#0071bd",
+                },
+                {
+                  from: 61,
+                  to: 80,
+                  color: "#a9dcf4",
+                },
+                {
+                  from: 81,
+                  to: 99,
+                  color: "#B81D13",
+                },
+              ],
+            },
           },
         },
         colors: ["#0071bd", "#FF8000"],
@@ -89,19 +108,19 @@ export default {
         xaxis: {
           type: "string",
         },
-        yaxis: [
-          {
-            title: {
-              text: "Humidity",
-            },
-          },
-          {
-            opposite: true,
-            title: {
-              text: "",
-            },
-          },
-        ],
+        // yaxis: [
+        //   {
+        //     title: {
+        //       text: "Humidity",
+        //     },
+        //   },
+        //   {
+        //     opposite: true,
+        //     title: {
+        //       text: "",
+        //     },
+        //   },
+        // ],
       },
     };
   },
@@ -112,12 +131,16 @@ export default {
     //     this.getDataFromApi();
     //   } catch (e) {}
     // },
+    from_date(val) {
+      setTimeout(() => {
+        this.getDataFromApi();
+      }, 1000);
+    },
   },
 
   created() {
-    const today = new Date();
-
-    this.from_date = today.toISOString().slice(0, 10);
+    // const today = new Date();
+    // this.from_date = today.toISOString().slice(0, 10);
   },
   mounted() {
     this.chartOptions.chart.height = this.height;
@@ -169,14 +192,18 @@ export default {
           },
         })
         .then(({ data }) => {
+          this.key = this.key + 1;
           this.data = data;
           this.loading = false;
           this.$store.commit("AlarmDashboard/alarm_humidity_hourly", data);
 
           this.temperature_hourly_data = data.houry_data;
-          this.key = this.key + 1;
-
           this.renderChart(this.temperature_hourly_data);
+          // setTimeout(() => {
+          //   this.key = this.key + 1;
+          // }, 1000);
+
+          this.key = this.key + 1;
         });
     },
     renderChart(data) {
