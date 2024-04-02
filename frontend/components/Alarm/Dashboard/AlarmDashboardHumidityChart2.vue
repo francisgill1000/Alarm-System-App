@@ -72,12 +72,12 @@ export default {
                   color: "#0071bd",
                 },
                 {
-                  from: 61,
+                  from: 60,
                   to: 80,
                   color: "#a9dcf4",
                 },
                 {
-                  from: 81,
+                  from: 80,
                   to: 99,
                   color: "#B81D13",
                 },
@@ -145,7 +145,7 @@ export default {
   mounted() {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
-    console.log("this.$route.name", this.$route.name);
+    //console.log("this.$route.name", this.$route.name);
 
     setInterval(() => {
       if (this.$route.name == "alarm-dashboard") {

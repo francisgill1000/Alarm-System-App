@@ -137,12 +137,12 @@ export default {
                   color: "#008450",
                 },
                 {
-                  from: 24,
+                  from: 23,
                   to: 50,
                   color: "#EFB700",
                 },
                 {
-                  from: 51,
+                  from: 50,
                   to: 99,
                   color: "#B81D13",
                 },

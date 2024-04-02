@@ -61,8 +61,13 @@ export default {
         centralLabel: this.humidity_latest + "%",
         hasNeedle: true,
         arcDelimiters: [60, 80, 99],
+        // arcLabels: [60, 80, 99],
         arcColors: ["#0071bd", "#a9dcf4", "#cc86ec"],
         chartWidth: 350,
+        needleColor: "#0071bd",
+        arcOverEffect: true,
+
+        top: true,
 
         label: {
           show: true, // Display labels

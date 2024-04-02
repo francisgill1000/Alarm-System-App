@@ -47,6 +47,8 @@ export default {
         centralLabel: "0",
         hasNeedle: true,
         arcDelimiters: [23, 50, 99],
+
+        //arcLabels: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
       },
 
@@ -61,6 +63,7 @@ export default {
         centralLabel: this.temperature_latest + "°C",
         hasNeedle: true,
         arcDelimiters: [23, 50, 99],
+        //arcLabels: [23, 50, 99],
         arcColors: ["#008450", "#EFB700", "#B81D13"],
         chartWidth: 350,
         label: {
