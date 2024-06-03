@@ -529,7 +529,8 @@ class DeviceSensorLogsController extends Controller
         $startTime = new DateTime($date . " 00:00:00"); // Current date and time
         $endTime = new DateTime($date . " 23:59:59");; // Display for the next 24 hours
 
-        $interval = new DateInterval('PT60M'); // 30 minutes interval
+        //$interval = new DateInterval('PT60M'); // 60 minutes interval
+        $interval = new DateInterval('PT12H'); // 60 minutes interval
         $period = new DatePeriod($startTime, $interval, $endTime);
 
         $companies = Company::get();
@@ -542,7 +543,7 @@ class DeviceSensorLogsController extends Controller
                 $filter_from_date = $dt->format('Y-m-d H:i:s');
 
                 $filter_to_datetime = $dt;
-                $filter_to_datetime = $filter_to_datetime->modify('+60 minutes'); // Add 5 minutes to the current date and time
+                $filter_to_datetime = $filter_to_datetime->modify('+60 minutes'); // Add 60 minutes to the current date and time
                 $filter_to_datetime = $filter_to_datetime->format('Y-m-d H:i:s');
 
 
