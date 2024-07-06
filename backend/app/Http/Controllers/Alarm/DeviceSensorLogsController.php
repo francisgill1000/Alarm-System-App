@@ -7,6 +7,7 @@ use App\Models\Alarm\DeviceSensorLogs as AlarmDeviceSensorLogs;
 use App\Models\Company;
 use App\Models\Device;
 use App\Models\DeviceSensorLogs;
+use Carbon\Carbon;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -521,17 +522,20 @@ class DeviceSensorLogsController extends Controller
     }
     public function deleteOneMonthOldLogs()
     {
+        // Define the start and end date variables
+        // $startDate = '2024-04-02';
+        // $endDate = '2024-04-03';
 
-        //Fetch 30minutes logs and keep one record for every 30 minutes with alarm
-        //Deleting records which has no alarm vaue 
+        $date =  date("Y-m-d", strtotime('-30 days'));
+        $startDate = new DateTime($date . " 00:00:00"); // Current date and time
+        $endDate = new DateTime($date . " 23:59:59");; // Display for the next 24 hours
 
-        $date =  date("Y-m-d", strtotime('-15 days'));
-        $startTime = new DateTime($date . " 00:00:00"); // Current date and time
-        $endTime = new DateTime($date . " 23:59:59");; // Display for the next 24 hours
 
-        //$interval = new DateInterval('PT60M'); // 60 minutes interval
-        $interval = new DateInterval('PT12H'); // 60 minutes interval
-        $period = new DatePeriod($startTime, $interval, $endTime);
+        // Create Carbon instances for the start and end dates
+        $fromDate = Carbon::create($startDate, 0, 0, 0); // Start date: April 2, 2024, 00:00
+        $toDate = Carbon::create($endDate, 0, 0, 0);    // End date: April 3, 2024, 00:00
+
+        // Loop through each hour in the date range
 
         $companies = Company::get();
 
@@ -539,26 +543,34 @@ class DeviceSensorLogsController extends Controller
         $finalDuplicateIds = [];
         foreach ($companies as $company) {
 
-            foreach ($period as $dt) {
-                $filter_from_date = $dt->format('Y-m-d H:i:s');
+            while ($fromDate->lt($toDate)) {
+                // Calculate the next hour
+                $nextHour = $fromDate->copy()->addHours(13);
 
-                $filter_to_datetime = $dt;
-                $filter_to_datetime = $filter_to_datetime->modify('+60 minutes'); // Add 60 minutes to the current date and time
-                $filter_to_datetime = $filter_to_datetime->format('Y-m-d H:i:s');
+                // Display the from and to dates for the current hour
+                echo "From: " . $fromDate->toDateTimeString() . " To: " . $nextHour->toDateTimeString() . "\n";
+
+                $filter_from_date = $fromDate->toDateTimeString();
+
+                $filter_to_datetime = $nextHour->toDateTimeString();
 
 
                 $logs = AlarmDeviceSensorLogs::where("company_id", $company->id)
-                    ->where("water_leakage", 0)
-                    ->where("power_failure", 0)
-                    ->where("door_status", 0)
-                    ->where("smoke_alarm", 0)
-                    ->where("fire_alarm", 0)
+
                     ->where("log_time", ">=",  $filter_from_date)
                     ->where("log_time", "<",  $filter_to_datetime);
 
                 $deleteIds = $logs->get()->pluck('id')->toArray();
 
                 array_shift($deleteIds);
+                // // Fetch the records to delete (including soft deleted ones)
+                //$logsToDelete = AlarmDeviceSensorLogs::withTrashed()->whereIn('id', $deleteIds)->get();
+
+                // // Check if there are records to delete
+                // if ($logsToDelete->isNotEmpty()) {
+                //     // Perform the force delete operation
+                //     $deleted = AlarmDeviceSensorLogs::withTrashed()->whereIn('id', $deleteIds)->forceDelete();
+                // }
 
 
                 if (count($deleteIds))
@@ -566,6 +578,8 @@ class DeviceSensorLogsController extends Controller
 
 
                 $finalDuplicateIds = array_merge($finalDuplicateIds, $deleteIds);
+
+                $fromDate->addHours(12);
             }
         }
 
@@ -573,7 +587,65 @@ class DeviceSensorLogsController extends Controller
         // if (count($finalDuplicateIds))
         //     AlarmDeviceSensorLogs::whereIn("id", $finalDuplicateIds)->delete();
 
+
+
+        // Add one hour to the current date
+
+
         return $finalDuplicateIds;
+        // return;
+        // //Fetch 30minutes logs and keep one record for every 30 minutes with alarm
+        // //Deleting records which has no alarm vaue 
+
+        // $date =  date("Y-m-d", strtotime('-15 days'));
+        // $startTime = new DateTime($date . " 00:00:00"); // Current date and time
+        // $endTime = new DateTime($date . " 23:59:59");; // Display for the next 24 hours
+
+        // //$interval = new DateInterval('PT60M'); // 60 minutes interval
+        // $interval = new DateInterval('PT12H'); // 60 minutes interval
+        // $period = new DatePeriod($startTime, $interval, $endTime);
+
+        // $companies = Company::get();
+
+
+        // $finalDuplicateIds = [];
+        // foreach ($companies as $company) {
+
+        //     foreach ($period as $dt) {
+        //         $filter_from_date = $dt->format('Y-m-d H:i:s');
+
+        //         $filter_to_datetime = $dt;
+        //         $filter_to_datetime = $filter_to_datetime->modify('+60 minutes'); // Add 60 minutes to the current date and time
+        //         $filter_to_datetime = $filter_to_datetime->format('Y-m-d H:i:s');
+
+
+        //         $logs = AlarmDeviceSensorLogs::where("company_id", $company->id)
+        //             ->where("water_leakage", 0)
+        //             ->where("power_failure", 0)
+        //             ->where("door_status", 0)
+        //             ->where("smoke_alarm", 0)
+        //             ->where("fire_alarm", 0)
+        //             ->where("log_time", ">=",  $filter_from_date)
+        //             ->where("log_time", "<",  $filter_to_datetime);
+
+        //         $deleteIds = $logs->get()->pluck('id')->toArray();
+
+        //         array_shift($deleteIds);
+
+
+        //         if (count($deleteIds))
+        //             AlarmDeviceSensorLogs::whereIn("id", $deleteIds)->delete();
+
+
+        //         $finalDuplicateIds = array_merge($finalDuplicateIds, $deleteIds);
+        //     }
+        // }
+
+
+        // // if (count($finalDuplicateIds))
+        // //     AlarmDeviceSensorLogs::whereIn("id", $finalDuplicateIds)->delete();
+
+        // return $finalDuplicateIds;
     }
     public function deleteOld5DaysLogs()
     {
