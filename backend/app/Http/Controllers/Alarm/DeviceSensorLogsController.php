@@ -23,9 +23,7 @@ class DeviceSensorLogsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-    }
+    public function index() {}
 
     public function getDeliveLogs(Request $request)
     {
@@ -513,12 +511,24 @@ class DeviceSensorLogsController extends Controller
         } catch (\Exception $e) {
         }
         try {
+            $logs[] = $this->delete2MonthOldLogs();
+        } catch (\Exception $e) {
+        }
+        try {
             $logs[] = $this->deleteOneMonthOldLogs();
         } catch (\Exception $e) {
         }
 
+
         Storage::put("logs/deleted-logs-count-" . date("Y-m-d") . ".logs", json_encode($logs));
         return json_encode($logs);
+    }
+
+    public function delete2MonthOldLogs()
+    {
+
+        $date =  date("Y-m-d", strtotime('-60 days'));
+        $logs = AlarmDeviceSensorLogs::where("log_time", "<=", $date);
     }
     public function deleteOneMonthOldLogs()
     {
