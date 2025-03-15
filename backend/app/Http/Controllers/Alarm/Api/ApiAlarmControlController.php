@@ -133,7 +133,7 @@ class ApiAlarmControlController extends Controller
                 $deviceModel = Device::where("serial_number", $device_serial_number);
 
                 $deviceObj = $deviceModel->clone()->get();
-                //update live status 
+                //update live status
                 $deviceModel->clone()->update(["status_id" => 1, "last_live_datetime" => date("Y-m-d H:i:s")]);
                 if (count($deviceObj) == 0) {
                     return $this->response('Device Information is not available', null, false);
@@ -431,7 +431,7 @@ class ApiAlarmControlController extends Controller
                         }
 
 
-                        if ($minutesDifference >=   15 || $ignore15Minutes) { // 
+                        if ($minutesDifference >=   15 || $ignore15Minutes) { //
 
 
 
@@ -504,7 +504,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if ($minutesDifference >=   15   || $ignore15Minutes) { // 
+                    if ($minutesDifference >=   15   || $ignore15Minutes) { //
 
                         if ($manager->whatsapp_number != '') {
 
@@ -535,7 +535,7 @@ class ApiAlarmControlController extends Controller
                             if (count($model->company->company_whatsapp_content))
                                 $body_content1 .= $model->company->company_whatsapp_content[0]->content;
 
-                            (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
+                            ////////(new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
 
                             $data = [
                                 "company_id" => $model->company->id,

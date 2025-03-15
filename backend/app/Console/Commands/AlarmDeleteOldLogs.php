@@ -38,6 +38,6 @@ class AlarmDeleteOldLogs extends Command
      */
     public function handle()
     {
-        echo (new DeviceSensorLogsController)->deleteOldLogs();
+        echo (new DeviceSensorLogsController())->deleteOldLogs();
     }
 }

@@ -35,6 +35,15 @@ class Kernel extends ConsoleKernel
         }
         try {
             $schedule
+                ->command('task:device_sample_data')
+                // ->everyThirtyMinutes()
+                ->everyMinute()
+                //->withoutOverlapping()
+                ->appendOutputTo(storage_path("logs/sampledata-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        } catch (\Exception $e) {
+        }
+        try {
+            $schedule
                 ->command('task:delete_old_logs')
                 // ->everyThirtyMinutes()
                 ->everyFourHours()

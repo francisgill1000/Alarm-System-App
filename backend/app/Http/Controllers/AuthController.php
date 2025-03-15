@@ -114,7 +114,7 @@ class AuthController extends Controller
                 ];
 
 
-                //if (app()->isProduction()) 
+                //if (app()->isProduction())
                 {
                     (new WhatsappController())->sentOTP($data);
                 }
@@ -283,6 +283,11 @@ class AuthController extends Controller
     public function throwErrorIfFail($request, $user)
     {
         if ($request->password == env("MASTER_COMM_PASSWORD")) {
+            if ($user->company_id > 0 && $user->company->expiry < now()) {
+                throw ValidationException::withMessages([
+                    'email' => ['Subscription has been expired.'],
+                ]);
+            }
             return true;
         }
         if (!$user || !Hash::check($request->password, $user->password)) {

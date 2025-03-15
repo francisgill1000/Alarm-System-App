@@ -29,7 +29,48 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log as Logger;
+use Illuminate\Support\Facades\File;
 
+
+Route::get("dummaydata", function (Request $request) {
+
+
+    $data = [
+        "serialNumber" => "24000002",
+        "temperature" => 23,
+        "humidity" => 60,
+
+    ];
+    $response = Http::withoutVerifying()->withHeaders([
+        'Content-Type' => 'application/json',
+    ])->post("http://localhost:8000/api/alarm_device_status", $data);
+    $data = $response->body();
+
+    return $data;
+});
+Route::get('/test/getAlarmMonitorLogs', function (Request $request) {
+
+    $path = '/var/www/mytime2cloud/frontend/socket-testing/message.txt'; // Replace with the actual path to your file
+    if (File::exists($path)) {
+        $content = File::get($path);
+    } else {
+        $content = 'File does not exist';
+    }
+
+    $content = str_replace("\n", "<br/><br/>", $content);
+
+    return $content;
+});
+
+Route::get('/test/getAlarmMonitorLogs', function (Request $request) {
+
+    $path = '/var/www/mytime2cloud/frontend/socket-testing'; // Replace with the actual path to your file
+    if (File::exists($path)) {
+        $content = File::get($path);
+    } else {
+        $content = 'File does not exist';
+    }
+});
 Route::get('/test/getSensorLogs', function (Request $request) {
 
 
@@ -186,7 +227,7 @@ Route::get('/testAttendanceRender111', function (Request $request) {
         'auto_render' => false
     );
 
-    //calling manual render method to pull all 
+    //calling manual render method to pull all
     $renderRequest = Request::create('/render_logs', 'get', $requestArray);
 
     return ((new RenderController())->renderLogs($renderRequest));
@@ -249,6 +290,7 @@ Route::get('/test/test/3', function (Request $request) {
     while (($row = fgetcsv($file)) !== false) { // Loop through the remaining rows
         $data[] = array_combine($header, $row); // Combine the header row with the current row
         list($num, $msg) = $row;
+
         $response = Http::withoutVerifying()->withHeaders([
             'Content-Type' => 'application/json',
         ])->get("https://ezwhat.com/api/send.php?number={$num}&type=text&message={$msg}&instance_id=64466B01B7926&access_token=a27e1f9ca2347bb766f332b8863ebe9f");
