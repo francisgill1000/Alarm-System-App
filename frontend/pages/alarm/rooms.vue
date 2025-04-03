@@ -424,7 +424,7 @@
         </template>
 
         <template v-slot:item.device_wifi="{ item }">
-          {{ item.wifiipaddress }}
+          {{ item.wifiipaddress || "---" }}
           <div>
             {{ item.wifissid }}
           </div>
