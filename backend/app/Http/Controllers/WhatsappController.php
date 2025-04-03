@@ -127,7 +127,7 @@ class WhatsappController extends Controller
 
                 // dd($response->status());
 
-                //if ($response->status() == 200) 
+                //if ($response->status() == 200)
                 {
                     Log::channel('whatsapp_logs')->info($msg);
                     Log::channel('whatsapp_logs')->info($response);
@@ -182,7 +182,7 @@ class WhatsappController extends Controller
             }
         }
         // print_r($data);
-        $response = Http::timeout(3600)->withoutVerifying()->get(env('WHATSAPP_URL'), $data);
+        $response = Http::timeout(30)->withoutVerifying()->get(env('WHATSAPP_URL'), $data);
 
         // You can check the response status and get the response content as needed
         if ($response->successful()) {

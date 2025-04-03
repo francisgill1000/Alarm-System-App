@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 //Route::apiResource('announcement', AnnouncementController::class);
 // Route::get('announcement_list', [AnnouncementController::class, 'annoucement_list']);
 // Route::get('announcement/search/{key}', [AnnouncementController::class, 'search']);
-//Route::get('alarm_device_status', [ApiAlarmControlController::class, 'LogDeviceStatus']);
+Route::get('alarm_device_status', [ApiAlarmControlController::class, 'LogDeviceStatus']);
 Route::post('alarm_device_status', [ApiAlarmControlController::class, 'LogDeviceStatus']);
 Route::post('nursecalling_device_status', [ApiNurseCallingControlController::class, 'ApiLogDeviceStatus']);
 

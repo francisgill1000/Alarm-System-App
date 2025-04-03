@@ -39,8 +39,8 @@ class DeviceSampleData extends Command
     {
         $data = [
             "serialNumber" => "24000001",
-            "temperature" =>  mt_rand(200, 220) / 10,
-            "humidity" =>  mt_rand(500, 600) / 10, //62
+            "temperature" =>  mt_rand(180, 260) / 10,
+            "humidity" =>  mt_rand(400, 600) / 10,
             "fire_alarm" => 0,
             "smokeStatus" =>  0,
             "waterLeakage" =>  0,

@@ -47,6 +47,10 @@ class ApiAlarmControlController extends Controller
             $fire_alarm = 0;
             $log_time = date('Y-m-d H:i:s');
 
+            $wifiipaddress = null;
+            $wifissid = null;
+
+
             $max_temparature = '';
             $max_humidity = '';
 
@@ -91,6 +95,19 @@ class ApiAlarmControlController extends Controller
                 if ($request->filled("doorOpen")) {
                     $door_status = $request->doorOpen;
                 }
+                if ($request->filled("doorOpen")) {
+                    $door_status = $request->doorOpen;
+                }
+                if ($request->filled("wifiipaddress")) {
+                    $wifiipaddress = $request->wifiipaddress;
+                }
+                if ($request->filled("wifissid")) {
+                    $wifissid = $request->wifissid;
+                }
+                //update WIFI details on Devices Table
+                Device::where("serial_number", $device_serial_number)
+
+                    ->update(["wifiipaddress" => $wifiipaddress, "wifissid" => $wifissid]);
 
                 if ($temparature == "NaN") {
                     $temparature = 0;

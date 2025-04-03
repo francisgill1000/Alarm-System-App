@@ -422,6 +422,14 @@
             {{ $dateFormat.format4(item.power_alarm_start_datetime) }}
           </div>
         </template>
+
+        <template v-slot:item.device_wifi="{ item }">
+          {{ item.wifiipaddress }}
+          <div>
+            {{ item.wifissid }}
+          </div>
+        </template>
+
         <template v-slot:item.door_open_status="{ item }">
           <v-icon :color="item.door_open_status == 0 ? '' : 'error'"
             >mdi mdi-bell
@@ -666,7 +674,15 @@ export default {
       },
 
       {
-        text: "Smoke Alarm",
+        text: "Device Wifi",
+        align: "left",
+        sortable: false,
+        value: "device_wifi",
+        filterable: false,
+      },
+
+      {
+        text: "Smoke  ",
         align: "center",
         sortable: false,
         value: "smoke_alarm_status",
@@ -680,7 +696,7 @@ export default {
         filterable: false,
       },
       {
-        text: "AC Power Alarm",
+        text: "AC Power  ",
         align: "center",
 
         sortable: false,
@@ -697,7 +713,7 @@ export default {
       },
 
       {
-        text: "Smoke Detection",
+        text: "Smoke  ",
         align: "center",
         sortable: false,
         value: "smoke_enabled",
@@ -794,19 +810,19 @@ export default {
       return;
     }
 
-    let branch_header = [
-      {
-        text: "Branch",
-        align: "left",
-        sortable: true,
-        key: "branch_id", //sorting
-        value: "company_branch.branch_name", //edit purpose
+    // let branch_header = [
+    //   {
+    //     text: "Branch",
+    //     align: "left",
+    //     sortable: true,
+    //     key: "branch_id", //sorting
+    //     value: "company_branch.branch_name", //edit purpose
 
-        filterable: true,
-        filterSpecial: true,
-      },
-    ];
-    this.headers.splice(1, 0, ...branch_header);
+    //     filterable: true,
+    //     filterSpecial: true,
+    //   },
+    // ];
+    // this.headers.splice(1, 0, ...branch_header);
 
     try {
       const { data } = await this.$axios.get(`branches_list`, {

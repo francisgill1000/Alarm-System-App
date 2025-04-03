@@ -35,7 +35,12 @@ class DbBackup extends Command
      * @return int
      */
     public function handle()
+
+
+
     {
+
+        echo exec("php artisan backup:clean");
         echo exec("php artisan backup:run --only-db");
 
         echo "\n";

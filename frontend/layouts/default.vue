@@ -221,7 +221,9 @@
             >mdi-clock-outline</v-icon
           >
           <span style="font-size: 30px; color: #fff"> {{ currentTime }}</span>
-          <span style="font-size: 16px; color: #fff">{{ todayDate }}</span>
+          <span style="font-size: 16px; color: #fff; font-weight: 200">{{
+            todayDate
+          }}</span>
         </div>
       </span>
       <v-menu

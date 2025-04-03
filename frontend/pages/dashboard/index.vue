@@ -26,7 +26,7 @@ export default {
   mounted() {},
   async created() {
     if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
-      alert("You do not have permission to access this branch");
+      alert("You do not have permission to access ");
       //this.$router.push("/login");
       this.$axios.get(`/logout`).then(({ res }) => {
         this.$auth.logout();
