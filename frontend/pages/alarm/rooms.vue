@@ -6,6 +6,32 @@
       </v-snackbar>
     </div>
 
+    <v-dialog
+      v-model="DialogDeviceSettings"
+      width="800px"
+      style="background-color: #fff !important"
+    >
+      <v-card>
+        <v-card-title dense class="popup_background">
+          <span>Device Config Settings</span>
+          <v-spacer></v-spacer>
+          <v-icon @click="DialogDeviceSettings = false" outlined>
+            mdi mdi-close-circle
+          </v-icon>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <DeviceSettings
+              :key="deviceSerialNumber"
+              :editedItem="editedItem"
+              :device_serial_number="deviceSerialNumber"
+              @emitCloseEvent="DialogDeviceSettings = false"
+            />
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+
     <v-row>
       <!-- <v-col xs="12" sm="12" md="3" cols="12">
         <v-select class="form-control" @change="getDataFromApi(`device`)" v-model="pagination.per_page"
@@ -502,7 +528,7 @@
                 </v-list-item-title>
               </v-list-item>
 
-              <v-list-item v-else @click="showDeviceSettings(item)">
+              <v-list-item @click="showDeviceSettings(item)">
                 <v-list-item-title style="cursor: pointer">
                   <v-icon color="secondary" small> mdi-cog </v-icon>
                   Settings
@@ -528,10 +554,13 @@
 // import Back from "../../components/Snippets/Back.vue";
 import timeZones from "../../defaults/utc_time_zones.json";
 import DeviceAccessSettings from "../../components/DeviceAccessSettings.vue";
+import DeviceSettings from "../../components/Alarm/DeviceSettings.vue";
 export default {
-  components: { DeviceAccessSettings },
+  components: { DeviceAccessSettings, DeviceSettings },
 
   data: () => ({
+    deviceSerialNumber: "",
+
     deviceCAMVIISettings: {},
     DialogDeviceMegviiSettings: false,
     valid: false,
@@ -1356,6 +1385,7 @@ export default {
       this.deviceResponse = "";
     },
     showDeviceSettings(item) {
+      this.key = this.key + 1;
       this.errors = [];
       this.payload = {};
       this.editedIndex = item.id;
@@ -1363,7 +1393,7 @@ export default {
       this.editedItem = item;
       this.loadingDeviceData = true;
 
-      this.getDeviceSettginsFromSDK(item.device_id);
+      //this.getDeviceSettginsFromSDK(item.device_id);
       this.DialogDeviceSettings = true;
     },
     addItem() {

@@ -47,6 +47,12 @@ Route::get('get-device-settings-from-sdk', [DeviceController::class, 'getDeviceS
 Route::post('update-device-sdk-settings', [DeviceController::class, 'updateDeviceSettingsToSDK']);
 Route::post('update-device-alarm-status', [DeviceController::class, 'updateDeviceAlarmToSDK']);
 
+Route::get('get_device_settings_from_socket_arduino', [DeviceController::class, 'getDeviceConfigSettingsFromArduinoSocket']);
+Route::post('update_device_settings_from_socket_arduino', [DeviceController::class, 'updateDeviceConfigSettingsFromArduinoSocket']);
+
+
+
+
 
 
 

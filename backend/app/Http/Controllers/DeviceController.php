@@ -37,7 +37,7 @@ class DeviceController extends Controller
         $model->where("device_type", "!=", "Manual");
         $model->where("device_id", "!=", "Manual");
         $model->Where("device_id",  'not like', "%Mobile%");
-        $model->when(request()->filled('branch_id'), fn ($q) => $q->where('branch_id', request('branch_id')));
+        $model->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')));
         $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
         return $model->get(["id", "name", "location", "device_id", "device_type", "serial_number"]);
     }
@@ -220,7 +220,7 @@ class DeviceController extends Controller
         $model->with(['device']);
         $model->where('company_id', $id);
         $model->when($request->filled("branch_id"), function ($q) use ($request) {
-            $q->whereHas("employee", fn ($q) => $q->where("branch_id", $request->branch_id));
+            $q->whereHas("employee", fn($q) => $q->where("branch_id", $request->branch_id));
         });
         $model->whereIn('UserID', function ($query) use ($request) {
             // $model1 = Employee::query();
@@ -516,7 +516,10 @@ class DeviceController extends Controller
         $model = Device::query();
 
         $fields = [
-            'name', 'device_id', 'location', 'short_name',
+            'name',
+            'device_id',
+            'location',
+            'short_name',
             'status' => ['name'],
             'company' => ['name'],
         ];
@@ -797,7 +800,7 @@ class DeviceController extends Controller
 
 
         $total_devices_count = Device::where("device_type", "!=", "Mobile")
-            ->when($company_id > 0, fn ($q) => $q->where('company_id', $company_id))
+            ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
             ->where("device_type", "!=", "Manual")
             ->where("device_id", "!=", "Manual")
 
@@ -808,7 +811,7 @@ class DeviceController extends Controller
 
 
         $companyDevices = Device::where("device_type", "!=", "Mobile")
-            ->when($company_id > 0, fn ($q) => $q->where('company_id', $company_id))
+            ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
             ->where("device_type", "!=", "Manual")
             ->where("device_id", "!=", "Manual")
 
@@ -977,7 +980,12 @@ class DeviceController extends Controller
         $device_settings_id = '';
 
         $devices_active_settings_array = [
-            'device_id' => $device_id, 'company_id' =>  $request->company_id, 'date_from' => $request->date_from, 'date_to' => $request->date_to,   'open_json' => json_encode($open_time_array), 'close_json' => json_encode($closing_time_array)
+            'device_id' => $device_id,
+            'company_id' =>  $request->company_id,
+            'date_from' => $request->date_from,
+            'date_to' => $request->date_to,
+            'open_json' => json_encode($open_time_array),
+            'close_json' => json_encode($closing_time_array)
         ];
 
         $record = DeviceActivesettings::where("device_id", $device_id)->where("company_id", $request->company_id);
@@ -1040,7 +1048,7 @@ class DeviceController extends Controller
                     }
 
                     // $this->sendWhatsappNotification($message, '971554501483');
-                    // $this->sendWhatsappNotification($message, '971553303991'); 
+                    // $this->sendWhatsappNotification($message, '971553303991');
 
 
                     $this->sendNotification($notification, $company, $offlineDevicesCount, $devicesLocations, "", $company->devices);
@@ -1138,5 +1146,129 @@ class DeviceController extends Controller
             "Finger Print",
             "Password"
         ];
+    }
+
+    public function getDeviceConfigSettingsFromArduinoSocket(Request $request)
+    {
+        if ($request->filled('serial_number')) {
+
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'http://64.227.164.43:6000/device-config/' . $request->serial_number,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET',
+            ));
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+
+            $response = json_decode($response, true);
+
+            if (isset($response["error"]))
+                $response['error'] = $response["error"];
+            else
+                $response['config'] = json_decode($response['config'], true);
+
+
+
+
+            return  $response;
+        }
+    }
+    public function updateDeviceConfigSettingsFromArduinoSocket(Request $request)
+    {
+
+        $config = [];
+
+        $config["server_url"] = $request->config["server_url"];
+
+        $config["heartbeat"] = $request->config["heartbeat"];
+
+        $config["server_ip"] = $request->config["server_ip"];
+
+        $config["server_port"] = $request->config["server_port"];
+        if ($request->config["temp_checkbox"] == true) {
+            $config["temp_checkbox"] = true;
+            $config["max_temperature"] = (float) $request->config["max_temperature"];
+            $config["min_temperature"] = (float) $request->config["min_temperature"];
+        } else {
+            $config["temp_checkbox"] = false;
+        }
+        if ($request->config["humidity_checkbox"] == true) {
+            $config["humidity_checkbox"] = true;
+            $config["max_humidity"] = (float) $request->config["max_humidity"];
+        } else {
+            $config["humidity_checkbox"] = false;
+        }
+        if ($request->config["doorcontact_checkbox"] == true) {
+            $config["doorcontact_checkbox"] = true;
+            $config["max_doorcontact"] = (float) $request->config["max_doorcontact"];
+        } else {
+            $config["doorcontact_checkbox"] = false;
+        }
+        if ($request->config["siren_checkbox"] == true) {
+            $config["siren_checkbox"] = true;
+            $config["max_siren_play"] = (float) $request->config["max_siren_play"];
+            $config["max_siren_pause"] = (float) $request->config["max_siren_pause"];
+        } else {
+            $config["siren_checkbox"] = false;
+        }
+        $config["fire_checkbox"] = $request->config["fire_checkbox"];
+        $config["power_checkbox"] = $request->config["power_checkbox"];
+
+
+
+
+        if ($request->filled('serial_number')) {
+            $url = 'http://64.227.164.43:6000/device-config-update/' . $request->serial_number;
+
+            $postData = [
+                "action" => "UPDATE_CONFIG",
+                "serialNumber" => $request->serial_number,
+                "config" => $config,
+            ];
+
+
+
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode($postData),
+                CURLOPT_HTTPHEADER => [
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen(json_encode($postData))
+                ],
+            ]);
+
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($response === false) {
+                return $this->response('cURL Error: ' . $curlError, null, false);
+            }
+
+            return $this->response('Updated Successfully', ['response' => $response, 'status' => $httpCode], true);
+        }
     }
 }
