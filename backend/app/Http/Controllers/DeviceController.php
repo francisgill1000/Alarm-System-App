@@ -1272,6 +1272,8 @@ class DeviceController extends Controller
         }
         $config["fire_checkbox"] = $request->config["fire_checkbox"];
         $config["power_checkbox"] = $request->config["power_checkbox"];
+        $config["water_checkbox"] = $request->config["water_checkbox"];
+
 
 
 
