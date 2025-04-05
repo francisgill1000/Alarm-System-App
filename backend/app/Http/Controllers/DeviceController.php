@@ -17,6 +17,7 @@ use App\Models\DevicesActiveWeeklySettings;
 use App\Models\Employee;
 use DateTime;
 use DateTimeZone;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -798,69 +799,113 @@ class DeviceController extends Controller
     {
 
 
-
-        $total_devices_count = Device::where("device_type", "!=", "Mobile")
-            ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
-            ->where("device_type", "!=", "Manual")
+        $devices = Device::whereNotIn("device_type", ["Mobile", "Manual"])
             ->where("device_id", "!=", "Manual")
-
-
-            ->get()->count();;
-
-        $devicesHealth = (new SDKController())->GetAllDevicesHealth();
-
-
-        $companyDevices = Device::where("device_type", "!=", "Mobile")
             ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
-            ->where("device_type", "!=", "Manual")
-            ->where("device_id", "!=", "Manual")
 
-            ->Where(function ($q) {
-                $q->where('device_category_name', "!=", "CAMERA");
-                $q->orWhere('device_category_name', null);
-            })
             ->get();
-        $total_iterations = count($companyDevices);
-        $online_devices_count = 0;
-        $offline_devices_count = 0;
-        $companiesIds = [];
-        foreach ($companyDevices as $key => $Device) {
-            $companyDevice_id = $Device["device_id"];
-            $companiesIds[] = $Device["company_id"];
-            $SDKDeviceResponce = array_filter($devicesHealth["data"], function ($device) use ($companyDevice_id) {
-                return $companyDevice_id == $device['sn'];
-            });
 
-            if (count($SDKDeviceResponce) && current($SDKDeviceResponce)["keepAliveTime"] != '') {
-                $date  = new DateTime(current($SDKDeviceResponce)["keepAliveTime"], new DateTimeZone('Asia/Dubai'));
-                $DeviceDateTime = $date->format('Y-m-d H:i:00');
-                $online_devices_count++;
-                Device::where("device_id", $companyDevice_id)->update(["status_id" => 1, "last_live_datetime" => $DeviceDateTime]);
-            } else {
-                // $offline_devices_count++;
-                Device::where("device_id", $companyDevice_id)->update(["status_id" => 2,]);
+        $onlineCount = 0;
+        $totalDevicesCount = $devices->count();
 
-                // info($count . "companies has been updated");
+        $updates = [];
+
+        foreach ($devices as $device) {
+            $deviceConfig = $this->getDeviceConfig($device["serial_number"]);
+            $isOnline = isset($deviceConfig["config"]);
+
+            $onlineStatus = $isOnline ? 1 : 2;
+            if ($isOnline) $onlineCount++;
+            $currentDateTime = date("Y-m-d H:i:s");
+            try {
+                $currentDateTime = now(new DateTimeZone($device["utc_time_zone"]))->format('Y-m-d H:i:s');
+            } catch (Exception $e) {
             }
-        }
-        try {
-
-            $count = (new DeviceCameraController(''))->updateCameraDeviceLiveStatus($company_id);
-            $online_devices_count = $online_devices_count +  $count;
-        } catch (\Exception $e) {
-        }
-        try {
-
-            $count = (new DeviceCameraModel2Controller(''))->getCameraDeviceLiveStatus($company_id);
-
-            $online_devices_count = $online_devices_count +  $count;
-        } catch (\Exception $e) {
+            $updates[] = [
+                'serial_number' => $device["serial_number"],
+                'status_id' => $onlineStatus,
+                'last_live_datetime' => $currentDateTime,
+            ];
         }
 
-        $offline_devices_count = $total_devices_count - $online_devices_count;
+        // Batch update devices
+        foreach ($updates as $update) {
+            Device::where("serial_number", $update['serial_number'])->update([
+                'status_id' => $update['status_id'],
+                'last_live_datetime' => $update['last_live_datetime'],
+            ]);
+        }
 
-        Company::whereIn("id", array_values($companiesIds))->update(["is_offline_device_notificaiton_sent" => false]);
-        return   "$offline_devices_count Devices offline. $online_devices_count Devices online. $total_devices_count records found.";
+        $offline_devices_count = $totalDevicesCount - $onlineCount;
+
+        return "$offline_devices_count Devices offline. $onlineCount Devices online. $totalDevicesCount records found.";
+
+
+
+        // $total_devices_count = Device::where("device_type", "!=", "Mobile")
+        //     ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
+        //     ->where("device_type", "!=", "Manual")
+        //     ->where("device_id", "!=", "Manual")
+
+
+        //     ->get()->count();;
+
+
+
+        // $devicesHealth = (new SDKController())->GetAllDevicesHealth();
+
+
+        // $companyDevices = Device::where("device_type", "!=", "Mobile")
+        //     ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
+        //     ->where("device_type", "!=", "Manual")
+        //     ->where("device_id", "!=", "Manual")
+
+        //     ->Where(function ($q) {
+        //         $q->where('device_category_name', "!=", "CAMERA");
+        //         $q->orWhere('device_category_name', null);
+        //     })
+        //     ->get();
+        // $total_iterations = count($companyDevices);
+        // $online_devices_count = 0;
+        // $offline_devices_count = 0;
+        // $companiesIds = [];
+        // foreach ($companyDevices as $key => $Device) {
+        //     $companyDevice_id = $Device["device_id"];
+        //     $companiesIds[] = $Device["company_id"];
+        //     $SDKDeviceResponce = array_filter($devicesHealth["data"], function ($device) use ($companyDevice_id) {
+        //         return $companyDevice_id == $device['sn'];
+        //     });
+
+        //     if (count($SDKDeviceResponce) && current($SDKDeviceResponce)["keepAliveTime"] != '') {
+        //         $date  = new DateTime(current($SDKDeviceResponce)["keepAliveTime"], new DateTimeZone('Asia/Dubai'));
+        //         $DeviceDateTime = $date->format('Y-m-d H:i:00');
+        //         $online_devices_count++;
+        //         Device::where("device_id", $companyDevice_id)->update(["status_id" => 1, "last_live_datetime" => $DeviceDateTime]);
+        //     } else {
+        //         // $offline_devices_count++;
+        //         Device::where("device_id", $companyDevice_id)->update(["status_id" => 2,]);
+
+        //         // info($count . "companies has been updated");
+        //     }
+        // }
+        // try {
+
+        //     $count = (new DeviceCameraController(''))->updateCameraDeviceLiveStatus($company_id);
+        //     $online_devices_count = $online_devices_count +  $count;
+        // } catch (\Exception $e) {
+        // }
+        // try {
+
+        //     $count = (new DeviceCameraModel2Controller(''))->getCameraDeviceLiveStatus($company_id);
+
+        //     $online_devices_count = $online_devices_count +  $count;
+        // } catch (\Exception $e) {
+        // }
+
+        // $offline_devices_count = $total_devices_count - $online_devices_count;
+
+        // Company::whereIn("id", array_values($companiesIds))->update(["is_offline_device_notificaiton_sent" => false]);
+        // return   "$offline_devices_count Devices offline. $online_devices_count Devices online. $total_devices_count records found.";
     }
     // public function checkDeviceHealth_old(Request $request)
     // {
@@ -1150,13 +1195,18 @@ class DeviceController extends Controller
 
     public function getDeviceConfigSettingsFromArduinoSocket(Request $request)
     {
-        if ($request->filled('serial_number')) {
+        return $this->getDeviceConfig($request->serial_number);
+    }
+
+    public function getDeviceConfig($serial_number)
+    {
+        if ($serial_number) {
 
 
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-                CURLOPT_URL => 'http://64.227.164.43:6000/device-config/' . $request->serial_number,
+                CURLOPT_URL => 'http://165.22.222.17:6000/device-config/' . $serial_number,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => '',
                 CURLOPT_MAXREDIRS => 10,
@@ -1175,11 +1225,9 @@ class DeviceController extends Controller
 
             if (isset($response["error"]))
                 $response['error'] = $response["error"];
-            else
+            else if (isset($response['config']))
                 $response['config'] = json_decode($response['config'], true);
-
-
-
+            else   $response['error'] = "Device Communication error";
 
             return  $response;
         }
@@ -1229,7 +1277,7 @@ class DeviceController extends Controller
 
 
         if ($request->filled('serial_number')) {
-            $url = 'http://64.227.164.43:6000/device-config-update/' . $request->serial_number;
+            $url = 'http://165.22.222.17:6000/device-config-update/' . $request->serial_number;
 
             $postData = [
                 "action" => "UPDATE_CONFIG",

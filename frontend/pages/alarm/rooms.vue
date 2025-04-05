@@ -22,7 +22,7 @@
         <v-card-text>
           <v-container>
             <DeviceSettings
-              :key="deviceSerialNumber"
+              :key="key"
               :editedItem="editedItem"
               :device_serial_number="deviceSerialNumber"
               @emitCloseEvent="DialogDeviceSettings = false"
@@ -355,7 +355,7 @@
 
         <v-spacer></v-spacer>
 
-        <!-- <span>
+        <span>
           <v-btn
             x-small
             :ripple="false"
@@ -365,7 +365,7 @@
           >
             <v-icon dark white>mdi-cached</v-icon>
           </v-btn>
-        </span> -->
+        </span>
         <span>
           <v-btn
             v-if="can(`device_create`)"
@@ -797,6 +797,7 @@ export default {
     isCompany: true,
     timeZoneOptions: [],
     editedItem: null,
+    key: 1,
   }),
 
   computed: {

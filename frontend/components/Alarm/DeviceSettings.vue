@@ -605,7 +605,9 @@ export default {
           this.snackbar = true;
           this.snackbarResponse = "Device Settings Updated successfully";
 
-          this.$emit("emitCloseEvent");
+          setTimeout(() => {
+            this.$emit("emitCloseEvent");
+          }, 1000 * 2);
         });
     },
   },
