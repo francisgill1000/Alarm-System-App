@@ -484,10 +484,12 @@ export default {
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
     ],
     heartBeatData: [],
+    timeOptionsData: [],
   }),
 
   created() {
     this.generateTimeOptions();
+    this.generateTimeOptionsHeartBeat();
 
     this.getDataFromApi();
   },
@@ -497,6 +499,21 @@ export default {
       return (
         (u && u.permissions.some((e) => e == per || per == "/")) || u.is_master
       );
+    },
+    generateTimeOptionsHeartBeat() {
+      const options = [];
+      const increments = [5, 10, 15, 30]; // Time increments in seconds and minutes
+
+      // Generate options for seconds (5s to 55s)
+      for (let sec = 1; sec <= 10; sec += 1) {
+        options.push({
+          id: "heartbeat",
+          value: sec + "",
+          label: `${sec} seconds`,
+        });
+      }
+
+      this.heartBeatData = options;
     },
     generateTimeOptions() {
       const options = [];
@@ -512,7 +529,7 @@ export default {
       }
 
       // Generate options for minutes (1 min to 60 min)
-      for (let min = 0; min <= 60; min += 5) {
+      for (let min = 1; min <= 60; min += 1) {
         if (min == 0)
           options.push({
             id: "heartbeat",
@@ -527,7 +544,7 @@ export default {
           });
       }
 
-      this.heartBeatData = options;
+      this.timeOptionsData = options;
     },
     getDataFromApi() {
       this.message = "loading....";
