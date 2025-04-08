@@ -1192,7 +1192,12 @@ class DeviceController extends Controller
             "Password"
         ];
     }
+    public function getDeviceCompanyInfoForArduino(Request $request)
+    {
+        if ($request->serial_number)
 
+            return Device::with("company")->where("serial_number", $request->serial_number)->first();
+    }
     public function getDeviceConfigSettingsFromArduinoSocket(Request $request)
     {
         return $this->getDeviceConfig($request->serial_number);

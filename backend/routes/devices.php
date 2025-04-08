@@ -50,6 +50,9 @@ Route::post('update-device-alarm-status', [DeviceController::class, 'updateDevic
 Route::get('get_device_settings_from_socket_arduino', [DeviceController::class, 'getDeviceConfigSettingsFromArduinoSocket']);
 Route::post('update_device_settings_from_socket_arduino', [DeviceController::class, 'updateDeviceConfigSettingsFromArduinoSocket']);
 
+Route::get('/get_device_company_info_arduino', [DeviceController::class, 'getDeviceCompanyInfoForArduino']);
+
+
 
 
 
