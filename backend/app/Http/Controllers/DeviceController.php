@@ -621,6 +621,7 @@ class DeviceController extends Controller
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
         $model = $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id);
         return $model->where(function ($query) use ($request) {
+            $query->where("temparature_alarm_status", 1);
             $query->where("smoke_alarm_status", 1);
             $query->orWhere("water_alarm_status",  1);
             $query->orWhere("power_alarm_status",  1);
@@ -1205,6 +1206,37 @@ class DeviceController extends Controller
 
     public function getDeviceConfig($serial_number)
     {
+
+        $config["config"] = json_decode('{
+  "wifi_ssid": "akil",
+  "wifi_password": "Akil1234",
+  "wifi_ip": "192.168.3.20",
+  "wifi_or_ethernet": "1",
+  "eth_ip": "192.168.1.20",
+  "eth_gateway": "192.168.1.1",
+  "eth_subnet": "255.255.255.0",
+  "device_serial_number": "XT123456",
+  "server_url": "https://backend.xtremeguard.org/api",
+  "heartbeat": "10",
+  "server_ip": "165.22.222.17",
+  "server_port": "6002",
+  "min_temperature": "",
+  "max_temperature": "",
+  "max_humidity": "",
+  "max_doorcontact": "",
+  "max_siren_play": "",
+  "max_siren_pause": "",
+  "door_checkbox": false,
+  "humidity_checkbox": false,
+  "temp_checkbox": false,
+  "water_checkbox": false,
+  "fire_checkbox": false,
+  "power_checkbox": false,
+  "siren_checkbox": false
+}
+');
+
+        return $config;
         if ($serial_number) {
 
 
@@ -1249,38 +1281,110 @@ class DeviceController extends Controller
         $config["server_ip"] = $request->config["server_ip"];
 
         $config["server_port"] = $request->config["server_port"];
-        if ($request->config["temp_checkbox"] == true) {
-            $config["temp_checkbox"] = true;
-            $config["max_temperature"] = (float) $request->config["max_temperature"];
-            $config["min_temperature"] = (float) $request->config["min_temperature"];
+
+        $config["phone_number1"] = isset($request->config["phone_number1"]) ? $request->config["phone_number1"] : '';
+        $config["phone_number2"] = isset($request->config["phone_number2"]) ? $request->config["phone_number2"] : '';
+        $config["phone_number3"] = isset($request->config["phone_number3"]) ? $request->config["phone_number3"] : '';
+        $config["phone_number4"] = isset($request->config["phone_number4"]) ? $request->config["phone_number4"] : '';
+        $config["phone_number5"] = isset($request->config["phone_number5"]) ? $request->config["phone_number5"] : '';
+
+
+        if (isset($request->config["power_checkbox"]) && $request->config["power_checkbox"] == true) {
+            $config["power_checkbox"] = true;
+
+            $config["power_alert_sms"] = isset($request->config["power_alert_sms"]) ? $request->config["power_alert_sms"] : false;
+            $config["power_alert_call"] = isset($request->config["power_alert_call"]) ? $request->config["power_alert_call"] : false;
+            $config["power_alert_whatsapp"] = isset($request->config["power_alert_whatsapp"]) ? $request->config["power_alert_whatsapp"] : false;
         } else {
-            $config["temp_checkbox"] = false;
+            $config["power_checkbox"] = false;
+
+            $config["power_alert_sms"] = false;
+            $config["power_alert_call"] = false;
+            $config["power_alert_whatsapp"] = false;
         }
-        if ($request->config["humidity_checkbox"] == true) {
-            $config["humidity_checkbox"] = true;
-            $config["max_humidity"] = (float) $request->config["max_humidity"];
+        if (isset($request->config["water_checkbox"]) && $request->config["water_checkbox"] == true) {
+            $config["water_checkbox"] = true;
+
+
+            $config["water_alert_sms"] = isset($request->config["water_alert_sms"]) ? $request->config["water_alert_sms"] : false;
+            $config["water_alert_call"] = isset($request->config["water_alert_call"]) ? $request->config["water_alert_call"] : false;
+            $config["water_alert_whatsapp"] = isset($request->config["water_alert_whatsapp"]) ? $request->config["water_alert_whatsapp"] : false;
         } else {
-            $config["humidity_checkbox"] = false;
+            $config["water_checkbox"] = false;
+
+            $config["water_alert_sms"] = false;
+            $config["water_alert_call"] = false;
+            $config["water_alert_whatsapp"] = false;
         }
-        if ($request->config["doorcontact_checkbox"] == true) {
-            $config["doorcontact_checkbox"] = true;
-            $config["max_doorcontact"] = (float) $request->config["max_doorcontact"];
+        if (isset($request->config["fire_checkbox"]) && $request->config["fire_checkbox"] == true) {
+            $config["fire_checkbox"] = true;
+
+
+            $config["fire_alert_sms"] = isset($request->config["fire_alert_sms"]) ? $request->config["fire_alert_sms"] : false;
+            $config["fire_alert_call"] = isset($request->config["fire_alert_call"]) ? $request->config["fire_alert_call"] : false;
+            $config["fire_alert_whatsapp"] = isset($request->config["fire_alert_whatsapp"]) ? $request->config["fire_alert_whatsapp"] : false;
         } else {
-            $config["doorcontact_checkbox"] = false;
+            $config["fire_checkbox"] = false;
+
+            $config["fire_alert_sms"] = false;
+            $config["fire_alert_call"] = false;
+            $config["fire_alert_whatsapp"] = false;
         }
-        if ($request->config["siren_checkbox"] == true) {
+        if (isset($request->config["siren_checkbox"]) &&  $request->config["siren_checkbox"] == true) {
             $config["siren_checkbox"] = true;
-            $config["max_siren_play"] = (float) $request->config["max_siren_play"];
-            $config["max_siren_pause"] = (float) $request->config["max_siren_pause"];
+
+
+            $config["max_siren_play"] = isset($request->config["max_siren_play"]) ? (float) $request->config["max_siren_play"] : 0;
+            $config["max_siren_pause"] = isset($request->config["max_siren_pause"]) ? (float) $request->config["max_siren_pause"] : 0;
         } else {
             $config["siren_checkbox"] = false;
         }
-        $config["fire_checkbox"] = $request->config["fire_checkbox"];
-        $config["power_checkbox"] = $request->config["power_checkbox"];
-        $config["water_checkbox"] = $request->config["water_checkbox"];
 
 
 
+        if (isset($request->config["temp_checkbox"]) && $request->config["temp_checkbox"] == true) {
+            $config["temp_checkbox"] = true;
+            $config["max_temperature"] = (float) $request->config["max_temperature"] ?? 0;
+            $config["min_temperature"] = (float) $request->config["min_temperature"] ?? 0;
+
+            $config["temp_alert_sms"] = $request->config["temp_alert_sms"] ?? false;
+            $config["temp_alert_call"] = $request->config["temp_alert_call"] ?? false;
+            $config["temp_alert_whatsapp"] = $request->config["temp_alert_whatsapp"] ?? false;
+        } else {
+            $config["temp_checkbox"] = false;
+
+            $config["temp_alert_sms"] = false;
+            $config["temp_alert_call"] =  false;
+            $config["temp_alert_whatsapp"] = false;
+        }
+        if (isset($request->config["humidity_checkbox"]) &&  $request->config["humidity_checkbox"] == true) {
+            $config["humidity_checkbox"] = true;
+            $config["max_humidity"] = (float) $request->config["max_humidity"];
+
+            $config["humidity_alert_sms"] = $request->config["humidity_alert_sms"] ?? false;
+            $config["humidity_alert_call"] = $request->config["humidity_alert_call"] ?? false;
+            $config["humidity_alert_whatsapp"] = $request->config["humidity_alert_whatsapp"] ?? false;
+        } else {
+            $config["humidity_checkbox"] = false;
+
+            $config["humidity_alert_sms"] = false;
+            $config["humidity_alert_call"] = false;
+            $config["humidity_alert_whatsapp"] = false;
+        }
+        if (isset($request->config["doorcontact_checkbox"]) && $request->config["doorcontact_checkbox"] == true) {
+            $config["doorcontact_checkbox"] = true;
+            $config["max_doorcontact"] = (float) $request->config["max_doorcontact"];
+
+            $config["door_alert_sms"] = $request->config["door_alert_sms"] ?? false;
+            $config["door_alert_call"] = $request->config["door_alert_call"] ?? false;
+            $config["door_alert_whatsapp"] = $request->config["door_alert_whatsapp"] ?? false;
+        } else {
+            $config["doorcontact_checkbox"] = false;
+
+            $config["door_alert_sms"] = false;
+            $config["door_alert_call"] = false;
+            $config["door_alert_whatsapp"] = false;
+        }
 
 
         if ($request->filled('serial_number')) {

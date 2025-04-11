@@ -400,7 +400,7 @@
                   <v-col cols="5" style="text-align: center">
                     <img
                       title="Max"
-                      src="../../../static/up-blue.png"
+                      src="../../../static/down-blue.png"
                       style="width: 70px"
                     />
                   </v-col>

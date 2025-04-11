@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\File;
 
 Route::get("dummaydata", function (Request $request) {
 
+    return storage_path();
+
 
     $data = [
         "serialNumber" => "24000002",

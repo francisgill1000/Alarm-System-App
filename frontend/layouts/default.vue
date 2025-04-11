@@ -161,7 +161,7 @@
           <v-list-item-title class="text-center p-2">
             Server Rooms
           </v-list-item-title>
-        </v-list-item> 
+        </v-list-item>
       </v-list>-->
     </v-navigation-drawer>
     <v-app-bar
@@ -336,7 +336,7 @@
                 item.title
               }}</v-list-item-title>
             </v-list-item-content>
-             
+
           </v-list-item>
         </v-list>
       </v-menu> -->
@@ -449,6 +449,38 @@
                 key="index"
               >
                 <v-col cols="12">
+                  <v-row
+                    v-if="device.temparature_alarm_status"
+                    style="border-bottom: 1px solid #ddd"
+                  >
+                    <v-col cols="2" class="pt-10 text-center"
+                      ><img
+                        src="../static/alarm-icons/smoke_alarm.png"
+                        width="100px"
+                    /></v-col>
+                    <v-col cols="10" class="pl-4">
+                      <div
+                        class="pa-3 pt-0"
+                        style="font-size: 20px; font-weight: bold"
+                      >
+                        Fire Alarm Triggered at :
+                        {{
+                          $dateFormat.format5(
+                            device.temparature_alarm_start_datetime
+                          )
+                        }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Name :{{ device.name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Branch Name :{{ device.branch?.branch_name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Device Location :{{ device.location }}
+                      </div>
+                    </v-col>
+                  </v-row>
                   <v-row
                     v-if="device.smoke_alarm_status"
                     style="border-bottom: 1px solid #ddd"
@@ -1493,7 +1525,7 @@ header i {
 }
 /*
 .theme--dark.v-bottom-navigation .v-btn:not(.v-btn--active) {
-  
+
   color: red !important;
 }
 .v-item-group.v-bottom-navigation .v-btn .v-btn__content > *:not(.v-icon) {

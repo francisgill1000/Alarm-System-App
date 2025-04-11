@@ -8,10 +8,10 @@
 
     <v-dialog
       v-model="DialogDeviceSettings"
-      width="800px"
+      width="900px"
       style="background-color: #fff !important"
     >
-      <v-card>
+      <v-card elevation="2">
         <v-card-title dense class="popup_background">
           <span>Device Config Settings</span>
           <v-spacer></v-spacer>
@@ -22,6 +22,7 @@
         <v-card-text>
           <v-container>
             <DeviceSettings
+              v-if="DialogDeviceSettings"
               :key="key"
               :editedItem="editedItem"
               :device_serial_number="deviceSerialNumber"

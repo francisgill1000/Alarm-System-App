@@ -70,6 +70,14 @@ class Kernel extends ConsoleKernel
                 ->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
         } catch (\Exception $e) {
         }
+
+        $schedule
+            ->command("task:files-delete-old-log-files")
+            ->dailyAt('23:30')
+            //->withoutOverlapping()
+            ->appendOutputTo(storage_path("kernal_logs/$monthYear-delete-old-logs.log"))
+
+        ;;
     }
 
     /**

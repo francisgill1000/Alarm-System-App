@@ -170,7 +170,11 @@ class ApiAlarmControlController extends Controller
 
                     $temparature = floatval($temparature);
 
+
+
                     if ($temparature >= $deviceObj['temperature_threshold']) {
+
+
 
                         $ignore15Minutes = false;
 
