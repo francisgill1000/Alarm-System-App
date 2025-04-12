@@ -219,7 +219,7 @@
                 <v-row>
                   <v-col cols="5" style="text-align: center">
                     <img
-                      title="Min"
+                      title="Max"
                       src="../../../static/down.png"
                       style="width: 70px"
                     />
@@ -237,14 +237,14 @@
                     >
                       <!-- <div style="text-align: center; font-size: 20px">Min</div> -->
                       <div class="bold text-h4 red--text">
-                        <span v-html="temperature_min"></span>
+                        <span v-html="temperature_max"></span>
                       </div>
                       <span
-                        title="Min"
+                        title="Max"
                         style="font-size: 10px"
-                        v-if="temperature_min_date_time != '---'"
+                        v-if="temperature_max_date_time != '---'"
                       >
-                        At : {{ temperature_min_date_time }}
+                        At : {{ temperature_max_date_time }}
                       </span>
                     </div></v-col
                   >
@@ -253,7 +253,7 @@
                 <v-row>
                   <v-col cols="5" style="text-align: center">
                     <img
-                      title="Max"
+                      title="Min"
                       src="../../../static/up.png"
                       style="width: 70px"
                     />
@@ -272,13 +272,13 @@
                         Max
                       </div> -->
                       <div title="Max" class="bold text-h4 green--text">
-                        <span v-html="temperature_max"></span>
+                        <span v-html="temperature_min"></span>
                       </div>
                       <span
                         style="font-size: 10px"
-                        v-if="temperature_max_date_time != '---'"
+                        v-if="temperature_min_date_time != '---'"
                       >
-                        At : {{ temperature_max_date_time }}</span
+                        At : {{ temperature_min_date_time }}</span
                       >
                     </div>
                   </v-col>
@@ -366,7 +366,7 @@
                 <v-row>
                   <v-col cols="5" style="text-align: center">
                     <img
-                      title="Min"
+                      title="Max"
                       src="../../../static/down.png"
                       style="width: 70px"
                     />
@@ -383,14 +383,14 @@
                       "
                     >
                       <!-- <div style="text-align: center; font-size: 20px">Min</div> -->
-                      <div title="Min" class="bold text-h4 red--text">
-                        <span v-html="humidity_min"></span>
+                      <div title="Max" class="bold text-h4 red--text">
+                        <span v-html="humidity_max"></span>
                       </div>
                       <span
                         style="font-size: 10px"
-                        v-if="humidity_min_date_time != '---'"
+                        v-if="humidity_max_date_time != '---'"
                       >
-                        At : {{ humidity_min_date_time }}
+                        At : {{ humidity_max_date_time }}
                       </span>
                     </div></v-col
                   >
@@ -399,7 +399,7 @@
                 <v-row>
                   <v-col cols="5" style="text-align: center">
                     <img
-                      title="Max"
+                      title="Min"
                       src="../../../static/down-blue.png"
                       style="width: 70px"
                     />
@@ -418,17 +418,17 @@
                         Max
                       </div> -->
                       <div
-                        title="Max"
+                        title="Min"
                         class="bold text-h4"
                         style="color: #0071bd"
                       >
-                        <span v-html="humidity_max"></span>
+                        <span v-html="humidity_min"></span>
                       </div>
                       <span
                         style="font-size: 10px"
-                        v-if="humidity_max_date_time != '---'"
+                        v-if="humidity_min_date_time != '---'"
                       >
-                        At : {{ humidity_max_date_time }}</span
+                        At : {{ humidity_min_date_time }}</span
                       >
                     </div>
                   </v-col>

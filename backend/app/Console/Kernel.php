@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel
         }
         try {
             $schedule
-                ->command('task:device_sample_data')
+                ->command('task:device_sample_data') //dummy data
                 // ->everyThirtyMinutes()
                 ->everyMinute()
                 //->withoutOverlapping()
