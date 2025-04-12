@@ -780,9 +780,9 @@
     </v-row>
 
     <v-card-actions class="mt-5" v-if="!viewMode">
-      <v-btn @click="newItemDialog = false" dark filled color="red"
+      <!-- <v-btn @click="newItemDialog = false" dark filled color="red"
         >Cancel</v-btn
-      >
+      > -->
       <v-spacer></v-spacer>
       <span
         v-if="errorValidateMessage != ''"
