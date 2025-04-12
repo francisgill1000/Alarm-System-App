@@ -206,7 +206,7 @@ export default {
           this.key = this.key + 1;
         });
     },
-    renderChart(data) {
+    async renderChart(data) {
       let counter = 0;
 
       data.forEach((item) => {
@@ -217,12 +217,19 @@ export default {
         this.chartOptions.labels[counter] = item.hour;
         counter++;
       });
-      try {
-        new ApexCharts(
-          document.querySelector("#" + this.name),
-          this.chartOptions
-        ).render();
-      } catch (error) {}
+      // try {
+      //   new ApexCharts(
+      //     document.querySelector("#" + this.name),
+      //     this.chartOptions
+      //   ).render();
+      // } catch (error) {}
+
+      // Render the chart
+      this.chart = await new ApexCharts(
+        document.querySelector("#" + this.name),
+        this.chartOptions
+      );
+      if (this.chart) this.chart.render();
     },
   },
 };

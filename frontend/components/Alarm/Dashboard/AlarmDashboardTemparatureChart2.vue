@@ -322,7 +322,7 @@ export default {
           // }, 1000);
         });
     },
-    renderChart(data) {
+    async renderChart(data) {
       let counter = 0;
 
       this.chartOptions.series[0]["data"] = [];
@@ -334,12 +334,19 @@ export default {
         this.chartOptions.labels[index] = item.hour;
         counter++;
       });
-      try {
-        new ApexCharts(
-          document.querySelector("#" + this.name),
-          this.chartOptions
-        ).render();
-      } catch (error) {}
+      // try {
+      //   new ApexCharts(
+      //     document.querySelector("#" + this.name),
+      //     this.chartOptions
+      //   ).render();
+      // } catch (error) {}
+
+      // Render the chart
+      this.chart = await new ApexCharts(
+        document.querySelector("#" + this.name),
+        this.chartOptions
+      );
+      if (this.chart) this.chart.render();
     },
   },
 };

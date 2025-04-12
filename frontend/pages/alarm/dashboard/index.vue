@@ -292,21 +292,40 @@
             </v-row>
           </v-col>
           <v-col lg="7" md="7" sm="12" xs="12" class="pr-0">
-            <v-row style="width: 100%; height: 260px">
+            <!-- <v-row style="width: 100%; height: 260px;">
               <v-card class="py-0" style="width: 100%">
                 <v-col
                   lg="12"
                   md="12"
-                  style="text-align: center; padding-top: 0px"
+                  style="
+                    text-align: center;
+                    padding-top: 0px;
+                    height: 250px;
+                    overflow: hidden;
+                  "
                 >
-                  <AlarmDashboardTemparatureChart2
-                    :name="'AlarmDashboardTemparatureChart2'"
+                  <AlarmDashboardHumidityChart2
+                    :branch_id="branch_id"
+                    :name="'AlarmDashboardHumidityChart2'"
                     :height="'230'"
                     :device_serial_number="device_serial_number"
                     :key="keyChart2"
                     :from_date="from_date"
                   />
                 </v-col>
+              </v-card>
+            </v-row> -->
+            <v-row style="width: 100%">
+              <v-card style="width: 100%; height: 260px" elevation="2">
+                <v-card-text>
+                  <AlarmDashboardTemparatureChart2
+                    :name="'AlarmDashboardTemparatureChart2'"
+                    :height="'260'"
+                    :device_serial_number="device_serial_number"
+                    :key="keyChart2"
+                    :from_date="from_date"
+                  />
+                </v-card-text>
               </v-card> </v-row
           ></v-col>
         </v-row>
@@ -485,7 +504,12 @@
                 <v-col
                   lg="12"
                   md="12"
-                  style="text-align: center; padding-top: 0px"
+                  style="
+                    text-align: center;
+                    padding-top: 0px;
+                    height: 250px;
+                    overflow: hidden;
+                  "
                 >
                   <AlarmDashboardHumidityChart2
                     :branch_id="branch_id"

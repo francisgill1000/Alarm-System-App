@@ -936,6 +936,12 @@ export default {
     };
   },
   created() {
+    if (!this.$auth.user) {
+      {
+        this.logout();
+        return "";
+      }
+    }
     // this.verifyAlarmStatus();
     //console.log("process.env.BACKEND_URL2", process.env.BACKEND_URL2);
     this.updateTopmenu();
