@@ -320,7 +320,7 @@
                 <v-card-text>
                   <AlarmDashboardTemparatureChart2
                     :name="'AlarmDashboardTemparatureChart2'"
-                    :height="'260'"
+                    :height="'230'"
                     :device_serial_number="device_serial_number"
                     :key="keyChart2"
                     :from_date="from_date"
