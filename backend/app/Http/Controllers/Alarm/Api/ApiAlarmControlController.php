@@ -474,7 +474,7 @@ class ApiAlarmControlController extends Controller
                                 }
                             }
                             if (isset($tempArray["max_temparature"])) {
-                                $body_content1 .= "Temperature Threshold:  {$tempArray["max_temparature"]}<br/>";
+                                $body_content1 .= "Temperature Threshold:  {$tempArray["max_temparature"]}°C<br/>";
                             }
 
                             $body_content1 .= "Date:  $date<br/>";
