@@ -30,6 +30,8 @@ class WhatsappClientsController extends Controller
     public function store(Request $request)
     {
 
+
+
         // $validated = $request->validate([
         //     'company_id' => 'required|exists:companies,id',
         //     'accounts' => 'required|array',
@@ -48,4 +50,11 @@ class WhatsappClientsController extends Controller
 
         return response()->json($whatsappClient, 200);
     }
+
+    // public function delete(Request $request)
+    // {
+    //     if ($request->filled("client_id")) {
+    //         $clientId = $request->client_id;
+    //     }
+    // }
 }

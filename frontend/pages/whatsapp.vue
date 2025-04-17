@@ -114,7 +114,16 @@
               </v-btn>
 
               <div v-if="account.qrCodePath" style="color: blue">
-                Please Scan QR Code
+                Scan QR Code
+                <v-btn
+                  block
+                  small
+                  color="red"
+                  class="white--text"
+                  @click="connect(account.clientId, index)"
+                >
+                  Re-Generate QR Code
+                </v-btn>
               </div>
               <!-- {{ account }} -->
             </div>
