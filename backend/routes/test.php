@@ -14,6 +14,7 @@ use App\Http\Controllers\Shift\MultiInOutShiftController;
 use App\Http\Controllers\Shift\NightShiftController;
 use App\Http\Controllers\Shift\RenderController;
 use App\Http\Controllers\Shift\SingleShiftController;
+use App\Jobs\WhatsappJob;
 use App\Mail\ReportNotificationMail;
 use App\Models\Alarm\DeviceSensorLogs;
 use App\Models\Attendance;
@@ -34,16 +35,20 @@ use Illuminate\Support\Facades\File;
 
 Route::get("dummaydata", function (Request $request) {
 
-    return storage_path();
+    // return storage_path();
+
+    // $data = ["company_id" => 8, "message" => "test" . date("Y-m-d H:i:s"), "number" => "971552205149"];
 
 
+    // WhatsappJob::dispatch($data);
+    // return "";
     $data = [
-        "serialNumber" => "24000002",
-        "temperature" => 23,
+        "serialNumber" => "XT123456",
+        "temperature" => 50,
         "humidity" => 60,
 
     ];
-    $response = Http::withoutVerifying()->withHeaders([
+    $response = Http::withoutVerifying()->timeout(300)->withHeaders([
         'Content-Type' => 'application/json',
     ])->post("http://localhost:8000/api/alarm_device_status", $data);
     $data = $response->body();

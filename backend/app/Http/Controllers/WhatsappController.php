@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\WhatsappJob;
 use App\Models\Attendance;
 use App\Models\Company;
 use App\Models\Device;
@@ -155,6 +156,31 @@ class WhatsappController extends Controller
 
     //working method
     public function sendWhatsappNotification($company, $message, $number, $attachments = [])
+    {
+        $data = ["company_id" => $company["id"], "message" => $message, "number" => $number];
+        //$data = ["company_id" => $company["id"], "message" => $message, "number" => "971552205149"];
+
+
+        WhatsappJob::dispatch($data);
+
+        // if (!$company) return "Company Id is Empty";
+
+        // // API endpoint URL
+        // $url = 'https://wa.mytime2cloud.com/send-message';
+
+        // // Data to send in the request
+        // $data = [
+        //     'clientId' => "client_id_online_xtremeguard_" . $company["id"],
+        //     'recipient' => "971552205149", // $number, //request("number"),
+        //     'text' => $message,
+
+        // ];
+
+        // return   Http::withoutVerifying()->timeout(30)->post($url, $data);
+
+        // return false;
+    }
+    public function sendWhatsappNotification_oldToken($company, $message, $number, $attachments = [])
     {
         $data = [
             'number' => $number,

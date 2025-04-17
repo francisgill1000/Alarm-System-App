@@ -9,6 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Http\Controllers\WhatsappController;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class WhatsappJob implements ShouldQueue
 {
@@ -26,8 +28,51 @@ class WhatsappJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        return (new WhatsappController)->toSendNotification($this->data);
+        Log::channel("jobs")->info("WhatsappJob started", ['job_data' => $this->data]);
+
+        $companyId = $this->data['company_id'] ?? null;
+        $number = $this->data['number'] ?? null;
+        $message = $this->data['message'] ?? null;
+
+        if (!$companyId || !$number || !$message) {
+            Log::channel("jobs")->warning("WhatsappJob missing required fields", $this->data);
+            return;
+        }
+
+        $payload = [
+            'clientId'  => "client_id_online_xtremeguard_{$companyId}",
+            'recipient' => $number,
+            'text'      => $message,
+        ];
+
+        try {
+            Log::channel("jobs")->info("Sending WhatsApp message", ['payload' => $payload]);
+
+            $response = Http::withoutVerifying()
+                ->timeout(30)
+                ->post('https://wa.mytime2cloud.com/send-message', $payload);
+
+            if ($response->successful()) {
+                Log::channel("jobs")->info("WhatsApp message sent successfully", [
+                    'company_id' => $companyId,
+                    'response' => $response->body()
+                ]);
+            } else {
+                Log::channel("jobs")->error("WhatsApp API failed", [
+                    'status' => $response->status(),
+                    'response' => $response->body(),
+                    'payload' => $payload,
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::channel("jobs")->error("Exception in WhatsappJob", [
+                'error' => $e->getMessage(),
+                'data' => $this->data,
+            ]);
+        }
+
+        Log::channel("jobs")->info("WhatsappJob completed", ['company_id' => $companyId]);
     }
 }

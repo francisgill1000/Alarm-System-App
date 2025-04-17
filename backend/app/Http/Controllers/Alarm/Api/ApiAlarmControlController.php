@@ -6,6 +6,7 @@ use App\Console\Commands\SendWhatsappNotification;
 use App\Http\Controllers\Alarm\DeviceSensorLogsController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\WhatsappController;
+use App\Jobs\MailJob;
 use App\Mail\DbBackupMail;
 use App\Mail\EmailContentDefault;
 use App\Mail\ReportNotificationMail;
@@ -394,6 +395,8 @@ class ApiAlarmControlController extends Controller
 
     public function SendWhatsappNotification($issue, $room_name, $model1, $date,  $ignore15Minutes, $tempArray = [])
     {
+
+
         $company_id = $model1->company_id;
         $branch_id = $model1->branch_id;
 
@@ -471,7 +474,7 @@ class ApiAlarmControlController extends Controller
                                 }
                             }
                             if (isset($tempArray["max_temparature"])) {
-                                $body_content1 .= "Threshold:  {$tempArray["max_temparature"]}<br/>";
+                                $body_content1 .= "Temperature Threshold:  {$tempArray["max_temparature"]}<br/>";
                             }
 
                             $body_content1 .= "Date:  $date<br/>";
@@ -488,8 +491,12 @@ class ApiAlarmControlController extends Controller
                             $body_content1 = new EmailContentDefault($data);
 
                             if ($value->email != '') {
-                                Mail::to($value->email)
-                                    ->send($body_content1);
+                                // Mail::to($value->email)
+                                //     ->send($body_content1);
+
+                                $data = ["email" => $value->email, "body_content" => $body_content1];
+
+                                MailJob::dispatch($data);
 
 
                                 $data = ["company_id" => $value->company_id, "branch_id" => $value->branch_id, "notification_id" => $value->notification_id, "notification_manager_id" => $value->id, "email" => $value->email, "subject" => $issue];
@@ -542,7 +549,7 @@ class ApiAlarmControlController extends Controller
                                 }
                             }
                             if (isset($tempArray["max_temparature"])) {
-                                $body_content1 .= "*Threshold:  {$tempArray["max_temparature"]}°C*\n\n";
+                                $body_content1 .= "*Temperature Threshold:  {$tempArray["max_temparature"]}°C*\n\n";
                             }
                             $body_content1 .= "Date:  $date\n";
                             $body_content1 .= "Room Name:  {$room_name}\n";
@@ -556,7 +563,7 @@ class ApiAlarmControlController extends Controller
                             if (count($model->company->company_whatsapp_content))
                                 $body_content1 .= $model->company->company_whatsapp_content[0]->content;
 
-                            ////////(new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
+                            (new WhatsappController())->sendWhatsappNotification($model->company, $body_content1, $manager->whatsapp_number, []);
 
                             $data = [
                                 "company_id" => $model->company->id,
