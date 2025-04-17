@@ -26,7 +26,7 @@ class MailJob implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @return void
+     * @return voidenv
      */
     public function handle()
     {
