@@ -455,7 +455,7 @@ class ApiAlarmControlController extends Controller
                         }
 
 
-                        if ($minutesDifference >=   15 || $ignore15Minutes) { //
+                        if ($minutesDifference >=   5 || $ignore15Minutes) { //
 
 
 
@@ -532,7 +532,7 @@ class ApiAlarmControlController extends Controller
 
 
 
-                    if ($minutesDifference >=   15   || $ignore15Minutes) { //
+                    if ($minutesDifference >=   5   || $ignore15Minutes) { //
 
                         if ($manager->whatsapp_number != '') {
 
