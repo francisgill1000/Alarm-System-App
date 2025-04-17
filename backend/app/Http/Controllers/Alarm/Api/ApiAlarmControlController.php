@@ -413,7 +413,7 @@ class ApiAlarmControlController extends Controller
         foreach ($reports as $model) {
             $id = $model["id"];
 
-            $script_name = "ReportNotificationCrons";
+            ///////$script_name = "ReportNotificationCrons";
 
             // $date = date("Y-m-d H:i:s");
 
@@ -508,7 +508,7 @@ class ApiAlarmControlController extends Controller
                         }
                     }
                 } else {
-                    echo "[" . $date . "] Cron: $script_name. No emails are configured";
+                    // echo "[" . $date . "] Cron: $script_name. No emails are configured";
                 }
 
             //wahtsapp with attachments

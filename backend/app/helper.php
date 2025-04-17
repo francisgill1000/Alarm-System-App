@@ -315,8 +315,7 @@ if (!function_exists('getTotalHours2')) {
                 "name" => "whatsapp",
                 "company_id" => $id,
                 "branch_id" => 1,
-                "content" =>  "Automatic generated whatsapp Notifications. 
-            Thanks"
+                "content" =>  "Automatic generated whatsapp Notifications.\nThanks"
             ],
         ];
     }
