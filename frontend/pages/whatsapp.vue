@@ -114,7 +114,22 @@
               </v-btn>
 
               <div v-if="account.qrCodePath" style="color: blue">
-                Scan QR Code
+                <div v-if="!qrCodeScanned">
+                  Step2: Scan QR Code and click Button
+                </div>
+                <div v-else>Step3: Verifieng QR Code.....<br /></div>
+
+                <v-btn
+                  block
+                  v-if="!qrCodeScanned"
+                  @click="qrCodeScanned = true"
+                  small
+                  color="green"
+                  class="white--text"
+                >
+                  QR Code Scanned
+                </v-btn>
+                <br />
                 <v-btn
                   block
                   small
@@ -125,6 +140,13 @@
                   Re-Generate QR Code
                 </v-btn>
               </div>
+
+              <div
+                v-else-if="account.statusMessage == 'Connecting to WhatsApp...'"
+              >
+                Status: Connecting to Whatsapp Server.....
+              </div>
+
               <!-- {{ account }} -->
             </div>
           </v-card-text>
@@ -141,6 +163,7 @@ export default {
   data() {
     return {
       accounts: [],
+      qrCodeScanned: false,
     };
   },
   async mounted() {
@@ -178,7 +201,7 @@ export default {
         disconnectButton: false,
         connectButton: false,
         statusColor: null,
-        label: "Title",
+        label: "Whatsapp Linked Account",
         loading: false,
       });
 
@@ -224,6 +247,7 @@ export default {
     },
 
     async connectWebSocket(clientId, index) {
+      this.qrCodeScanned = false;
       const account = this.accounts[index];
 
       if (!account) return;
@@ -275,7 +299,7 @@ export default {
               account.loading = false;
               account.statusMessage = "Timeout. Please retry.";
               account.connectButton = true;
-            }, 1000 * 60 * 2); // 60 seconds
+            }, 1000 * 60 * 5); // 60 seconds
           } catch (error) {
             account.statusMessage = `Error generating QR code: ${error.message}`;
             account.loading = false;
