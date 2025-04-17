@@ -31,6 +31,6 @@ class MailJob implements ShouldQueue
     public function handle()
     {
         return    Mail::to($this->data["email"])
-            ->send($this->data["body_content"]);
+            ->queue($this->data["body_content"]);
     }
 }
