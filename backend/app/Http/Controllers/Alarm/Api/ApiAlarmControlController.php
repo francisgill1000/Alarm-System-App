@@ -545,7 +545,7 @@ class ApiAlarmControlController extends Controller
                             $body_content1 .= "This is Notifing you about *{$issue}* status \n\n";
                             if (isset($tempArray["temparature"])) {
                                 if ($tempArray["temparature"] != 'nan°C') {
-                                    $body_content1 .= "Temperature:  {$tempArray["temparature"]}°C\n\n";
+                                    $body_content1 .= "Temperature:  {$tempArray["temparature"]}°C\n";
                                 }
                             }
                             if (isset($tempArray["max_temparature"])) {
@@ -554,7 +554,7 @@ class ApiAlarmControlController extends Controller
                             $body_content1 .= "Date:  $date\n";
                             $body_content1 .= "Room Name:  {$room_name}\n";
 
-                            $body_content1 .= "Branch:  {$branch_name}\n";
+                            $body_content1 .= "Branch:  {$branch_name}\n\n\n";
                             $body_content1 .= "*Xtreme Guard*\n";
 
 
