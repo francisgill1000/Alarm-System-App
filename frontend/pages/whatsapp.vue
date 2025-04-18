@@ -35,119 +35,136 @@
               </div>
             </div>
 
-            <div v-if="account.qrCodeDisplay">
-              <v-img
-                max-width="250"
-                max-height="250"
-                :src="account.qrCodePath"
-              ></v-img>
-            </div>
-            <div v-else style="max-width: 250px; padding: 15px">
-              <v-img :src="account.placeHolderImage"></v-img>
-            </div>
+            <div v-if="!whatsappSocketClosed">
+              <div v-if="account.qrCodeDisplay">
+                <v-img
+                  max-width="250"
+                  max-height="250"
+                  :src="account.qrCodePath"
+                ></v-img>
+              </div>
+              <div v-else style="max-width: 250px; padding: 15px">
+                <v-img :src="account.placeHolderImage"></v-img>
+              </div>
 
-            <div class="text-center">
-              <v-btn
-                :loading="account.loading"
-                v-if="account.statusMessage"
-                block
-                small
-                color="#139c4a"
-                style="cursor: text"
-              >
-                {{ account.statusMessage }}
-              </v-btn>
-              <!-- <div class="btn button" block small color="#139c4a">
-                {{ account.statusMessage }}
-              </div> -->
-              <br />
-              <v-btn
-                :loading="account.loading"
-                v-if="account.statusMessage == 'Online'"
-                block
-                small
-                color="red"
-                class="white--text"
-                @click="deleteItem(index)"
-              >
-                Disconnect
-              </v-btn>
-
-              <v-btn
-                :loading="account.loading"
-                v-else-if="account.connectButton"
-                block
-                small
-                color="primary"
-                class="white--text"
-                @click="connect(account.clientId, index)"
-              >
-                Scan QR code and Reconnect
-              </v-btn>
-              <v-btn
-                :loading="account.loading"
-                v-else-if="
-                  account.client_id != '' &&
-                  account.statusMessage != 'Connecting to WhatsApp...'
-                "
-                block
-                small
-                color="green"
-                @click="connect(account.clientId, index)"
-              >
-                Click to Connect Wahtsapp
-              </v-btn>
-
-              <br />
-              <v-btn
-                :loading="account.loading"
-                v-if="
-                  !account.statusMessage && account.statusMessage == 'Online'
-                "
-                block
-                small
-                color="red"
-                class="white--text"
-                @click="deleteItem(index, account.client_id)"
-              >
-                Delete
-              </v-btn>
-
-              <div v-if="account.qrCodePath" style="color: blue">
-                <div v-if="!qrCodeScanned">
-                  Step2: Scan QR Code and click Button
-                </div>
-                <div v-else>Step3: Verifieng QR Code.....<br /></div>
-
+              <div class="text-center">
                 <v-btn
+                  :loading="account.loading"
+                  v-if="account.statusMessage"
                   block
-                  v-if="!qrCodeScanned"
-                  @click="qrCodeScanned = true"
                   small
-                  color="green"
+                  color="#139c4a"
                   class="white--text"
+                  style="cursor: text"
                 >
-                  QR Code Scanned
+                  {{ account.statusMessage }}
                 </v-btn>
+
                 <br />
                 <v-btn
+                  :loading="account.loading"
+                  v-if="account.statusMessage == 'Online'"
                   block
                   small
                   color="red"
                   class="white--text"
+                  @click="deleteItem(index)"
+                >
+                  Click to Disconnect
+                </v-btn>
+
+                <v-btn
+                  :loading="account.loading"
+                  v-else-if="account.connectButton"
+                  block
+                  small
+                  color="primary"
+                  class="white--text"
                   @click="connect(account.clientId, index)"
                 >
-                  Re-Generate QR Code
+                  Scan QR code and Reconnect
                 </v-btn>
-              </div>
+                <v-btn
+                  :loading="account.loading"
+                  v-else-if="
+                    account.client_id != '' &&
+                    account.statusMessage != 'Connecting to WhatsApp...'
+                  "
+                  block
+                  small
+                  color="green"
+                  @click="connect(account.clientId, index)"
+                >
+                  Click to Connect Wahtsapp
+                </v-btn>
 
-              <div
-                v-else-if="account.statusMessage == 'Connecting to WhatsApp...'"
-              >
-                Status: Connecting to Whatsapp Server.....
-              </div>
+                <br />
+                <v-btn
+                  :loading="account.loading"
+                  v-if="
+                    !account.statusMessage && account.statusMessage == 'Online'
+                  "
+                  block
+                  small
+                  color="red"
+                  class="white--text"
+                  @click="deleteItem(index, account.client_id)"
+                >
+                  Delete
+                </v-btn>
 
+                <div v-if="account.qrCodePath" style="color: blue">
+                  <div v-if="!qrCodeScanned">
+                    <v-btn
+                      block
+                      v-if="!qrCodeScanned"
+                      @click="qrCodeScanned = true"
+                      small
+                      color="green"
+                      class="white--text"
+                    >
+                      Click here after QR Scanned
+                    </v-btn>
+
+                    Step2: Scan QR Code and click Button
+                  </div>
+                  <div v-else>Step3: Verifieng QR Code.....<br /></div>
+
+                  <br />
+                  <v-btn
+                    block
+                    small
+                    color="red"
+                    class="white--text"
+                    @click="connect(account.clientId, index)"
+                  >
+                    Re-Generate QR Code
+                  </v-btn>
+                </div>
+
+                <div
+                  v-else-if="
+                    account.statusMessage == 'Connecting to WhatsApp...'
+                  "
+                >
+                  Status: Connecting to Whatsapp Server.....
+                </div>
+
+                <!-- {{ account }} -->
+              </div>
+            </div>
+            <div v-else>
               <!-- {{ account }} -->
+              <br />
+              <v-btn
+                block
+                small
+                color="red"
+                class="white--text"
+                @click="connect(account.clientId, index)"
+              >
+                Disconnected. Connect Again
+              </v-btn>
             </div>
           </v-card-text>
         </v-card>
@@ -164,6 +181,7 @@ export default {
     return {
       accounts: [],
       qrCodeScanned: false,
+      whatsappSocketClosed: false,
     };
   },
   async mounted() {
@@ -184,6 +202,24 @@ export default {
           ...acc,
           loading: false,
         }));
+
+        //connect clients - for re-verifications and trigger the whatsapp server
+        for (const [index, element] of data.accounts.entries()) {
+          // await this.connect(element.clientId, index);
+          const wsUrl = `wss://wa.mytime2cloud.com/ws/?clientId=${element.clientId}`;
+          let socketResponse = new WebSocket(wsUrl);
+          console.log(socketResponse);
+          if (socketResponse)
+            socketResponse.onmessage = async (event) => {
+              const data = JSON.parse(event.data);
+
+              if (data.event === "status") {
+              } else if (data.event === "ready") {
+              } else if (data.event === "qr") {
+                this.whatsappSocketClosed = true;
+              }
+            };
+        }
       } else {
         await this.addAccount();
       }
@@ -242,6 +278,7 @@ export default {
     },
 
     async connect(clientId, index) {
+      this.whatsappSocketClosed = false;
       this.accounts[index].loading = true;
       await this.connectWebSocket(clientId, index);
     },
