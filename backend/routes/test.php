@@ -23,6 +23,7 @@ use App\Models\Device;
 use App\Models\Employee;
 use App\Models\ReportNotification;
 use App\Models\Shift;
+use App\Models\WhatsappClients;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -34,6 +35,9 @@ use Illuminate\Support\Facades\File;
 
 
 Route::get("dummaydata", function (Request $request) {
+
+
+
 
     // return storage_path();
 
