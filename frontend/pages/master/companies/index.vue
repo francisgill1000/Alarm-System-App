@@ -78,6 +78,7 @@
                 {{ item.location }}
               </div>
               <div class="bold">Employees: {{ item.employees_count }}</div>
+              <div>{{ item.user.email }}</div>
             </v-card-text>
           </v-card>
         </v-col>
