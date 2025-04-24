@@ -39,13 +39,13 @@ class ApiAlarmControlController extends Controller
             //backend\storage\app\logs\alarm
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
 
-            $temparature = -1;
-            $humidity = -1;
+            $temparature = 0;
+            $humidity = 0;
 
-            $smoke_alarm = -1;
-            $water_leakage = -1;
-            $power_failure = -1;
-            $door_status = -1;
+            $smoke_alarm = 0;
+            $water_leakage = 0;
+            $power_failure = 0;
+            $door_status = 0;
             $fire_alarm = 0;
             $log_time = date('Y-m-d H:i:s');
 
@@ -89,6 +89,11 @@ class ApiAlarmControlController extends Controller
                 }
                 if ($request->filled("fire_alarm")) {
                     $fire_alarm = $request->fire_alarm;
+                    $smoke_alarm = $request->fire;
+                }
+                if ($request->filled("fire")) {
+                    $fire_alarm = $request->fire;
+                    $smoke_alarm = $request->fire;
                 }
                 if ($request->filled("temperature_alarm")) {
                     $temperature_alarm = $request->temperature_alarm;
@@ -147,6 +152,7 @@ class ApiAlarmControlController extends Controller
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
                 $logs["fire_alarm"] = $fire_alarm;
+
                 $logs["humidity"] = $humidity;
                 $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
 
@@ -163,12 +169,13 @@ class ApiAlarmControlController extends Controller
 
 
                 $logs["log_time"] = $log_time;
-                try {
-                    $insertedRecord = DeviceSensorLogs::create($logs);
 
-                    //(new DeviceSensorLogsController)->updateCompanyIds();
-                } catch (\Exception $e) {
-                }
+
+
+                $insertedRecord = DeviceSensorLogs::create($logs);
+
+                //(new DeviceSensorLogsController)->updateCompanyIds();
+
                 $deviceModel = Device::where("serial_number", $device_serial_number);
 
                 $deviceObj = $deviceModel->clone()->get();
@@ -197,12 +204,12 @@ class ApiAlarmControlController extends Controller
                 // }
 
 
-
+                $row["fire_alarm_status"] = $fire_alarm;
                 $row["smoke_alarm_status"] = $smoke_alarm;
                 $row["water_alarm_status"] = $water_leakage;
                 $row["power_alarm_status"] = $power_failure;
                 $row["door_open_status"] = $door_status;
-                $row["temperature_alarm_status"] = $temperature_alarm;
+                $row["temparature_alarm_status"] = $temperature_alarm;
 
 
                 if ($temperature_alarm == 1) {

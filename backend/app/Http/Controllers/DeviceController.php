@@ -626,6 +626,7 @@ class DeviceController extends Controller
         return $model->where(function ($query) use ($request) {
 
             $query->where("smoke_alarm_status", 1);
+            $query->orWhere("fire_alarm_status",  1);
             $query->orWhere("temparature_alarm_status",  1);
             $query->orWhere("water_alarm_status",  1);
             $query->orWhere("power_alarm_status",  1);

@@ -637,7 +637,7 @@ export default {
       if (this.$route.name == "alarm-dashboard") {
         this.getDataFromApi(1);
       }
-    }, 1000 * 30);
+    }, 1000 * 10);
   },
   async created() {
     const today = new Date();
