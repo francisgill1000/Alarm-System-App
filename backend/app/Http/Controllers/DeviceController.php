@@ -50,7 +50,7 @@ class DeviceController extends Controller
         $model->excludeMobile();
 
         $cols = $request->cols;
-        $model->with(['status', 'company', 'companyBranch']);
+        $model->with(['status', 'company.user', 'companyBranch']);
         if (!$request->filled("master")) {
             $model->where('company_id', $request->company_id);
         }

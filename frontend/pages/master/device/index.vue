@@ -61,6 +61,10 @@
           {{ item.device === "customer" ? "" : "mdi-delete" }}
         </v-icon> -->
       </template>
+      <template v-slot:item.company.name="{ item }">
+        {{ item.company.name }}<br />
+        {{ item.company.user.email }}
+      </template>
       <template v-slot:item.status="{ item }">
         <div v-if="item.status_id == 1" style="color: green">Online</div>
         <div v-else style="color: red">Offline</div>
