@@ -7,11 +7,10 @@
     </div>
     <v-row class=" ">
       <v-col cols="6">
-        <h3>device</h3>
         <div>Dashboard / device</div>
       </v-col>
       <v-col cols="6">
-        <div class="text-right">
+        <!-- <div class="text-right">
           <v-btn
             small
             color="error"
@@ -23,12 +22,11 @@
           <v-btn small color="primary" to="/device/create" class="mb-2"
             >device +</v-btn
           >
-        </div>
+        </div> -->
       </v-col>
     </v-row>
     <v-data-table
       v-model="ids"
-      show-select
       item-key="id"
       :headers="headers"
       :items="devices"
@@ -51,17 +49,25 @@
             label="Search"
             single-line
             hide-details
+            clearable
           ></v-text-field>
         </v-toolbar>
       </template>
       <template v-slot:item.action="{ item }">
-        <v-icon color="secondary" small class="mr-2" @click="editItem(item.id)">
+        <!-- <v-icon color="secondary" small class="mr-2" @click="editItem(item.id)">
           mdi-pencil
         </v-icon>
         <v-icon color="error" small @click="deleteItem(item)">
           {{ item.device === "customer" ? "" : "mdi-delete" }}
-        </v-icon>
+        </v-icon> -->
       </template>
+      <template v-slot:item.status="{ item }">
+        <div v-if="item.status_id == 1" style="color: green">Online</div>
+        <div v-else style="color: red">Offline</div>
+
+        {{ item.status_id == 1 ? "" : "" }}
+      </template>
+
       <template v-slot:no-data>
         <!-- <v-btn color="primary" @click="initialize">Reset</v-btn> -->
       </template>
@@ -93,7 +99,7 @@ export default {
     headers: [
       { text: "Name", align: "left", value: "name", sortable: false },
       { text: "Device Id", align: "left", value: "device_id", sortable: false },
-      { text: "Status", align: "left", value: "status.name", sortable: false },
+      { text: "Status", align: "left", value: "status", sortable: false },
       {
         text: "Company",
         align: "left",
@@ -139,7 +145,6 @@ export default {
     can(per) {
       return this.$pagePermission.can(per, this);
     },
-    
 
     getDataFromApi(url = this.endpoint) {
       this.loading = true;
@@ -150,6 +155,7 @@ export default {
         params: {
           per_page: itemsPerPage,
           company_id: this.$auth.user?.company?.id,
+          master: true,
         },
       };
 

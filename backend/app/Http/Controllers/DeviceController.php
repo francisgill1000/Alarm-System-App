@@ -51,7 +51,10 @@ class DeviceController extends Controller
 
         $cols = $request->cols;
         $model->with(['status', 'company', 'companyBranch']);
-        $model->where('company_id', $request->company_id);
+        if (!$request->filled("master")) {
+            $model->where('company_id', $request->company_id);
+        }
+
         $model->when($request->filled('name'), function ($q) use ($request) {
             $q->where('name', 'ILIKE', "$request->name%");
         });

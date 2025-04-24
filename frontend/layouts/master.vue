@@ -197,11 +197,17 @@ export default {
           permission: this.can("company_access"),
         },
         {
-          icon: "mdi-account-multiple",
-          title: "Communities",
-          to: "/master/communities",
+          icon: "mdi-domain",
+          title: "Devices",
+          to: "/master/device",
           permission: this.can("company_access"),
         },
+        // {
+        //   icon: "mdi-account-multiple",
+        //   title: "Communities",
+        //   to: "/master/communities",
+        //   permission: this.can("company_access"),
+        // },
         {
           icon: "mdi-login-variant",
           title: "Logs",
