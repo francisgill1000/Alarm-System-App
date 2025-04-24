@@ -31,12 +31,20 @@ class DeleteOldLogFiles extends Command
     public function handle()
     {
         $path = storage_path() . "/app"; //"/mytime2cloud/backend/storage";
+
+
         $this->deleteAttendanceLogFiles($path);
 
         $path = storage_path() . "/kernal_logs"; //"/mytime2cloud/backend/storage";
         $this->deleteAttendanceLogFiles($path);
 
         $path = storage_path() . "/temp"; //"/mytime2cloud/backend/storage";
+        $this->deleteAttendanceLogFiles($path);
+
+        $path = storage_path() . "/logs"; //"/mytime2cloud/backend/storage";
+        $this->deleteAttendanceLogFiles($path);
+
+        $path = storage_path() . "/app/logs"; //"/mytime2cloud/backend/storage";
         $this->deleteAttendanceLogFiles($path);
     }
 

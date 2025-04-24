@@ -28,27 +28,27 @@ class Kernel extends ConsoleKernel
             $schedule
                 ->command('task:alarm_update_company_ids')
                 // ->everyThirtyMinutes()
-                ->everyMinute()
-                //->withoutOverlapping()
-                ->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+                ->everyMinute();
+            //->withoutOverlapping()
+            //->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
         } catch (\Exception $e) {
         }
         try {
             $schedule
                 ->command('task:device_sample_data') //dummy data
                 // ->everyThirtyMinutes()
-                ->everyMinute()
-                //->withoutOverlapping()
-                ->appendOutputTo(storage_path("logs/sampledata-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+                ->everyMinute();
+            //->withoutOverlapping()
+            // ->appendOutputTo(storage_path("logs/sampledata-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
         } catch (\Exception $e) {
         }
         try {
             $schedule
                 ->command('task:delete_old_logs')
                 // ->everyThirtyMinutes()
-                ->everyFourHours()
+                ->everyFourHours();
 
-                ->appendOutputTo(storage_path("logs/fire-alarm-deleted-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+            // ->appendOutputTo(storage_path("logs/fire-alarm-deleted-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
         } catch (\Exception $e) {
         }
         try {
@@ -73,9 +73,9 @@ class Kernel extends ConsoleKernel
 
         $schedule
             ->command("task:files-delete-old-log-files")
-            ->dailyAt('23:30')
+            ->dailyAt('10:30');
             //->withoutOverlapping()
-            ->appendOutputTo(storage_path("kernal_logs/$monthYear-delete-old-logs.log"))
+            //->appendOutputTo(storage_path("kernal_logs/$monthYear-delete-old-logs.log"))
 
         ;;
     }

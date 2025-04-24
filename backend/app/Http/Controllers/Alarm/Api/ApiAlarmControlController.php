@@ -36,6 +36,7 @@ class ApiAlarmControlController extends Controller
         $message = [];
 
         try {
+            //backend\storage\app\logs\alarm
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") .  " : "    . json_encode($request->all()));
 
             $temparature = -1;
@@ -68,6 +69,10 @@ class ApiAlarmControlController extends Controller
             // }
 
             $device_serial_number = $request->serialNumber;
+
+            if ($request->filled("deviceID"))
+                $device_serial_number = $request->deviceID;
+
 
 
             if ($device_serial_number != '') {
