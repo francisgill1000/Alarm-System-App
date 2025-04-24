@@ -132,6 +132,10 @@ class ApiAlarmControlController extends Controller
                     $humidity = 0;
                 }
 
+                if ($temparature == "-273.0" || $temparature == "0") {
+                    return false;
+                }
+
 
 
 
