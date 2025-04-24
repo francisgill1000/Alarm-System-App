@@ -268,7 +268,7 @@ export default {
         };
 
         if (process.env.NODE_ENV !== "production") {
-          console.log("🚀 ~ Sending payload:", payload);
+          //console.log("🚀 ~ Sending payload:", payload);
         }
 
         await this.$axios.post(`whatsapp-client-json`, payload);

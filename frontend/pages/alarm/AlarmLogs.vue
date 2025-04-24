@@ -127,6 +127,11 @@
             <template v-slot:item.humidity="{ item }">
               {{ item.humidity }}%
             </template>
+            <template v-slot:item.temperature_alarm="{ item }">
+              <v-icon :style="getPriorityColor(item.temperature_alarm)"
+                >mdi mdi-alarm-light
+              </v-icon>
+            </template>
             <template v-slot:item.smoke_alarm="{ item }">
               <v-icon :style="getPriorityColor(item.smoke_alarm)"
                 >mdi mdi-alarm-light
@@ -207,13 +212,6 @@ export default {
     loading: false,
     time_menu: false,
 
-    log_payload: {
-      user_id: 41,
-      device_id: "OX-8862021010100",
-      date: null,
-      time: null,
-    },
-
     ids: [],
 
     data: [],
@@ -277,6 +275,16 @@ export default {
         sortable: false,
         key: "humidity", //sorting
         value: "humidity", //edit purpose
+
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Temperature Threshold  ",
+        align: "center",
+        sortable: false,
+        key: "temperature_alarm", //sorting
+        value: "temperature_alarm", //edit purpose
 
         filterable: true,
         filterSpecial: false,

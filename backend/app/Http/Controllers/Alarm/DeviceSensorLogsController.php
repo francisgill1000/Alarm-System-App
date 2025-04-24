@@ -42,13 +42,16 @@ class DeviceSensorLogsController extends Controller
         if ($request->filled("filter_alarm_status")) {
             if ($request->filter_alarm_status == 1) {
                 $model->where(function ($query) use ($request) {
+
                     $query->where("water_leakage", 1);
+                    $query->orWhere("temperature_alarm", 1);
                     $query->orWhere("power_failure",  1);
                     $query->orWhere("door_status",  1);
                     $query->orWhere("smoke_alarm",  1);
                 });
             } else if ($request->filter_alarm_status == 0) {
                 $model->where(function ($query) use ($request) {
+                    $query->orWhere("temperature_alarm", 0);
                     $query->where("water_leakage", 0);
                     $query->Where("power_failure",  0);
                     $query->Where("door_status",  0);
@@ -204,7 +207,7 @@ class DeviceSensorLogsController extends Controller
             $temperature_max_date_time = $temperature->log_time;
         }
 
-        //-------Humidity 
+        //-------Humidity
         //----
         $model =   AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
@@ -240,7 +243,7 @@ class DeviceSensorLogsController extends Controller
         }
 
 
-        //last alarm 
+        //last alarm
 
         $DeviceArray = Device::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
@@ -506,7 +509,7 @@ class DeviceSensorLogsController extends Controller
         $logs = [];
         try {
 
-            //delete duplicate 5 days before old logs 
+            //delete duplicate 5 days before old logs
             $logs[] = $this->deleteOld5DaysLogs();
         } catch (\Exception $e) {
         }
@@ -605,7 +608,7 @@ class DeviceSensorLogsController extends Controller
         return $finalDuplicateIds;
         // return;
         // //Fetch 30minutes logs and keep one record for every 30 minutes with alarm
-        // //Deleting records which has no alarm vaue 
+        // //Deleting records which has no alarm vaue
 
         // $date =  date("Y-m-d", strtotime('-15 days'));
         // $startTime = new DateTime($date . " 00:00:00"); // Current date and time
@@ -660,7 +663,7 @@ class DeviceSensorLogsController extends Controller
     public function deleteOld5DaysLogs()
     {
 
-        //delete duplicate 5 days before old logs 
+        //delete duplicate 5 days before old logs
 
         $date = date("Y-m-d", strtotime('-3 days'));
         $return = [];

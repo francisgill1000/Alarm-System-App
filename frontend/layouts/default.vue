@@ -455,15 +455,15 @@
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
-                        src="../static/alarm-icons/smoke_alarm.png"
-                        width="100px"
+                        src="../static/alarm-icons/temperature.png"
+                        width="50px"
                     /></v-col>
                     <v-col cols="10" class="pl-4">
                       <div
                         class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="font-size: 16px; font-weight: bold"
                       >
-                        Fire Alarm Triggered at :
+                        Temperature Threshold Alarm Triggered at :
                         {{
                           $dateFormat.format5(
                             device.temparature_alarm_start_datetime

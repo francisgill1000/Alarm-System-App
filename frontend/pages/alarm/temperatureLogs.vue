@@ -128,8 +128,8 @@
             <template v-slot:item.humidity="{ item }">
               {{ item.humidity }}%
             </template>
-            <template v-slot:item.smoke_alarm="{ item }">
-              <v-icon :style="getPriorityColor(item.smoke_alarm)"
+            <template v-slot:item.temperature_alarm="{ item }">
+              <v-icon :style="getPriorityColor(item.temperature_alarm)"
                 >mdi mdi-alarm-light
               </v-icon>
             </template>
@@ -283,11 +283,11 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Smoke/Fire Detected",
+        text: "Threshold Detected",
         align: "center",
         sortable: false,
-        key: "smoke_alarm", //sorting
-        value: "smoke_alarm", //edit purpose
+        key: "temperature_alarm", //sorting
+        value: "temperature_alarm", //edit purpose
 
         filterable: true,
         filterSpecial: false,

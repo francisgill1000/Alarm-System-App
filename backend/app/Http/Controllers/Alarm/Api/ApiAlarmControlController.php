@@ -48,6 +48,8 @@ class ApiAlarmControlController extends Controller
             $fire_alarm = 0;
             $log_time = date('Y-m-d H:i:s');
 
+            $temperature_alarm = 0;
+
             $wifiipaddress = null;
             $wifissid = null;
 
@@ -83,6 +85,10 @@ class ApiAlarmControlController extends Controller
                 if ($request->filled("fire_alarm")) {
                     $fire_alarm = $request->fire_alarm;
                 }
+                if ($request->filled("temperature_alarm")) {
+                    $temperature_alarm = $request->temperature_alarm;
+                }
+
 
                 if ($request->filled("smokeStatus")) {
                     $smoke_alarm = $request->smokeStatus;
@@ -139,6 +145,12 @@ class ApiAlarmControlController extends Controller
                 $logs["power_failure"] = $power_failure;
                 $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
 
+                $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
+                $logs["temperature_alarm"] = $temperature_alarm; //== 1 ? 0 : 1;
+
+
+
+
 
 
                 $logs["log_time"] = $log_time;
@@ -165,21 +177,30 @@ class ApiAlarmControlController extends Controller
                 } catch (\Exception $e) {
                 }
 
+                $row = [];
 
 
-                if ($deviceObj['temperature_threshold'] > 0 && $temparature != 'nan') {
+
+
+                // if ($humidity >= $max_humidity) {
+                //     $row["humidity_alarm_status"] = 1;
+                //     $row["humidity_alarm_start_datetime"] = $log_time;
+                // }
+
+
+
+                $row["smoke_alarm_status"] = $smoke_alarm;
+                $row["water_alarm_status"] = $water_leakage;
+                $row["power_alarm_status"] = $power_failure;
+                $row["door_open_status"] = $door_status;
+                $row["temperature_alarm_status"] = $temperature_alarm;
+
+
+                if ($temperature_alarm == 1) {
 
                     $temparature = floatval($temparature);
-
-
-
-                    if ($temparature >= $deviceObj['temperature_threshold']) {
-
-
-
+                    if ($temperature_alarm == 1) {
                         $ignore15Minutes = false;
-
-
                         if ($deviceObj['temparature_alarm_status'] == 0) {
                             $row = [];
                             $row["temparature_alarm_status"] = 1;
@@ -200,8 +221,6 @@ class ApiAlarmControlController extends Controller
                         );
                     } else {
 
-
-
                         if ($deviceObj['temparature_alarm_status'] == 1) {
                             $ignore15Minutes = true;
                             $message[] =  $this->SendWhatsappNotification($name . " -  Temperature Alarm is  OFF",   $name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
@@ -212,24 +231,67 @@ class ApiAlarmControlController extends Controller
                             $deviceModel->clone()->update($row);
                         }
                     }
+                } else if ($temperature_alarm == 0) {
+
+
+
+                    if ($deviceObj['temparature_alarm_status'] == 1) {
+                        $row = [];
+                        $row["temparature_alarm_status"] = $temperature_alarm;
+                        $row["temparature_alarm_end_datetime"] = $log_time;
+
+                        $ignore15Minutes = true;
+                        $deviceModel->clone()->where("temparature_alarm_status", 1)->update($row);
+                        $message[] =  $this->SendWhatsappNotification($name . " - Temperature Threshold Alarm is OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
+                    }
                 }
 
-                $row = [];
+                // if ($deviceObj['temperature_threshold'] > 0 && $temparature != 'nan') {
+
+                //     $temparature = floatval($temparature);
 
 
 
+                //     if ($temparature >= $deviceObj['temperature_threshold']) {
 
-                // if ($humidity >= $max_humidity) {
-                //     $row["humidity_alarm_status"] = 1;
-                //     $row["humidity_alarm_start_datetime"] = $log_time;
+
+
+                //         $ignore15Minutes = false;
+
+
+                //         if ($deviceObj['temparature_alarm_status'] == 0) {
+                //             $row = [];
+                //             $row["temparature_alarm_status"] = 1;
+                //             $row["temparature_alarm_start_datetime"] = $log_time;
+                //             $row["temparature_alarm_end_datetime"] = null;
+                //             $deviceModel->clone()->update($row);
+                //             $ignore15Minutes = true;
+                //         }
+
+                //         $message[] =  $this->SendWhatsappNotification(
+                //             $name . " -   Temperature Alarm is  ON",
+                //             $name,
+                //             $deviceModel->clone()->first(),
+                //             $log_time,
+
+                //             $ignore15Minutes,
+                //             ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]
+                //         );
+                //     } else {
+
+
+
+                //         if ($deviceObj['temparature_alarm_status'] == 1) {
+                //             $ignore15Minutes = true;
+                //             $message[] =  $this->SendWhatsappNotification($name . " -  Temperature Alarm is  OFF",   $name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes, ["temparature" => $temparature, "max_temparature" => $deviceObj['temperature_threshold']]);
+                //             $row = [];
+                //             $row["temparature_alarm_status"] = 0;
+
+                //             $row["temparature_alarm_end_datetime"] = $log_time;
+                //             $deviceModel->clone()->update($row);
+                //         }
+                //     }
                 // }
-
-
-
-                $row["smoke_alarm_status"] = $smoke_alarm;
-                $row["water_alarm_status"] = $water_leakage;
-                $row["power_alarm_status"] = $power_failure;
-                $row["door_open_status"] = $door_status;
 
 
 

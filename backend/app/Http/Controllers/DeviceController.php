@@ -621,8 +621,9 @@ class DeviceController extends Controller
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
         $model = $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id);
         return $model->where(function ($query) use ($request) {
-            $query->where("temparature_alarm_status", 1);
+
             $query->where("smoke_alarm_status", 1);
+            $query->orWhere("temparature_alarm_status",  1);
             $query->orWhere("water_alarm_status",  1);
             $query->orWhere("power_alarm_status",  1);
             $query->orWhere("door_open_status",  1);
@@ -802,6 +803,9 @@ class DeviceController extends Controller
 
         $devices = Device::whereNotIn("device_type", ["Mobile", "Manual"])
             ->where("device_id", "!=", "Manual")
+            ->where("serial_number", "!=", "Manual")
+
+
             ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
 
             ->get();
@@ -813,20 +817,26 @@ class DeviceController extends Controller
 
         foreach ($devices as $device) {
             $deviceConfig = $this->getDeviceConfig($device["serial_number"]);
+
+
             $isOnline = isset($deviceConfig["config"]);
 
             $onlineStatus = $isOnline ? 1 : 2;
-            if ($isOnline) $onlineCount++;
-            $currentDateTime = date("Y-m-d H:i:s");
-            try {
-                $currentDateTime = now(new DateTimeZone($device["utc_time_zone"]))->format('Y-m-d H:i:s');
-            } catch (Exception $e) {
+            if ($isOnline && $deviceConfig["serialNumber"] == $device["serial_number"]) {
+                $onlineCount++;
+                $currentDateTime = date("Y-m-d H:i:s");
+                try {
+                    $currentDateTime = now(new DateTimeZone($device["utc_time_zone"]))->format('Y-m-d H:i:s');
+                } catch (Exception $e) {
+                }
+
+
+                $updates[] = [
+                    'serial_number' => $device["serial_number"],
+                    'status_id' => $onlineStatus,
+                    'last_live_datetime' => $currentDateTime,
+                ];
             }
-            $updates[] = [
-                'serial_number' => $device["serial_number"],
-                'status_id' => $onlineStatus,
-                'last_live_datetime' => $currentDateTime,
-            ];
         }
 
         // Batch update devices
