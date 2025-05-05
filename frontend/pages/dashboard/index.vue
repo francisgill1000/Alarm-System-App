@@ -2,7 +2,9 @@
   <div
     style="width: 100%"
     v-if="can('dashboard_access') && can('dashboard_view')"
-  ></div>
+  >
+    11111111111111111
+  </div>
 
   <NoAccess v-else />
 </template>
@@ -37,7 +39,7 @@ export default {
       return "";
     }
 
-    this.$router.push(`alarm/dashboard`);
+    this.$router.push(`/alarm/dashboard`);
 
     return;
 

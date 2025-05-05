@@ -2083,4 +2083,11 @@ body {
 }
 </style>
 
+<!-- BLACK THEME ----------------------------------------------START --------------------------------------------------------------------->
+
 <!-- <link rel="stylesheet" href="../static/css/textbox-label-style.css" /> -->
+<!-- <link rel="stylesheet" href="@/assets/blacktheme.css" /> -->
+
+<style>
+@import "../assets/blacktheme.css";
+</style>
