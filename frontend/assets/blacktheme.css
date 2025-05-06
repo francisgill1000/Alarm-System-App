@@ -1,7 +1,4 @@
-.v-main__wrap,
-.main_bg {
-  background-color: #333c5d;
-}
+
 .dashboard-card {
   border-radius: 20px;
   padding: 30px;
@@ -29,11 +26,35 @@
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #7b53c7 0%, #83066e 100%);
+  background: linear-gradient(135deg, #7d66e5 0%, #0071bd 100%);
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
+.vue-gauge-item text
+{
+  color:#FFF!important;
+}
+
+
+/* Global SVG text styling */
+::v-deep svg text {
+  fill: white !important;
+  font-family: Arial, sans-serif;
+}
+
+/* Specific element targeting */
+::v-deep .gauge-arc-label {
+  fill: white !important;
+  font-size: 12px;
+}
+
+::v-deep .gauge-central-label {
+  fill: white !important;
+  font-size: 24px;
+  font-weight: bold;
+}
+
 
 

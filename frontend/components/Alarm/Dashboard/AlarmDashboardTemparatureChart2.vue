@@ -50,7 +50,14 @@
 <script>
 // import VueApexCharts from 'vue-apexcharts'
 export default {
-  props: ["name", "height", "branch_id", "device_serial_number", "from_date"],
+  props: [
+    "name",
+    "height",
+    "branch_id",
+    "device_serial_number",
+    "from_date",
+    "theme",
+  ],
   data() {
     return {
       key: 1,
@@ -323,6 +330,20 @@ export default {
         });
     },
     async renderChart(data) {
+      if (this.theme) {
+        this.chartOptions.chart.background = "#000000";
+        this.chartOptions.chart.foreColor = "#ffffff";
+      }
+      //this.chartOptions.series[0]["data"] = [];
+      //this.chartOptions.series[1]["data"] = [];
+      this.chartOptions.labels = [];
+      //this.chartOptions.series[0]["data"] = [];
+      //this.chartOptions.series[1]["data"] = [];
+
+      if (data.length == 0) {
+        this.chart.destroy();
+        return;
+      }
       let counter = 0;
 
       this.chartOptions.series[0]["data"] = [];

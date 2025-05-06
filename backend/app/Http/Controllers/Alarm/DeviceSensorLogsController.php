@@ -90,6 +90,25 @@ class DeviceSensorLogsController extends Controller
 
         return    $model->paginate($request->per_page);
     }
+
+    public function getDeviceTodayHourlyHumidityTemperature(Request $request)
+    {
+        $date = date('Y-m-d');
+        if ($request->filled("from_date")) {
+            $date = $request->from_date;
+        }
+        $TemperatureData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
+        $HumidityData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date);
+
+
+        return [
+
+            "temperature" => $TemperatureData,
+            "humidity" => $HumidityData
+
+
+        ];
+    }
     public function getDeviceTodayHourlyTemperature(Request $request)
     {
 

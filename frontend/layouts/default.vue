@@ -674,7 +674,7 @@
     </v-app-bar>
 
     <v-main
-      class="main_bg"
+      :class="'main_bg main_bg_' + pagename"
       :style="
         miniVariant && drawer
           ? 'padding-left: 60px;'
@@ -928,7 +928,7 @@ export default {
       snackNotification: false,
       snackNotificationColor: "black",
       socketConnectionStatus: 0,
-
+      pagename: "",
       right: true,
       rightDrawer: false,
       color: "",
@@ -966,6 +966,7 @@ export default {
     };
   },
   created() {
+    this.pagename = this.$route.name;
     if (!this.$auth.user) {
       {
         this.logout();
@@ -2081,13 +2082,13 @@ body {
 .apexcharts-text {
   font-family: "Roboto", sans-serif !important;
 }
+
+.v-application .main_bg_alarm-dashboard2 {
+  background-color: #333c5d !important;
+}
 </style>
 
 <!-- BLACK THEME ----------------------------------------------START --------------------------------------------------------------------->
 
 <!-- <link rel="stylesheet" href="../static/css/textbox-label-style.css" /> -->
 <!-- <link rel="stylesheet" href="@/assets/blacktheme.css" /> -->
-
-<style>
-@import "../assets/blacktheme.css";
-</style>
