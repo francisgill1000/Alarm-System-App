@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Device;
 use App\Models\DeviceSensorLogs;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use DateInterval;
 use DatePeriod;
 use DateTime;
@@ -89,6 +90,79 @@ class DeviceSensorLogsController extends Controller
 
 
         return    $model->paginate($request->per_page);
+    }
+
+    public function getDeviceMonthlyHumidityTemperature(Request $request)
+    {
+
+
+
+
+
+        $fromDate = $request->from_date;
+        $toDate = $request->to_date;
+
+        // 1. First get your actual data
+        $dailyAverages = AlarmDeviceSensorLogs::selectRaw("DATE(log_time) as date,
+    (ROUND(AVG(CAST(temparature AS FLOAT)) * 100) / 100) as avg_temperature,
+    (ROUND(AVG(CAST(humidity AS FLOAT)) * 100) / 100) as avg_humidity")
+            ->where('company_id', $request->company_id)
+            ->where('serial_number', $request->device_serial_number)
+            ->where(function ($query) {
+                $query->whereNotNull('temparature')
+                    ->whereNotNull('humidity')
+                    ->where('temparature', '!=', 'NaN')
+                    ->where('humidity', '!=', 'NaN');
+            })
+            ->whereBetween('log_time', [
+                Carbon::parse($fromDate)->startOfDay(),
+                Carbon::parse($toDate)->endOfDay()
+            ])
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get()
+            ->keyBy('date'); // Key results by date for easier merging
+
+        // 2. Create complete date range
+        $period = CarbonPeriod::create($fromDate, $toDate);
+        $completeDates = collect($period->toArray())->mapWithKeys(function ($date) {
+            return [$date->format('Y-m-d') => [
+                'date' => $date->format('Y-m-d'),
+                'avg_temperature' => 0,
+                'avg_humidity' => 0
+            ]];
+        });
+
+        // 3. Merge and fill missing dates
+        $result = $completeDates->map(function ($defaultData, $date) use ($dailyAverages) {
+            return $dailyAverages->has($date)
+                ? $dailyAverages->get($date)
+                : (object)$defaultData;
+        })->values();
+
+        return $result;
+
+        //     $fromDate = '2025-05-01';
+        //     $toDate = '2025-05-10';
+
+        //     return  $dailyAverages = AlarmDeviceSensorLogs::selectRaw(
+        //         "DATE(log_time) as date,
+        // AVG(CAST(temparature AS FLOAT)) as avg_temperature,
+        // AVG(CAST(humidity AS FLOAT)) as avg_humidity"
+        //     )
+        //         ->where('company_id', $request->company_id)
+        //         ->where('serial_number', $request->device_serial_number)
+        //         ->whereNotNull('temparature')
+        //         ->whereNotNull('humidity')
+        //         ->where('temparature', '!=', 'NaN')
+        //         ->where('humidity', '!=', 'NaN')
+        //         ->whereBetween('log_time', [
+        //             Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+        //             Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+        //         ])
+        //         ->groupBy('date')
+        //         ->orderBy('date')
+        //         ->get();
     }
 
     public function getDeviceTodayHourlyHumidityTemperature(Request $request)

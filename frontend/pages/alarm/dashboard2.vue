@@ -3,45 +3,94 @@
     style="width: 100%"
     v-if="can('dashboard_access') && can('dashboard_view')"
   >
+    <!-- <v-row justify="end" style="display: none">
+      <v-col cols="3" class="pb-0">
+        <span style="float: left; width: 200px">
+          <v-select
+            style="z-index: 9999"
+            @change="ChangeDevice(device_serial_number)"
+            v-model="device_serial_number"
+            :items="devicesList"
+            dense
+            small
+            outlined
+            hide-details
+            class="ma-2"
+            label="Room"
+            item-value="serial_number"
+            item-text="name"
+          ></v-select>
+        </span>
+        <span style="float: left">
+          <v-menu
+            style="z-index: 9999"
+            v-model="from_menu"
+            :close-on-content-click="false"
+            :nudge-left="50"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                style="
+                  width: 230px;
+                  float: right;
+                  z-index: 9999;
+                  height: 5px;
+                  padding-top: 8px;
+                "
+                outlined
+                v-model="from_date"
+                v-bind="attrs"
+                v-on="on"
+                dense
+                class="custom-text-box shadow-none"
+                label="Date Filter"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              no-title
+              scrollable
+              v-model="from_date"
+              @input="from_menu = false"
+              @change="getDataFromApi()"
+            ></v-date-picker>
+          </v-menu>
+        </span>
+      </v-col>
+    </v-row> -->
     <v-row>
-      <v-col cols="6">
-        <v-card
+      <v-col cols="6"
+        ><v-card
+          v-if="!displayLiveData"
+          class="dashboard-card"
           height="400px"
           elevation="24"
           loading="false"
           outlined
-          class="dashboard-card"
           style="border-radius: 20px"
         >
-          <div>Hello , Customer Name</div>
-          <br />
-          <div style="font-weight: 400; color: lightblue">
-            Welcome To XtremeGuard. AI Alarm sensor Monitoring System with
-            Instant Alert messagesing and calling controller.
-          </div>
-          <div class="text-center" style="margin-top: 50px; height: 400px">
-            <v-row>
-              <v-col cols="3">
-                <img
-                  src="../../static/dashboardicons/cloud1.png"
-                  width="100px"
-                />
-              </v-col>
-              <v-col cols="3">
-                <img
-                  src="../../static/dashboardicons/humidity.png"
-                  width="100px"
-                />
-              </v-col>
-              <v-col cols="3" color="#FFF">
-                <img
-                  src="../../static/dashboardicons/temperature.png"
-                  width="100px"
-                />
-              </v-col>
-            </v-row>
-          </div>
-        </v-card>
+          <AlarmDashboardTemparatureHistoryChart2Black
+            :nameChart="'AlarmDashboardTemparatureHistoryChart2Black'"
+            :height="'300'"
+            :device_serial_number="device_serial_number"
+            :key="keyChart2"
+            :from_date="from_date"
+            :theme="'black'"
+            @switchBacktoLiveData="switchBacktoLiveData()"
+        /></v-card>
+        <v-card
+          v-if="displayLiveData"
+          class="dashboard-card"
+          height="400px"
+          elevation="24"
+          loading="false"
+          outlined
+          style="border-radius: 20px"
+          ><AlarmDashboardLiveWeather
+            @switchBacktoHistoryData="switchBacktoHistoryData()"
+        /></v-card>
       </v-col>
       <v-col cols="6">
         <v-card
@@ -70,10 +119,12 @@
                 <v-col
                   cols="2"
                   class="align-items-center justify-content-center pt-10"
-                  ><img
+                >
+                  <!-- <img
                     src="../../static/alarm-icons/temperature.png"
                     width="70px"
-                /></v-col>
+                /> -->
+                </v-col>
                 <v-col cols="10" class="pa-0">
                   <AlarmDashboardTemparatureChart1Black
                     :name="'AlarmDashboardTemparatureChart1Black1'"
@@ -104,10 +155,12 @@
                 <v-col
                   cols="2"
                   class="align-items-center justify-content-center pt-10"
-                  ><img
+                >
+                  <!-- <img
                     src="../../static/alarm-icons/humidity.png"
                     width="70px"
-                /></v-col>
+                /> -->
+                </v-col>
                 <v-col cols="10" class="pa-0">
                   <AlarmDashboardHumidityChart1Black
                     :name="'AlarmDashboardHumidityChart1Black'"
@@ -124,89 +177,7 @@
     </v-row>
     <v-row>
       <v-col cols="6">
-        <v-row>
-          <v-col cols="3">
-            <v-card
-              class="dashboard-card-small-pink"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card> </v-col
-          ><v-col cols="3">
-            <v-card
-              class="dashboard-card-small"
-              height="180px"
-              elevation="24"
-              loading="false"
-              outlined
-              style="border-radius: 20px"
-              ><div>33333333</div>
-            </v-card>
-          </v-col>
-        </v-row>
+        <AlarmDashboardFooterBlack :device="device" :key="key" />
       </v-col>
       <v-col cols="6">
         <v-card
@@ -220,9 +191,9 @@
           <AlarmDashboardTemparatureChart2Black
             :name="'AlarmDashboardTemparatureChart2'"
             :height="'310'"
-            :device_serial_number="'24000001'"
-            :from_date="'2025-05-06'"
-            :theme="'black'"
+            :device_serial_number="device_serial_number"
+            :key="keyChart2"
+            :from_date="from_date"
           /> </v-card
       ></v-col>
     </v-row>
@@ -233,18 +204,24 @@
 </template>
 
 <script>
+import AlarmDashboardFooterBlack from "../../components/Alarm/Dashboard/AlarmDashboardFooterBlack.vue";
 import AlarmDashboardHumidityChart1Black from "../../components/Alarm/Dashboard/AlarmDashboardHumidityChart1Black.vue";
+import AlarmDashboardLiveWeather from "../../components/Alarm/Dashboard/AlarmDashboardLiveWeather.vue";
 import AlarmDashboardTemparatureChart1Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureChart1Black.vue";
 import AlarmDashboardTemparatureChart2Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureChart2Black.vue";
+import AlarmDashboardTemparatureHistoryChart2Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureHistoryChart2Black.vue";
 
 export default {
   components: {
     AlarmDashboardTemparatureChart2Black,
     AlarmDashboardTemparatureChart1Black,
     AlarmDashboardHumidityChart1Black,
+    AlarmDashboardLiveWeather,
+    AlarmDashboardTemparatureHistoryChart2Black,
   },
   data() {
     return {
+      displayLiveData: false,
       temperature: "",
       weatherCondition: "",
       humidity: "",
@@ -253,110 +230,241 @@ export default {
       temperature_date_time: "2025-05-06 10:25:10",
       humidity_latest: 50,
       humidity_date_time: "2025-05-06 10:25:10",
+      device: null,
+      from_date: "",
+      from_menu: false,
+      selectedDeviceIndex: 0,
+      audioSrc: null,
+      topMenu: 0,
+      key: 1,
+      keyChart2: 1,
+      branchList: [],
+      selectedBranchName: "All Branches",
+      seelctedBranchId: "",
+      branch_id: "",
+      overlay: false,
+      temperature_latest: 0,
+      temperature_date_time: "---",
+      temperature_min: 0,
+      temperature_max: 0,
+      temperature_min_date_time: 0,
+      temperature_max_date_time: 0,
+      temperature_hourly_data: {},
+      fire_alarm_start_datetime: "---",
+      device_serial_number: "",
 
-      series: [
-        {
-          name: "Series 1",
-          data: [44, 55, 41, 64, 22],
-        },
-        {
-          name: "Series 2",
-          data: [53, 32, 33, 52, 13],
-        },
-      ],
-      chartOptions: {
-        chart: {
-          type: "bar",
-          height: 380,
-          background: "#000000", // This sets the chart background to black
-          foreColor: "#ffffff", // This sets the default text color to white for better visibility
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "55%",
-            endingShape: "rounded",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ["transparent"],
-        },
-        xaxis: {
-          categories: ["Feb", "Mar", "Apr", "May", "Jun"],
-          labels: {
-            style: {
-              colors: "#ffffff", // White text for x-axis labels
-            },
-          },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              colors: "#ffffff", // White text for y-axis labels
-            },
-          },
-        },
-        fill: {
-          opacity: 1,
-        },
-        tooltip: {
-          theme: "dark", // This makes the tooltip dark to match the theme
-        },
-        grid: {
-          borderColor: "#333333", // Darker grid lines for better visibility on black
-        },
-        legend: {
-          labels: {
-            colors: "#ffffff", // White text for legend
-          },
-        },
+      humidity_latest: 0,
+      humidity_date_time: "---",
+      humidity_min: 0,
+      humidity_max: 0,
+      humidity_min_date_time: 0,
+      humidity_max_date_time: 0,
+      device: {
+        fire_alarm_status: 0,
+        fire_alarm_start_datetime: 0,
+        water_alarm_status: 0,
+        water_alarm_start_datetime: 0,
+        power_alarm_status: 0,
+        power_alarm_start_datetime: 0,
+        door_open_status: 0,
+        door_open_start_datetime: 0,
+        smoke_alarm_status: 0,
+        smoke_alarm_start_datetime: 0,
       },
+      devicesList: [],
+
+      intervalObj: null,
+      viewportHeight: 0,
     };
+  },
+  beforeDestroy() {
+    console.log("Cleaning up resources...");
+
+    // 1. Clear interval (with null check)
+    if (this.intervalObj) {
+      clearInterval(this.intervalObj);
+      this.intervalObj = null; // Prevent memory leaks
+    }
   },
   watch: {
     from_date(val) {},
   },
-  mounted() {},
+  mounted() {
+    // if (window) {
+    //   this.viewportHeight = window.innerHeight;
+    //   window.addEventListener("resize", this.handleResize);
+    // }
+    // if (this.$auth.user.user_type == "employee") {
+    //   this.$router.push(`/dashboard/employee`);
+    // }
+
+    if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
+      alert("You do not have permission to access  ");
+      //this.$router.push("/login");
+      this.$axios.get(`/logout`).then(({ res }) => {
+        this.$auth.logout();
+        this.$router.push(`/login`);
+      });
+
+      this.$router.push(`/login`);
+      return "";
+    }
+    this.loading = true;
+    setTimeout(() => {}, 1000);
+    ///this.getDataFromApi(1);
+
+    this.intervalObj = setInterval(() => {
+      {
+        this.getDataFromApi(1);
+        //this.key++;
+      }
+    }, 1000 * 15);
+  },
   async created() {
-    this.getWeatherReport();
+    const viewportHeight = window.innerHeight;
+    console.log("Visible content height:", viewportHeight, "px");
+
+    const contentHeight = document.documentElement.clientHeight;
+    console.log("Content height (excludes scrollbar):", contentHeight, "px");
+    const today = new Date();
+
+    this.from_date = today.toISOString().slice(0, 10);
+    if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
+      alert("You do not have permission to access this branch");
+      //this.$router.push("/login");
+      this.$axios.get(`/logout`).then(({ res }) => {
+        this.$auth.logout();
+        this.$router.push(`/login`);
+      });
+
+      this.$router.push(`/login`);
+      return "";
+    }
+
+    try {
+      await this.$store.dispatch("fetchDropDowns", {
+        key: "deviceList",
+        endpoint: "device-list",
+        refresh: true,
+      });
+      this.devicesList = this.$store.state.deviceList;
+
+      this.devicesList = this.devicesList.filter(
+        (item) => item.serial_number != null
+      );
+      if (this.$store.state.deviceList && this.$store.state.deviceList[0]) {
+        this.device_serial_number = this.$store.state.deviceList[0].device_id;
+        //this.getDataFromApi();
+      }
+
+      // await this.$store.dispatch("fetchDropDowns", {
+      //   key: "employeeList",
+      //   endpoint: "employee-list",
+      //   refresh: true,
+      // });
+      this.branchList = await this.$store.dispatch("fetchDropDowns", {
+        key: "branchList",
+        endpoint: "branch-list",
+        refresh: true,
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    this.getDataFromApi(1);
   },
 
   methods: {
     can(per) {
       return this.$pagePermission.can(per, this);
     },
-    getWeatherReport() {
-      this.$axios
-        .get("https://api.weatherapi.com/v1/current.json", {
-          params: {
-            key: "6619ca39981a4e4a9c7153233250605", // Your API key
-            q: "Dubai",
-            aqi: "no",
-          },
-        })
-        .then((response) => {
-          const weatherData = response.data;
-          console.log(
-            "Current Temperature:",
-            weatherData.current.temp_c + "°C"
-          );
-          console.log("Condition:", weatherData.current.condition.text);
-          console.log("Humidity:", weatherData.current.humidity + "%");
+    switchBacktoLiveData() {
+      this.displayLiveData = true;
+    },
+    switchBacktoHistoryData() {
+      this.displayLiveData = false;
+    },
 
-          // You can use this data in your component
-          this.temperature = weatherData.current.temp_c;
-          this.weatherCondition = weatherData.current.condition.text;
-          this.humidity = weatherData.current.humidity;
-        })
-        .catch((error) => {
-          console.error("Error fetching weather data:", error);
-          // Handle errors (e.g., show error message to user)
-        });
+    handleResize() {
+      this.viewportHeight = window.innerHeight;
+    },
+    ChangeDevice(serial_number) {
+      try {
+        this.device_serial_number = serial_number;
+        this.key++;
+        this.keyChart2++;
+
+        this.getDataFromApi(1);
+        //console.log(this.device_serial_number, " this.device_serial_number");
+      } catch (e) {}
+    },
+    getDataFromApi(reset = 0) {
+      // if (reset == 1) {
+      //   this.keyChart2++;
+      // }
+      try {
+        if (
+          this.device_serial_number == "" ||
+          this.device_serial_number == null
+        )
+          return false;
+        if (this.$store.state.alarm_temparature_latest && reset == 0) {
+          this.data = this.$store.state.alarm_temparature_latest;
+        } else {
+          this.$axios
+            .get("alarm_dashboard_get_temparature_latest", {
+              params: {
+                company_id: this.$auth.user.company_id,
+
+                device_serial_number: this.device_serial_number,
+              },
+            })
+            .then(({ data }) => {
+              this.data = data;
+              this.device = data.device;
+              this.loading = false;
+              this.$store.commit(
+                "AlarmDashboard/alarm_temparature_latest",
+                data
+              );
+
+              this.temperature_latest = data.temperature_latest;
+              this.temperature_date_time = this.$dateFormat.format4(
+                data.temperature_date_time
+              );
+
+              this.temperature_min = data.temperature_min + "&deg;C";
+              this.temperature_max = data.temperature_max + "&deg;C";
+              this.temperature_min_date_time = this.$dateFormat.format6(
+                data.temperature_min_date_time
+              );
+              this.temperature_max_date_time = this.$dateFormat.format6(
+                data.temperature_max_date_time
+              );
+              // this.temperature_hourly_data = data.houry_data;
+              if (data.fire_alarm_start_datetime)
+                this.fire_alarm_start_datetime = this.$dateFormat.format4(
+                  data.fire_alarm_start_datetime
+                );
+
+              //humidity
+              this.humidity_latest = data.humidity_latest;
+              this.humidity_date_time = this.$dateFormat.format4(
+                data.humidity_date_time
+              );
+
+              this.humidity_min = data.humidity_min + "%";
+              this.humidity_max = data.humidity_max + "%";
+              this.humidity_min_date_time = this.$dateFormat.format6(
+                data.humidity_min_date_time
+              );
+              this.humidity_max_date_time = this.$dateFormat.format6(
+                data.humidity_max_date_time
+              );
+
+              this.key = this.key + 1;
+            });
+        }
+      } catch (e) {}
     },
   },
 };

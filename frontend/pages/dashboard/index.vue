@@ -2,9 +2,7 @@
   <div
     style="width: 100%"
     v-if="can('dashboard_access') && can('dashboard_view')"
-  >
-    11111111111111111
-  </div>
+  ></div>
 
   <NoAccess v-else />
 </template>

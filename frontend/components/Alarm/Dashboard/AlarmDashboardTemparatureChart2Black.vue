@@ -1,6 +1,9 @@
 <template>
   <div style="width: 100%">
-    Teperature and Humidity Chart
+    <v-row>
+      <v-col>Teperature and Humidity Chart</v-col>
+      <v-col> </v-col>
+    </v-row>
     <div :id="name" style="width: 100%; margin-top: 0px" class="pt-2"></div>
   </div>
 </template>
@@ -210,7 +213,12 @@ export default {
       //     },
       //   },
       // },
+      intervalObj: null,
     };
+  },
+  beforeDestroy() {
+    clearInterval(this.intervalObj);
+    this.intervalObj = null;
   },
   watch: {
     from_date(val) {
@@ -226,10 +234,8 @@ export default {
     this.chartOptions.series = this.series;
     // setTimeout(() => {
     ////this.getDataFromApi();
-    setInterval(() => {
-      if (this.$route.name == "alarm-dashboard") {
-        this.getDataFromApi();
-      }
+    this.intervalObj = setInterval(() => {
+      this.getDataFromApi();
     }, 1000 * 60 * 15);
 
     console.log("Mounted");
@@ -259,6 +265,19 @@ export default {
     filterDate() {},
     viewLogs() {
       this.$router.push("/attendance_report");
+    },
+    handleDatesFilter(dates) {
+      //console.log(dates);
+      //if (dates.length > 1)
+      {
+        this.filter_from_date = dates.from; // dates[0];
+        this.filter_to_date = dates.to; // dates[1];
+
+        this.getDataFromApi(this.endpoint, "dates", [dates.from, dates.to]);
+
+        // this.payloadOptions.params["from_date"] = filter_value[0];
+        // this.payloadOptions.params["to_date"] = filter_value[1];
+      }
     },
     getDataFromApi() {
       if (!this.device_serial_number) return;
