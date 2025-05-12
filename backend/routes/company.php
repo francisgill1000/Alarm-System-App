@@ -54,6 +54,7 @@ use App\Http\Controllers\VisaController;
 use App\Models\DeviceNotifications;
 use App\Models\ReportNotificationLogs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/get-company-id-by-device', [DeviceController::class, 'get_company_id_by_device']);
@@ -140,7 +141,7 @@ Route::apiResource('policy', policyController::class);
 Route::get('policy/search/{key}', [policyController::class, 'search']);
 Route::post('policy/delete/selected', [policyController::class, 'deleteSelected']);
 
-//mail content 
+//mail content
 Route::apiResource('mail_content', MailContentController::class);
 
 // activities
@@ -298,3 +299,13 @@ Route::apiResource('leave_count', LeaveCountController::class);
 Route::apiResource('leave_groups', LeaveGroupsController::class);
 Route::get('leave_groups/{id}', [LeaveGroupsController::class, 'show']);
 Route::get('leave-group-list', [LeaveGroupsController::class, 'dropdownList']);
+
+Route::get('/weather', function (Request $request) {
+    $response = Http::get('https://api.weatherapi.com/v1/current.json', [
+        'key' => '6619ca39981a4e4a9c7153233250605',
+        'q' => $request->query('q'),
+        'aqi' => 'no',
+    ]);
+
+    return  json_decode($response);
+});

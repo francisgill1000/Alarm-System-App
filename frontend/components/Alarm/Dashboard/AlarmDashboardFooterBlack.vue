@@ -19,7 +19,11 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/alarm-icons/smoke_alarm.png"
+              v-if="device.smoke_alarm_status"
+              src="../../../static/blue-dashboard-icons/fire_alarm.png"
+              style="width: 80px"
+            /><img
+              src="../../../static/blue-dashboard-icons/fire.png"
               style="width: 80px"
             />
             <div>Smoke/Fire</div>
@@ -49,8 +53,16 @@
           style="border-radius: 20px; text-align: center"
         >
           <div style="margin: auto">
-            <img
+            <!-- <img
               src="../../../static/alarm-icons/water-leakage.png"
+              style="width: 80px"
+            /> -->
+            <img
+              v-if="device.water_alarm_status"
+              src="../../../static/blue-dashboard-icons/water_alarm.png"
+              style="width: 80px"
+            /><img
+              src="../../../static/blue-dashboard-icons/water.png"
               style="width: 80px"
             />
             <div>Water Leakage</div>
@@ -80,7 +92,11 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/alarm-icons/acpower.png"
+              v-if="device.power_alarm_status"
+              src="../../../static/blue-dashboard-icons/power_alarm.png"
+              style="width: 80px"
+            /><img
+              src="../../../static/blue-dashboard-icons/power.png"
               style="width: 80px"
             />
             <div>A/C Power</div>
@@ -110,7 +126,11 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/alarm-icons/dooropen.png"
+              v-if="device.door_open_status"
+              src="../../../static/blue-dashboard-icons/door_alarm.png"
+              style="width: 80px"
+            /><img
+              src="../../../static/blue-dashboard-icons/door.png"
               style="width: 80px"
             />
             <div>Door Open</div>
@@ -138,10 +158,48 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/dashboardicons/switch_on.png"
+              src="../../../static/blue-dashboard-icons/ac.png"
               style="width: 80px"
             />
-            <div>Switch On</div>
+            <div>A/C Off</div>
+          </div>
+        </v-card>
+      </v-col>
+
+      <v-col cols="3">
+        <v-card
+          class="dashboard-card-small"
+          height="180px"
+          elevation="24"
+          loading="false"
+          outlined
+          style="border-radius: 20px; text-align: center"
+        >
+          <div style="margin: auto">
+            <img
+              src="../../../static/blue-dashboard-icons/fan.png"
+              style="width: 80px"
+            />
+            <div>Fan Off</div>
+          </div>
+        </v-card>
+      </v-col>
+
+      <v-col cols="3">
+        <v-card
+          class="dashboard-card-small"
+          height="180px"
+          elevation="24"
+          loading="false"
+          outlined
+          style="border-radius: 20px; text-align: center"
+        >
+          <div style="margin: auto">
+            <img
+              src="../../../static/blue-dashboard-icons/siren.png"
+              style="width: 80px"
+            />
+            <div>Siren Off</div>
           </div>
         </v-card> </v-col
       ><v-col cols="3">
@@ -155,44 +213,10 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/dashboardicons/switch_on.png"
+              src="../../../static/blue-dashboard-icons/lamp.png"
               style="width: 80px"
             />
-            <div>Switch On</div>
-          </div>
-        </v-card> </v-col
-      ><v-col cols="3">
-        <v-card
-          class="dashboard-card-small"
-          height="180px"
-          elevation="24"
-          loading="false"
-          outlined
-          style="border-radius: 20px; text-align: center"
-        >
-          <div style="margin: auto">
-            <img
-              src="../../../static/dashboardicons/switch_on.png"
-              style="width: 80px"
-            />
-            <div>Switch On</div>
-          </div>
-        </v-card> </v-col
-      ><v-col cols="3">
-        <v-card
-          class="dashboard-card-small"
-          height="180px"
-          elevation="24"
-          loading="false"
-          outlined
-          style="border-radius: 20px; text-align: center"
-        >
-          <div style="margin: auto">
-            <img
-              src="../../../static/dashboardicons/switch_off.png"
-              style="width: 80px"
-            />
-            <div>Switch Off</div>
+            <div>Lamp Off</div>
           </div>
         </v-card>
       </v-col>
@@ -305,6 +329,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-@import "@../../assets/blacktheme.css";
-</style>

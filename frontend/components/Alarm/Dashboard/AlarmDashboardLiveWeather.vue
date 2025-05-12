@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; padding: 20px">
+  <div style="width: 100%">
     <!-- Header Section -->
     <div style="margin-bottom: 30px">
       <span style="color: #fff; font-size: 14px; font-weight: bold"
@@ -229,16 +229,11 @@ export default {
       this.error = null;
 
       try {
-        const response = await this.$axios.get(
-          "https://api.weatherapi.com/v1/current.json",
-          {
-            params: {
-              key: "6619ca39981a4e4a9c7153233250605",
-              q: this.selectedCity,
-              aqi: "no",
-            },
-          }
-        );
+        const response = await this.$axios.get("/weather", {
+          params: {
+            q: this.selectedCity,
+          },
+        });
 
         this.weatherData = response.data;
         this.lastUpdated = new Date();

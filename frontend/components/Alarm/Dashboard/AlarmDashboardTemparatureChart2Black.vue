@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%">
     <v-row>
-      <v-col>Teperature and Humidity Chart</v-col>
+      <v-col>Today - Temperature and Humidity Chart</v-col>
       <v-col> </v-col>
     </v-row>
     <div :id="name" style="width: 100%; margin-top: 0px" class="pt-2"></div>
@@ -47,7 +47,7 @@ export default {
 
           //type: "line",
           height: 350,
-          background: "#2a3453",
+
           foreColor: "#E0E0E0",
           // toolbar: { show: false },
           stacked: false,
@@ -227,7 +227,8 @@ export default {
   },
 
   created() {
-    console.log("from_date", this.from_date);
+    // console.log("from_date", this.from_date);
+    this.getDataFromApi();
   },
   mounted() {
     this.chartOptions.chart.height = this.height;
@@ -263,9 +264,7 @@ export default {
 
   methods: {
     filterDate() {},
-    viewLogs() {
-      this.$router.push("/attendance_report");
-    },
+
     handleDatesFilter(dates) {
       //console.log(dates);
       //if (dates.length > 1)

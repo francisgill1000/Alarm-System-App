@@ -1,30 +1,39 @@
-.v-application .main_bg_alarm-dashboard2 {
+/* .v-application .main_bg_alarm-dashboard2 {
   background-color: #333c5d !important;
+} */
+
+ .v-app-bar .v-toolbar.v-sheet
+{
+  background-color: #10103d !important;
 }
 
-.dashboard-card {
+  .dashboard-card {
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #2f3857 0%, #1b2845 100%);
+  /* background: linear-gradient(135deg, #2f3857 0%, #1b2845 100%); */
+  background-color: #10154d;;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.dashboard-card-small {
+   .dashboard-card-small {
+  border-color: #20225d!important;
+
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #2f3857 0%, #1b2845 100%);
+  /* background: linear-gradient(135deg, #2f3857 0%, #1b2845 100%); */
+  background-color: #10154d;;
   color: white;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.dashboard-card-small-pink {
+   .dashboard-card-small-pink {
   border-color: #2d2527!important;
   border-radius: 20px!important;
   padding: 30px!important;
@@ -42,22 +51,33 @@
 
 
 /* Global SVG text styling */
-::v-deep svg text {
+/* ::v-deep   svg text {
   fill: white !important;
   font-family: Arial, sans-serif;
 }
 
-/* Specific element targeting */
-::v-deep .gauge-arc-label {
+
+::v-deep  .gauge-arc-label {
   fill: white !important;
   font-size: 12px;
 }
 
-::v-deep .gauge-central-label {
+::v-deep    .gauge-central-label {
   fill: white !important;
   font-size: 24px;
   font-weight: bold;
+} */
+
+.theme--light .apexcharts-legend-text
+{
+color:black!important;
 }
+
+.theme--light .apexcharts-legend-text, .theme--light  .apexcharts-yaxis, .theme--light  .apexcharts-xaxis
+{
+color:black!important;
+}
+
 
 
 .weather-dashboard {

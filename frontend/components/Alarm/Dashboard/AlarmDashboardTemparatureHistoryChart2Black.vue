@@ -1,17 +1,18 @@
 <template>
-  <div style="width: 100%">
-    <v-row>
-      <v-col cols="6">Teperature and Humidity History</v-col>
+  <div style="width: 100%; height: 400px">
+    <v-row style="">
+      <v-col cols="6">Temperature and Humidity History</v-col>
       <v-col cols="6">
         <v-row>
-          <v-col style="float: right"
+          <v-col style="float: right; text-align: right"
             ><DateRangeComponent
               @filter-attr="handleDatesFilter"
               :defaultFilterType="1"
               :default_date_from="filter_from_date"
               :default_date_to="filter_to_date"
               :height="'40px'"
-              style=""
+              style="float: right; text-align: right"
+              class="daterange-blacktheme"
             />
           </v-col>
           <v-col style="max-width: 50px"
@@ -24,6 +25,7 @@
         ><span style="float: right"></span> -->
       </v-col>
     </v-row>
+
     <div
       :id="nameChart"
       style="width: 100%; margin-top: 0px"
@@ -69,8 +71,25 @@ export default {
           color: "#00C1D4", // Fixed orange for humidity
         },
       ],
-      chartOptions: {
+
+      intervalObj: null,
+      loading: false,
+    };
+  },
+  computed: {
+    chartOptions() {
+      const isDark = this.$vuetify.theme.dark;
+      return {
+        theme: {
+          mode: isDark ? "dark" : "light",
+        },
+        borderColor: isDark ? "#444" : "#e0e0e0",
+        row: {
+          colors: ["transparent"], // 🔍 Transparent row colors
+        },
         chart: {
+          foreColor: isDark ? "#FFF" : "#000",
+          background: "transparent", //
           toolbar: {
             show: false,
           },
@@ -89,15 +108,25 @@ export default {
         xaxis: {
           type: "category",
           categoriesDate: [],
+          // labels: {},
           labels: {
             rotate: -45,
+            style: {
+              colors: isDark ? "#FFF" : "#000",
+            },
           },
         },
         yaxis: {
           title: {
             text: " ",
           },
+          labels: {
+            style: {
+              colors: isDark ? "#FFF" : "#000",
+            },
+          },
         },
+        colors: [isDark ? "#FFF" : "#000"],
         // yaxis: [
         //   {
         //     title: {
@@ -163,7 +192,7 @@ export default {
           position: "top",
           horizontalAlign: "right",
           labels: {
-            colors: "#E0E0E0",
+            colors: isDark ? "#fff" : "#000",
           },
           markers: {
             width: 12,
@@ -171,13 +200,23 @@ export default {
             radius: 4,
           },
         },
-      },
-      intervalObj: null,
-      loading: false,
-    };
+      };
+    },
   },
 
   watch: {
+    // // Optional: force re-render when theme changes
+    // "$vuetify.theme.dark"(val) {
+    //   this.$forceUpdate();
+
+    // },
+
+    "$vuetify.theme.dark"(val) {
+      if (this.chart) {
+        this.chart.updateOptions(this.chartOptions);
+      }
+    },
+
     from_date() {
       this.getDataFromApi();
     },

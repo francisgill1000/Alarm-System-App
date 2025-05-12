@@ -255,7 +255,7 @@ class DeviceSensorLogsController extends Controller
 
 
 
-            ->whereDate("log_time", $date)
+            // ->whereDate("log_time", $date)
             ->orderBy("log_time", "DESC")
             ->first();
 

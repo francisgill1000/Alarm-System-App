@@ -34,6 +34,18 @@ use Illuminate\Support\Facades\Log as Logger;
 use Illuminate\Support\Facades\File;
 
 
+
+Route::get('/weather1111111', function (Request $request) {
+    $response = Http::get('https://api.weatherapi.com/v1/current.json', [
+        'key' => '6619ca39981a4e4a9c7153233250605',
+        'q' => $request->query('q'),
+        'aqi' => 'no',
+    ]);
+
+    return  json_decode($response);
+});
+
+
 Route::get("dummaydata", function (Request $request) {
 
 

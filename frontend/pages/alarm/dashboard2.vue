@@ -61,10 +61,9 @@
       </v-col>
     </v-row> -->
     <v-row>
-      <v-col cols="6"
-        ><v-card
+      <v-col cols="6">
+        <v-card
           v-if="!displayLiveData"
-          class="dashboard-card"
           height="400px"
           elevation="24"
           loading="false"
@@ -101,18 +100,16 @@
           outlined
           style="border-radius: 20px"
           ><v-row>
-            <v-col cols="6">
+            <v-col cols="5">
               <v-row>
                 <v-col cols="12" class="text-center"
-                  ><span class="pl-5" style="font-size: 16px">
-                    Temperature</span
-                  ></v-col
+                  ><span class="pl-5"> Temperature</span></v-col
                 >
                 <!-- <v-col cols="4" class="pull-right"
                     ><v-icon @click="getDataFromApi(1)" style="float: right"
                       >mdi mdi-reload</v-icon
                     >
-                  </v-col> -->
+                  </v-col>-->
               </v-row>
 
               <v-row>
@@ -126,9 +123,9 @@
                 /> -->
                 </v-col>
                 <v-col cols="10" class="pa-0">
-                  <AlarmDashboardTemparatureChart1Black
-                    :name="'AlarmDashboardTemparatureChart1Black1'"
-                    :height="'220'"
+                  <ArrowArcChartTemperature
+                    :name="'ArrowArcChartTemperature1'"
+                    :height="'380'"
                     :temperature_latest="temperature_latest"
                     :temperature_date_time="temperature_date_time"
                     :key="key"
@@ -136,19 +133,20 @@
                 </v-col>
               </v-row>
             </v-col>
+            <v-col cols="2" class="d-flex justify-center align-center">
+              <v-divider inset vertical style="color: #cfcece"></v-divider>
+            </v-col>
 
-            <v-col cols="6">
+            <v-col cols="5">
               <v-row>
                 <v-col cols="12" class="text-center"
-                  ><span class="pl-5" style="font-size: 16px">
-                    Humidity</span
-                  ></v-col
+                  ><span class="pl-5"> Humidity</span></v-col
                 >
-                <!-- <v-col cols="4" class="pull-right"
+                <!--<v-col cols="4" class="pull-right"
                     ><v-icon @click="getDataFromApi(1)" style="float: right"
                       >mdi mdi-reload</v-icon
                     >
-                  </v-col> -->
+                  </v-col>-->
               </v-row>
 
               <v-row>
@@ -162,18 +160,26 @@
                 /> -->
                 </v-col>
                 <v-col cols="10" class="pa-0">
-                  <AlarmDashboardHumidityChart1Black
+                  <ArrowArcChart2Humidity
+                    :name="'ArrowArcChart2Humidity'"
+                    :height="'380'"
+                    :humidity_latest="humidity_latest"
+                    :humidity_date_time="humidity_date_time"
+                    :key="key"
+                  />
+                  <!-- <AlarmDashboardHumidityChart1Black
                     :name="'AlarmDashboardHumidityChart1Black'"
                     :height="'220'"
                     :humidity_latest="humidity_latest"
                     :humidity_date_time="humidity_date_time"
                     :key="key"
-                  />
+                  /> -->
                 </v-col>
               </v-row>
             </v-col>
-          </v-row> </v-card
-      ></v-col>
+          </v-row>
+        </v-card></v-col
+      >
     </v-row>
     <v-row>
       <v-col cols="6">
@@ -192,7 +198,6 @@
             :name="'AlarmDashboardTemparatureChart2'"
             :height="'310'"
             :device_serial_number="device_serial_number"
-            :key="keyChart2"
             :from_date="from_date"
           /> </v-card
       ></v-col>
@@ -207,17 +212,22 @@
 import AlarmDashboardFooterBlack from "../../components/Alarm/Dashboard/AlarmDashboardFooterBlack.vue";
 import AlarmDashboardHumidityChart1Black from "../../components/Alarm/Dashboard/AlarmDashboardHumidityChart1Black.vue";
 import AlarmDashboardLiveWeather from "../../components/Alarm/Dashboard/AlarmDashboardLiveWeather.vue";
-import AlarmDashboardTemparatureChart1Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureChart1Black.vue";
+import ArrowArcChartTemperature from "../../components/Alarm/Dashboard/ArrowArcChartTemperature.vue";
 import AlarmDashboardTemparatureChart2Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureChart2Black.vue";
 import AlarmDashboardTemparatureHistoryChart2Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureHistoryChart2Black.vue";
+import ArrowArcChart2 from "../../components/Alarm/Dashboard/ArrowArcChart2Sample.vue";
+import ArrowArcChart2Humidity from "../../components/Alarm/Dashboard/ArrowArcChart2Humidity.vue";
 
 export default {
+  layout: "black",
   components: {
     AlarmDashboardTemparatureChart2Black,
-    AlarmDashboardTemparatureChart1Black,
+    ArrowArcChartTemperature,
     AlarmDashboardHumidityChart1Black,
     AlarmDashboardLiveWeather,
     AlarmDashboardTemparatureHistoryChart2Black,
+    ArrowArcChart2,
+    ArrowArcChart2Humidity,
   },
   data() {
     return {
@@ -321,11 +331,13 @@ export default {
     }, 1000 * 15);
   },
   async created() {
-    const viewportHeight = window.innerHeight;
-    console.log("Visible content height:", viewportHeight, "px");
+    if (window) {
+      const viewportHeight = window.innerHeight;
+      console.log("Visible content height:", viewportHeight, "px");
 
-    const contentHeight = document.documentElement.clientHeight;
-    console.log("Content height (excludes scrollbar):", contentHeight, "px");
+      const contentHeight = document.documentElement.clientHeight;
+      console.log("Content height (excludes scrollbar):", contentHeight, "px");
+    }
     const today = new Date();
 
     this.from_date = today.toISOString().slice(0, 10);
@@ -469,6 +481,3 @@ export default {
   },
 };
 </script>
-<style scoped>
-@import "@../../assets/blacktheme.css";
-</style>
