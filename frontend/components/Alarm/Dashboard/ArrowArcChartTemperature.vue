@@ -5,7 +5,8 @@
     <v-row>
       <v-col class="text-center">
         <div style="font-size: 14px">
-          <v-icon color="#FFF">mdi-clock-outline</v-icon> Updated at :
+          <v-icon color="default-font-color">mdi-clock-outline</v-icon> Updated
+          at :
           {{ temperature_date_time }}
         </div>
       </v-col>
@@ -31,7 +32,71 @@ export default {
       series: [0],
       chart: null,
       interval: null,
-      chartOptions: {
+      // chartOptions: {
+      //   chart: {
+      //     type: "radialBar",
+      //     offsetY: -20,
+      //     height: 300,
+      //     animations: {
+      //       enabled: true,
+      //       easing: "easeinout",
+      //       speed: 800,
+      //     },
+      //   },
+      //   plotOptions: {
+      //     radialBar: {
+      //       // size: "20%",
+      //       // columnWidth: "20%",
+      //       // Width: "20%",
+      //       startAngle: -135,
+      //       endAngle: 135,
+
+      //       track: {
+      //         background: "#333",
+      //         startAngle: -135,
+      //         endAngle: 135,
+      //       },
+      //       dataLabels: {
+      //         name: {
+      //           show: false,
+      //         },
+      //         value: {
+      //           fontSize: "30px",
+      //           show: true,
+
+      //           formatter: function (val) {
+      //             return val + ".00 °C";
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      //   stroke: {
+      //     lineCap: "butt",
+      //   },
+
+      //   labels: ["Temperature"],
+      //   fill: {
+      //     type: "solid",
+      //     colors: ["#0000FF"],
+      //   },
+      // },
+    };
+  },
+  // watch: {
+  //   "$vuetify.theme.dark"(isDark) {
+  //     this.applyTheme(isDark);
+  //   },
+  // },
+  computed: {
+    chartOptions() {
+      const isDark = this.$vuetify.theme.dark;
+
+      const textColor = isDark ? "#fff" : "#000";
+      const trackColor = isDark ? "#333" : "#333";
+      const fillColor = isDark ? "#2196F3" : "#2196F3";
+
+      return {
         chart: {
           type: "radialBar",
           offsetY: -20,
@@ -44,14 +109,10 @@ export default {
         },
         plotOptions: {
           radialBar: {
-            // size: "20%",
-            // columnWidth: "20%",
-            // Width: "20%",
             startAngle: -135,
             endAngle: 135,
-
             track: {
-              background: "#333",
+              background: trackColor,
               startAngle: -135,
               endAngle: 135,
             },
@@ -60,10 +121,11 @@ export default {
                 show: false,
               },
               value: {
-                fontSize: "40px",
+                fontSize: "30px",
+                color: textColor, // ✅ dynamic color
                 show: true,
                 formatter: function (val) {
-                  return val + " <span style='font-size:20px'>°C</span>";
+                  return val + " °C";
                 },
               },
             },
@@ -72,26 +134,21 @@ export default {
         stroke: {
           lineCap: "butt",
         },
-
         labels: ["Temperature"],
         fill: {
           type: "solid",
-          colors: ["#0000FF"],
+          colors: [fillColor],
         },
-        // fill: {
-        //   type: "gradient",
-        //   gradient: {
-        //     shade: "dark",
-        //     type: "horizontal",
-        //     gradientToColors: ["#87D4F9"],
-        //     stops: [0, 100],
-        //   },
-        // },
-        // stroke: {
-        //   lineCap: "butt",
-        // },
-      },
-    };
+      };
+    },
+  },
+  watch: {
+    "$vuetify.theme.dark"(val) {
+      if (this.chart) {
+        this.chart.updateOptions(this.chartOptions);
+        this.getDataFromApi();
+      }
+    },
   },
   mounted() {
     // Set height from prop or default

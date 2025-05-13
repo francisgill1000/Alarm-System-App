@@ -36,88 +36,7 @@ export default {
           color: "#00C1D4", // Fixed orange for humidity
         },
       ],
-      chartOptions: {
-        // colors: ["RED", "#FF0000"],
-        chart: {
-          toolbar: {
-            show: false,
-          },
-          type: "bar",
-          width: "98%",
 
-          //type: "line",
-          height: 350,
-
-          foreColor: "#E0E0E0",
-          // toolbar: { show: false },
-          stacked: false,
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 500,
-          },
-        },
-        // stroke: {
-        //   width: [0, 0], // No border for columns, thicker line for trend
-        //   curve: "smooth",
-        // },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "50%",
-            endingShape: "rounded",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ["transparent"],
-        },
-        xaxis: {
-          categories: [],
-        },
-        yaxis: {
-          title: {
-            text: " ",
-          },
-        },
-        fill: {
-          opacity: 1,
-        },
-        grid: {
-          borderColor: "#2A2E34",
-          strokeDashArray: 3,
-          padding: {
-            top: 20,
-            right: 10,
-            bottom: 0,
-            left: 10,
-          },
-        },
-        legend: {
-          position: "top",
-          horizontalAlign: "right",
-          labels: {
-            colors: "#E0E0E0",
-          },
-          markers: {
-            width: 12,
-            height: 12,
-            radius: 4,
-          },
-        },
-        tooltip: {
-          theme: "dark",
-          y: {
-            formatter: function (val) {
-              return val + "°C";
-            },
-          },
-        },
-      },
       // chartOptions2: {
       //   chart: {
       //     type: "line",
@@ -216,6 +135,128 @@ export default {
       intervalObj: null,
     };
   },
+  computed: {
+    chartOptions() {
+      const isDark = this.$vuetify.theme.dark;
+
+      const textColor = isDark ? "#E0E0E0" : "#212121";
+      const gridColor = isDark ? "#2A2E34" : "#e0e0e0";
+
+      return {
+        series: [
+          {
+            name: "Temperature",
+            type: "column",
+            data: [], // Your temperature data will go here
+            color: "#ff4a4a", // Fixed teal for temperature
+          },
+          {
+            name: "Humidity",
+            type: "column",
+            data: [],
+            color: "#00C1D4", // Fixed orange for humidity
+          },
+        ],
+        theme: {
+          mode: isDark ? "dark" : "light",
+        },
+        chart: {
+          background: "transparent", //
+
+          toolbar: {
+            show: false,
+          },
+          type: "bar",
+          width: "98%",
+          height: 280,
+          foreColor: textColor,
+          stacked: false,
+          animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 500,
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: "50%",
+            endingShape: "rounded",
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ["transparent"],
+        },
+        xaxis: {
+          categories: [],
+          labels: {
+            style: {
+              colors: textColor,
+            },
+          },
+          axisBorder: {
+            show: true,
+            color: gridColor,
+          },
+          axisTicks: {
+            show: true,
+            color: gridColor,
+          },
+        },
+        yaxis: {
+          labels: {
+            style: {
+              colors: textColor,
+            },
+          },
+          title: {
+            text: " ",
+            style: {
+              color: textColor,
+            },
+          },
+        },
+        fill: {
+          opacity: 1,
+        },
+        grid: {
+          borderColor: gridColor,
+          strokeDashArray: 3,
+          padding: {
+            top: 20,
+            right: 10,
+            bottom: 0,
+            left: 10,
+          },
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          labels: {
+            colors: textColor,
+          },
+          markers: {
+            width: 12,
+            height: 12,
+            radius: 4,
+          },
+        },
+        tooltip: {
+          theme: isDark ? "dark" : "light",
+          y: {
+            formatter: function (val) {
+              return val + "°C";
+            },
+          },
+        },
+      };
+    },
+  },
   beforeDestroy() {
     clearInterval(this.intervalObj);
     this.intervalObj = null;
@@ -223,6 +264,12 @@ export default {
   watch: {
     from_date(val) {
       this.getDataFromApi();
+    },
+    "$vuetify.theme.dark"(val) {
+      if (this.chart) {
+        this.chart.updateOptions(this.chartOptions);
+        this.getDataFromApi();
+      }
     },
   },
 

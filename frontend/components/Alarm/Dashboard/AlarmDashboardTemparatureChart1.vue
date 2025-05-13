@@ -2,7 +2,7 @@
   <div style="width: 100%; height: 190px">
     <!-- <ComonPreloader
       icon="face-scan"
-    
+
       style="max-height: 180px"
       height="150px"
     /> -->
@@ -56,6 +56,7 @@ export default {
     };
   },
   watch: {},
+
   mounted() {
     setTimeout(() => {
       this.VueGaugeoptions = {

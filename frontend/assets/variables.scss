@@ -22,7 +22,23 @@ $material-dark: (
   'on-primary': #000000,         // Text color used on top of `primary`
   'on-secondary': #000000,       // Text color used on top of `secondary`
   'on-surface': #FFFFFF,         // Text color used on top of surfaces/backgrounds
+  'default-font-color':#FFF,
+  'default-font-color-reverse':#000,
+
+
+
+
 );
+$material-light: (
+
+
+  'default-font-color':#000000,  //font color
+  'default-font-color-reverse':#ffffff,
+
+
+);
+
+
 
 
 

@@ -9,12 +9,8 @@
     <v-row>
       <v-col>
         <v-card elevation="0" class="mt-2">
-          <v-toolbar class="mb-2 white--text" color="white" dense flat>
-            <v-toolbar-title>
-              <span style="color: black"
-                >Temperature Reports</span
-              ></v-toolbar-title
-            >
+          <v-toolbar class="mb-2" dense flat>
+            <v-toolbar-title> <span>Temperature Reports</span></v-toolbar-title>
             <span>
               <v-btn
                 title="Reload"
@@ -77,6 +73,7 @@
                 :defaultFilterType="1"
                 :height="'40px'"
                 style="margin-top: -7px; width: 100%"
+                :class="this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''"
               />
             </span>
           </v-toolbar>

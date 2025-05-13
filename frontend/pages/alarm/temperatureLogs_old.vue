@@ -173,7 +173,7 @@
                       @filter-attr="handleDatesFilter"
                       :defaultFilterType="1"
                       :height="'40px'"
-                      style="margin-top: -7px; width: 100%"
+                      style="margin-top: -7px; width: 100%" :class="this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''"
                     />
                     <v-autocomplete
                       :id="header.key"

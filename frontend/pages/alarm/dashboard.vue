@@ -68,7 +68,7 @@
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px"
+          style="border-radius: 10px"
         >
           <AlarmDashboardTemparatureHistoryChart2Black
             :nameChart="'AlarmDashboardTemparatureHistoryChart2Black'"
@@ -86,7 +86,7 @@
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px"
+          style="border-radius: 10px"
           ><AlarmDashboardLiveWeather
             @switchBacktoHistoryData="switchBacktoHistoryData()"
         /></v-card>
@@ -98,7 +98,7 @@
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px"
+          style="border-radius: 10px"
           ><v-row>
             <v-col cols="5">
               <v-row>
@@ -188,15 +188,15 @@
       <v-col cols="6">
         <v-card
           class="dashboard-card"
-          height="400px"
+          height="380px"
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px"
+          style="border-radius: 10px"
         >
           <AlarmDashboardTemparatureChart2Black
             :name="'AlarmDashboardTemparatureChart2'"
-            :height="'310'"
+            :height="'300'"
             :device_serial_number="device_serial_number"
             :from_date="from_date"
           /> </v-card
@@ -219,7 +219,7 @@ import ArrowArcChart2 from "../../components/Alarm/Dashboard/ArrowArcChart2Sampl
 import ArrowArcChart2Humidity from "../../components/Alarm/Dashboard/ArrowArcChart2Humidity.vue";
 
 export default {
-  layout: "black",
+  // layout: "black",
   components: {
     AlarmDashboardTemparatureChart2Black,
     ArrowArcChartTemperature,

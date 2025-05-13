@@ -166,7 +166,6 @@
               title="Add Notification"
               @click="openNewPage()"
               color="violet"
-              class="primary"
             >
               Add+
             </v-btn>

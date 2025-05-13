@@ -216,7 +216,6 @@
           <v-icon
             v-if="index == managers.length - 1"
             title="Add - Maximum 3 managers"
-            color="black"
             :disabled="managers.length >= 3"
             @click="add"
             >mdi-plus-circle</v-icon

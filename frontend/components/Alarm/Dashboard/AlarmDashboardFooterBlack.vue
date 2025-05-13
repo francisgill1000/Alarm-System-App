@@ -7,7 +7,7 @@
       <v-col cols="3">
         <v-card
           :class="
-            device.smoke_alarm_status == 0
+            device.fire_alarm_status == 0
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
@@ -19,21 +19,22 @@
         >
           <div style="margin: auto">
             <img
-              v-if="device.smoke_alarm_status"
+              v-if="device.fire_alarm_status"
               src="../../../static/blue-dashboard-icons/fire_alarm.png"
               style="width: 80px"
             /><img
+              v-else
               src="../../../static/blue-dashboard-icons/fire.png"
               style="width: 80px"
             />
             <div>Smoke/Fire</div>
 
-            <div :style="getPriorityColor(device.smoke_alarm_status)">
+            <div :style="getPriorityColor(device.fire_alarm_status)">
               <div style="font-size: 12px">
                 {{
-                  device.smoke_alarm_start_datetime == null
+                  device.fire_alarm_start_datetime == null
                     ? "---"
-                    : $dateFormat.format4(device.smoke_alarm_start_datetime)
+                    : $dateFormat.format4(device.fire_alarm_start_datetime)
                 }}
               </div>
             </div>
@@ -62,6 +63,7 @@
               src="../../../static/blue-dashboard-icons/water_alarm.png"
               style="width: 80px"
             /><img
+              v-else
               src="../../../static/blue-dashboard-icons/water.png"
               style="width: 80px"
             />
@@ -96,6 +98,7 @@
               src="../../../static/blue-dashboard-icons/power_alarm.png"
               style="width: 80px"
             /><img
+              v-else
               src="../../../static/blue-dashboard-icons/power.png"
               style="width: 80px"
             />
@@ -130,6 +133,7 @@
               src="../../../static/blue-dashboard-icons/door_alarm.png"
               style="width: 80px"
             /><img
+              v-else
               src="../../../static/blue-dashboard-icons/door.png"
               style="width: 80px"
             />

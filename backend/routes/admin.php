@@ -56,6 +56,8 @@ Route::get('company/list', [CompanyController::class, 'CompanyList']);
 
 Route::apiResource('company', CompanyController::class)->except('update');
 Route::post('company/{id}/update', [CompanyController::class, 'updateCompany']);
+Route::post('company/{id}/update_settings', [CompanyController::class, 'updateCompanySettings']);
+
 Route::post('company/{id}/update/contact', [CompanyController::class, 'updateContact']);
 Route::post('company/{id}/update/user', [CompanyController::class, 'updateCompanyUser']);
 Route::post('company/{id}/update/user_whatsapp', [CompanyController::class, 'updateCompanyUserWhatsapp']);

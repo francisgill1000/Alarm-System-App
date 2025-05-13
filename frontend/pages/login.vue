@@ -120,7 +120,7 @@
                 src="/logo22.png"
               ></v-img>
             </div>
-            <h3 class="pb-7 pt-15">
+            <h3 class="pb-7 pt-15" style="color: black">
               Welcome To
               <span style="font-size: 20px"> Xtreme Guard </span>
             </h3>
@@ -132,6 +132,7 @@
               v-model="valid"
               lazy-validation
               autocomplete="off"
+              class="loginpage"
             >
               <div class="form-outline">
                 <v-text-field
@@ -149,6 +150,8 @@
                   append-icon="mdi-at"
                   autocomplete="off"
                   aria-autocomplete="none"
+                  class="theme--light"
+                  style="color: black !important"
                 ></v-text-field>
               </div>
 
@@ -163,8 +166,9 @@
                   :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="show_password ? 'text' : 'password'"
                   v-model="credentials.password"
-                  class="input-group--focused"
+                  class="input-group--focused theme--light"
                   @click:append="show_password = !show_password"
+                  style="color: black !important"
                 ></v-text-field>
               </div>
 
@@ -196,8 +200,13 @@
                 <v-btn
                   :loading="loading"
                   @click="login()"
-                  class="btn primary btn-black btn-block mt-1 mb-3 p-4 btntext"
-                  style="width: 100%; height: 48px"
+                  class="btn btn-block mt-1 mb-3 p-4 btntext loginbutton"
+                  style="
+                    width: 100%;
+                    height: 48px;
+                    background-color: #6c2ac2;
+                    color: #fff;
+                  "
                 >
                   Login
                 </v-btn>
@@ -327,6 +336,7 @@ export default {
     },
   }),
   created() {
+    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
     this.$auth.logout();
     // this.$store.commit("dashboard/resetState", null);
     this.$store.dispatch("dashboard/resetState");
@@ -559,5 +569,22 @@ html {
     max-width: 100%;
     background-color: #6946dd;
   }
+}
+</style>
+<style scoped>
+label {
+  color: black !important;
+}
+.v-label {
+  color: black !important ;
+}
+.theme--light.v-label {
+  color: black !important ;
+}
+/* .theme--light {
+  color: black !important ;
+} */
+.loginbutton {
+  background-color: #6946dd !important;
 }
 </style>

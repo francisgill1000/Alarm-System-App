@@ -278,7 +278,7 @@
                 >
               </v-btn>
             </span>
-            <span>
+            <!-- <span>
               <v-btn
                 dense
                 class="ma-0 px-0"
@@ -291,7 +291,7 @@
                   >mdi mdi-filter</v-icon
                 >
               </v-btn>
-            </span>
+            </span> -->
 
             <v-spacer></v-spacer>
 
@@ -494,7 +494,7 @@
                     @click="viewItem(item)"
                   >
                     <v-list-item-title style="cursor: pointer">
-                      <v-icon color="secondary" small> mdi-eye </v-icon>
+                      <v-icon small> mdi-eye </v-icon>
                       View
                     </v-list-item-title>
                   </v-list-item>
@@ -503,7 +503,7 @@
                     @click="editItem(item)"
                   >
                     <v-list-item-title style="cursor: pointer">
-                      <v-icon color="secondary" small> mdi-pencil </v-icon>
+                      <v-icon small> mdi-pencil </v-icon>
                       Edit
                     </v-list-item-title>
                   </v-list-item>

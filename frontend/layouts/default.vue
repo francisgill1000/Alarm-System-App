@@ -10,6 +10,7 @@
       app
       :color="sideBarcolor"
       :width="150"
+      v-if="displayLeftMenu"
     >
       <br />
       <v-list
@@ -165,25 +166,25 @@
       </v-list>-->
     </v-navigation-drawer>
     <v-app-bar
-      :color="changeColor"
-      dark
+      :color="appBarColor"
       :clipped-left="clipped"
       fixed
       app
+      class="app-header-main"
       :style="$nuxt.$route.name == 'index' ? 'z-index: 100000' : ''"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" style="color: #fff" />
+      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" style="color: #fff" /> -->
       <span
         class="text-overflow"
         style="cursor: pointer"
-        @click="toggleTheme()"
+        @click="gotoHomePage()"
       >
         <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
       </span>
 
       <v-spacer></v-spacer>
 
-      <span style="width: 100%; display: none">
+      <span>
         <template
           v-if="
             getLoginType == 'company' ||
@@ -200,6 +201,39 @@
                 text
                 class="btn-text-size"
                 :elevation="0"
+                color="dark"
+                fill
+                @click="setSubLeftMenuItems(items.menu, items.to)"
+              >
+                <span style="color: #fff !important">{{ items.title }}</span>
+              </v-btn>
+            </v-col>
+          </v-row>
+        </template>
+      </span>
+      <v-spacer></v-spacer>
+
+      <!-- <span class="header-menu">
+        <template
+          v-if="
+            getLoginType == 'company' ||
+            getLoginType == 'branch' ||
+            getLoginType == 'department' ||
+            ($auth.user?.role?.role_type?.toLowerCase() != 'guard' &&
+              $auth.user?.role?.role_type?.toLowerCase() != 'host')
+          "
+        >
+          <v-row align="center" justify="space-around" class="header-menu-row">
+            <v-col
+              v-for="(items, index) in items"
+              :key="index"
+              class="header-menu-box"
+            >
+              <v-btn
+                class="header-menu-button"
+                small
+                text
+                :elevation="0"
                 :color="
                   menuProperties[items.menu] &&
                   menuProperties[items.menu].selected
@@ -207,23 +241,29 @@
                 fill
                 @click="setSubLeftMenuItems(items.menu, items.to)"
               >
-                <span>{{ items.title }}</span>
+                <b class="header-menu-item"> {{ items.title }} </b>
               </v-btn>
             </v-col>
           </v-row>
         </template>
-      </span>
+      </span> -->
 
+      <span>
+        <v-form autocomplete="off"> </v-form>
+      </span>
       <v-spacer></v-spacer>
-      <span style="font-size: 30px; color: #fff; padding-right: 75px">
-        <div>
-          <v-icon color="white" size="35" style="color: #fff"
-            >mdi-clock-outline</v-icon
-          >
-          <span style="font-size: 30px; color: #fff"> {{ currentTime }}</span>
-          <span style="font-size: 16px; color: #fff; font-weight: 200">{{
-            todayDate
-          }}</span>
+      <span
+        style="
+          font-size: 30px;
+          color: #fff;
+          padding-right: 75px;
+          min-width: 300px;
+        "
+      >
+        <div class="livedateTime">
+          <v-icon size="35" style="">mdi-clock-outline</v-icon>
+          <span style="font-size: 30px"> {{ currentTime }}</span>
+          <span style="font-size: 16px; font-weight: 200">{{ todayDate }}</span>
         </div>
       </span>
       <v-menu
@@ -276,7 +316,7 @@
       <!-- <button type="button" @click="playAudioOnUserInteraction" ref="myBtn">
         Click Me!
       </button> -->
-      <v-btn
+      <!-- <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
         plan
@@ -291,20 +331,41 @@
         plan
         @click="gotoHomePage()"
         class="mr-3"
-        ><v-icon class="white--text" style="text-align: center"
-          >mdi-view-dashboard</v-icon
-        ></v-btn
+        ><v-icon style="text-align: center">mdi-view-dashboard</v-icon></v-btn
+      > -->
+      <!-- <v-btn
+        v-if="
+          (getLoginType == 'company' || getLoginType == 'branch') &&
+          !this.$vuetify.theme.dark
+        "
+        icon
+        plan
+        @click="toggleTheme()"
+        class="mr-3"
       >
+        <v-icon class="white--black" style="text-align: center"
+          >mdi-swap-horizontal-circle
+        </v-icon></v-btn
+      >
+      <v-btn @click="switchTheme('light')">Light Theme</v-btn>
+      <v-btn @click="switchTheme('dark')">Dark Theme</v-btn>
+      <v-btn @click="switchTheme('blue')">Blue Theme</v-btn>
+
+      <v-alert type="info" class="mt-4">
+        {{ currentTheme }}
+      </v-alert> -->
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
         plan
         @click="toggleTheme()"
         class="mr-3"
-        ><v-icon class="white--text" style="text-align: center"
-          >mdi-compare</v-icon
-        ></v-btn
       >
+        <v-icon style="text-align: center; color: #fff"
+          >mdi-swap-horizontal-circle-outline
+        </v-icon></v-btn
+      >
+
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
@@ -440,28 +501,28 @@
             </v-card-title> -->
 
             <!-- <div @click="s()" class="toggle-sound"></div> -->
-            <v-toolbar
-              color="error"
-              style="
-                text-align: center;
-                padding-left: 35%;
-                color: #fff !important;
-              "
-              >Attention : Alarm Notification
+            <v-toolbar color="error" dense flat>
+              <v-toolbar-title
+                class="white--text text-center"
+                style="width: 100%"
+              >
+                Attention : Alarm Notification
+              </v-toolbar-title>
+
               <v-spacer></v-spacer>
+
               <v-icon
-                style="color: #fff !important"
-                fill
+                class="white--text"
                 @click="
                   alarmNotificationStatus = false;
                   stopsound();
                 "
-                outlined
               >
-                mdi mdi-close-circle
+                mdi-close-circle
               </v-icon>
             </v-toolbar>
-            <v-card-text>
+
+            <v-card-text class="pt-5">
               <v-row
                 v-for="(device, index) in notificationAlarmDevices"
                 key="index"
@@ -499,7 +560,7 @@
                       </div>
                     </v-col>
                   </v-row>
-                  <!-- <v-row
+                  <v-row
                     v-if="device.fire_alarm_status"
                     style="border-bottom: 1px solid #ddd"
                   >
@@ -528,7 +589,8 @@
                         Device Location :{{ device.location }}
                       </div>
                     </v-col>
-                  </v-row> -->
+                  </v-row>
+
                   <v-row
                     v-if="device.smoke_alarm_status"
                     style="border-bottom: 1px solid #ddd"
@@ -691,8 +753,8 @@
       </v-dialog>
     </v-app-bar>
 
-    <v-main
-      :class="'main_bg main_bg_' + pagename"
+    <!-- <v-main
+      :class="'main_bg main_bg_header main_bg_' + pagename"
       :style="
         miniVariant && drawer
           ? 'padding-left: 60px;'
@@ -700,13 +762,14 @@
           ? 'padding-left: 5px;'
           : 'padding-left: 140px;'
       "
-    >
+    > -->
+    <v-main :class="'main_bg main_bg_header main_bg_' + pagename">
       <v-container style="max-width: 100%">
         <nuxt />
       </v-container>
     </v-main>
 
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="rightDrawer"
       :clipped="true"
       :right="right"
@@ -831,11 +894,14 @@
           </v-card>
         </v-col>
       </v-row>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
   </v-app>
 </template>
 
 <script>
+import colors from "vuetify/lib/util/colors";
+import vuetify from "@/plugins/vuetify";
+
 import company_menus from "../menus/company.json";
 import employee_menus from "../menus/employee.json";
 import branch_menus from "../menus/branch.json";
@@ -848,6 +914,7 @@ import employee_top_menu from "../menus/employee_modules_top.json";
 export default {
   data() {
     return {
+      displayLeftMenu: false,
       currentTime: "00:00:00",
       todayDate: "---",
       notificationsMenuItems: [
@@ -873,66 +940,9 @@ export default {
           elevation: 0,
           selected: "",
         },
-        settings: {
-          elevation: 0,
-          selected: "",
-        },
-        employees: {
-          elevation: 0,
-          selected: "",
-        },
-        attendance: {
-          elevation: 0,
-          selected: "",
-        },
-        payroll: {
-          elevation: 0,
-          selected: "",
-        },
-        access_control: {
-          elevation: 0,
-          selected: "",
-        },
-        visitors: {
-          elevation: 0,
-          selected: "",
-        },
-        reports: {
-          elevation: 0,
-          selected: "",
-        },
-
-        profile_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        attendance_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        requests_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        announcements_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        payslips_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        schedule_topmenu: {
-          elevation: 0,
-          selected: "",
-        },
-        community: {
-          elevation: 0,
-          selected: "",
-        },
       },
 
-      topMenu_Selected: "dashboard",
+      topMenu_Selected: "dashboard2",
       company_menus,
       employee_menus,
       branch_menus,
@@ -956,10 +966,10 @@ export default {
 
       clipped: false,
       open_menu: [],
-      drawer: true,
+      drawer: false, //hide leftmenu
       fixed: false,
       order_count: "",
-      logo_src: "",
+      // logo_src: "",
       logo_src2: "",
       items: [],
       modules: {
@@ -968,7 +978,7 @@ export default {
       },
       clipped: true,
 
-      miniVariant: true,
+      miniVariant: true, //hide leftmenu
       title: "Xtreme Guards",
       socket: null,
       logout_btn: {
@@ -981,9 +991,73 @@ export default {
       alarmNotificationStatus: false,
       audio: null,
       timmerStatus: true,
+      currentTheme: "light",
+      // themes: {
+      //   light: {
+      //     primary: "#6946dd",
+      //     accent: "#d8363a",
+      //     secondary: "#242424",
+      //     background: "#34444c",
+      //     main_bg: "#ECF0F4",
+      //     violet: "#6946dd",
+      //     popup_background: "#ecf0f4",
+      //   },
+      //   dark: {
+      //     primary: "#1976D2",
+      //     accent: "#82B1FF",
+      //     secondary: "#424242",
+      //     background: "#10154d",
+      //     main_bg: "#101044",
+      //     popup_background: "#E3F2FD",
+      //   },
+      // },
     };
   },
+  // theme: {
+  //   dark: true,
+
+  //   themes: {
+  //     light: {
+  //       //primary: "#5fafa3", //green
+  //       primary: "#6946dd", //violoet
+  //       accent: "#d8363a",
+  //       secondary: "#242424",
+  //       background: "#10154d",
+  //       info: colors.teal.lighten1,
+  //       warning: colors.amber.base,
+  //       error: colors.deepOrange.accent4,
+  //       success: colors.green.accent3,
+  //       main_bg: "#ECF0F4",
+  //       violet: "#6946dd",
+  //       popup_background: "#ecf0f4",
+  //     },
+  //     dark: {
+  //       primary: "#000000", // Custom primary color
+  //       secondary: "#000000", // Custom secondary color
+  //       accent: "#000000", // Custom accent color
+  //       background: "#000000", // Background color
+  //       surface: "#000000", // Surface color (e.g., cards, sheets)
+  //       error: "#000000", // Error color
+  //       info: "#000000", // Info color
+  //       success: "#000000", // Success color
+  //       warning: "#000000", // Warning color
+
+  //       disabled: "#000000", // Disabled element color
+  //       divider: "#000000", // Divider color
+  //       //custom colors
+  //       appBarBackground: "#000000",
+  //     },
+  //   },
+  // },
   created() {
+    const savedTheme = this.$auth.user.company.theme || "light";
+
+    if (savedTheme === "dark") {
+      this.$vuetify.theme.dark = true;
+    } else {
+      this.$vuetify.theme.dark = false;
+    }
+
     this.pagename = this.$route.name;
     if (!this.$auth.user) {
       {
@@ -999,7 +1073,8 @@ export default {
     this.getCompanyDetails();
     this.setMenus();
     this.setSubLeftMenuItems("dashboard", "/dashboard", false);
-    this.logo_src = require("@/static/logo.png");
+    // this.logo_src = require("@/static/logo.png");
+
     this.pendingNotificationsCount = 0;
 
     setInterval(() => {
@@ -1043,15 +1118,17 @@ export default {
     const now = new Date();
     console.log("reloadCount", now.toLocaleTimeString([], { hour12: false }));
     setTimeout(() => {
-      if (window) window.location.reload();
+      window.location.reload();
     }, 1000 * 60 * 15);
     //this.company_menus = [];
 
     let menu_name = this.$route.name;
-    let bgColor = "violet";
+    let bgColor = "dark";
     let loadSelectedMenu = "";
 
     menu_name = menu_name.replaceAll("-", "/");
+
+    console.log(this.getLoginType);
 
     if (this.getLoginType === "company" || this.getLoginType === "branch") {
       //-------------------
@@ -1059,8 +1136,12 @@ export default {
         (item) => item.to === "/" + menu_name && item.submenu == null
       );
 
+      console.log(loadSelectedMenu);
+
       if (loadSelectedMenu[0]) {
         menu_name = loadSelectedMenu[0].module;
+
+        console.log("menu_name", menu_name);
 
         if (this.menuProperties.hasOwnProperty(menu_name)) {
           for (const key in this.menuProperties) {
@@ -1078,7 +1159,7 @@ export default {
         );
       }
     }
-    if (window) this.setupInactivityDetection();
+    this.setupInactivityDetection();
 
     // setTimeout(() => {
     //   this.$router.push(`/dashboard2`);
@@ -1086,9 +1167,30 @@ export default {
   },
   watch: {},
   computed: {
+    logo_src() {
+      return require("@/static/logo.png");
+      if (this.$vuetify.theme.dark) return require("@/static/logo.png");
+      else return require("@/static/black.jpeg");
+    },
+
+    isDark() {
+      return this.currentTheme === "dark";
+    },
+    appBarColor() {
+      console.log(
+        this.$vuetify.theme.dark,
+        this.$vuetify.theme.themes.dark.surface,
+        this.$vuetify.theme.themes.light.surface
+      );
+
+      return this.$vuetify.theme.dark
+        ? "#10154d"
+        : this.$vuetify.theme.themes.light.surface;
+    },
+
     changeColor() {
-      return "#04253b"; //background color
-      return "#ecf0f4"; //this.$store.state.color;
+      // return "#121653"; //background color dark blue
+      // return "#ecf0f4"; //this.$store.state.color;
     },
 
     getUser() {
@@ -1138,6 +1240,16 @@ export default {
     },
   },
   methods: {
+    // isDark() {
+    //   return this.currentTheme === "dark";
+    // },
+    // appBarColor() {
+
+    //   return "red";
+    //   return this.$vuetify.theme.dark
+    //     ? this.$vuetify.theme.themes.dark.primary
+    //     : this.$vuetify.theme.themes.light.primary;
+    // },
     palysound() {
       this.audio = new Audio(
         process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
@@ -1156,7 +1268,130 @@ export default {
     stopsound() {
       if (this.audio) this.audio.pause();
     },
+    // switchTheme(theme) {
+    //   this.currentTheme = theme;
+    //   console.log("Switching to theme:", theme);
+
+    //   const blueTheme = {
+    //     primary: "#000000",
+    //     secondary: "#000000",
+    //     accent: "#000000",
+    //     error: "#000000",
+    //     info: "#000000",
+    //     success: "#000000",
+    //     warning: "#000000",
+    //     background: "#000000",
+    //   };
+
+    //   const lightThemeD = {
+    //     //primary: "#5fafa3", //green
+    //     primary: "#6946dd", //violoet
+    //     accent: "#d8363a",
+    //     secondary: "#242424",
+    //     background: "#34444c",
+    //     info: colors.teal.lighten1,
+    //     warning: colors.amber.base,
+    //     error: colors.deepOrange.accent4,
+    //     success: colors.green.accent3,
+    //     main_bg: "#ecf0f4",
+    //     violet: "#6946dd",
+    //     popup_background: "#ecf0f4",
+    //     "on-surface": "#000",
+    //     "default-font-color": "#000",
+    //     "default-font-color-reverse": "#FFF",
+    //   };
+
+    //   if (theme === "blue") {
+    //     const lightTheme = this.$vuetify.theme.themes.light;
+
+    //     Object.keys(blueTheme).forEach((key) => {
+    //       lightTheme[key] = blueTheme[key];
+    //     });
+
+    //     this.$vuetify.theme.dark = false;
+    //   } else if (theme === "dark") {
+    //     this.$vuetify.theme.dark = true;
+    //   } else if (theme === "light") {
+    //     this.$vuetify.theme.themes.light = lightThemeD;
+
+    //     this.$vuetify.theme.dark = false;
+    //   } else {
+    //     console.warn("Unknown theme:", theme);
+    //   }
+
+    //   // const $vuetify = this.$vuetify;
+
+    //   // // Enable dark mode only if theme is dark
+    //   // $vuetify.theme.dark = theme === "dark";
+
+    //   // console.log($vuetify.theme.themes);
+
+    //   // // Get the selected theme from Vuetify config
+    //   // const selectedTheme = $vuetify.theme.themes[theme];
+
+    //   // // Replace current theme colors
+    //   // if ($vuetify.theme.dark) {
+    //   //   $vuetify.theme.themes.dark = { ...selectedTheme };
+    //   // } else {
+    //   //   $vuetify.theme.themes.light = { ...selectedTheme };
+    //   // }
+
+    //   // this.currentTheme = theme;
+    // },
+    toggleTheme222222222() {
+      this.currentTheme = this.currentTheme === "light" ? "dark" : "light";
+      this.$vuetify.theme.themes.light = this.themes[this.currentTheme];
+    },
+    udapteTheme() {
+      // this.update_contact();
+      // this.update_geographic();
+
+      let payload = new FormData();
+
+      payload.append("theme", this.$vuetify.theme.dark ? "dark" : "light");
+
+      try {
+        this.$axios
+          .post(
+            `/company/${this.$auth.user.company_id}/update_settings`,
+            payload
+          )
+
+          .catch((e) => console.log(e));
+      } catch (e) {}
+    },
     toggleTheme() {
+      console.log(this.$vuetify.theme.themes.dark);
+
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+
+      this.udapteTheme();
+      // return false;
+      // const isCurrentlyDark = this.$vuetify.theme.dark;
+
+      // if (isCurrentlyDark) {
+      //   // Switching to Light Theme
+      //   this.$vuetify.theme.themes.light = {
+      //     primary: "#6946dd",
+      //     accent: "#d8363a",
+      //     secondary: "#242424",
+      //     background: "#34444c",
+      //     main_bg: "#ECF0F4",
+      //     violet: "#6946dd",
+      //     popup_background: "#ecf0f4",
+      //   };
+      // } else {
+      //   // Switching to Dark Theme
+      //   // this.$vuetify.theme.themes.dark = {
+      //   //   background: "#10154d",
+      //   //   main_bg: "#101044",
+      //   // };
+      // }
+
+      // // Now toggle the theme
+      // this.$vuetify.theme.dark = !isCurrentlyDark;
+    },
+    toggleTheme111() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
 
       // if (!this.$vuetify.theme.dark) {
@@ -1169,6 +1404,16 @@ export default {
       //     violet: "#6946dd",
       //     popup_background: "#ecf0f4",
       //   };
+      // } else {
+      //   // this.$vuetify.theme.themes.dark = {
+      //   //   primary: "#6946dd", //violoet
+      //   //   accent: "#d8363a",
+      //   //   secondary: "#242424",
+      //   //   background: "#34444c",
+      //   //   main_bg: "#ECF0F4",
+      //   //   violet: "#6946dd",
+      //   //   popup_background: "#ecf0f4",
+      //   // };
       // }
     },
     updateTopmenu() {
@@ -1328,8 +1573,8 @@ export default {
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
         if (data.length > 0) {
           this.notificationAlarmDevices = data;
-
-          this.alarmNotificationStatus = true;
+          if (this.$route.name == "alarm/dashboard")
+            this.alarmNotificationStatus = true;
           this.palysound();
         } else {
           this.alarmNotificationStatus = false;
@@ -1353,7 +1598,7 @@ export default {
       this.$router.push(page);
     },
     goToSettings() {
-      this.setSubLeftMenuItems("settings", "/branches");
+      this.setSubLeftMenuItems("settings", "/settings");
     },
     setSubLeftMenuItems(menu_name, page, redirect = true) {
       this.topMenu_Selected = menu_name;
@@ -1474,7 +1719,7 @@ export default {
     },
 
     changeTheme(color) {
-      // alert(color);
+      alert(color);
     },
 
     changeSideBarColor(color) {
@@ -1562,20 +1807,12 @@ export default {
   color: #6946dd;
 }
 
-.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-  color: #9aa9b9;
-}
-.theme--dark.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled)
-  i {
-  color: #9aa9b9;
-}
-
-header,
+/* header,
 header button,
 header a,
 header i {
   color: black !important;
-}
+} */
 .header-devices-menu-selected {
   color: #fff !important;
 }
@@ -1609,10 +1846,6 @@ header i {
 .theme--light.v-bottom-navigation .v-btn--active {
   color: yellow !important;
 }*/
-.theme--dark.v-bottom-navigation .v-btn--active {
-  background: rgb(105, 70, 221);
-  color: #fff !important;
-}
 </style>
 
 <style>
@@ -2106,10 +2339,54 @@ body {
 }
 
 /* .v-application .main_bg_alarm-dashboard2 {
-  background-color: #333c5d !important;
+  background-color: #101044 !important;
+} */
+
+.dashboard {
+  display: flex;
+  gap: 20px;
+  background-color: #101044;
+  padding: 20px;
+}
+
+.daterange-blacktheme .mx-input {
+  background: #111755;
+  color: #fff !important;
+}
+
+.daterange-blacktheme .mx-icon-calendar {
+  color: #fff !important;
+}
+.app-header-main {
+  margin: 12px !important;
+  margin-bottom: 20px !important;
+  /* margin: 16px !important; */
+  border-radius: 10px !important;
+}
+
+.main_bg_header {
+  padding-top: 74px !important;
+  margin-top: 10px;
+}
+
+/* .livedateTime span {
+  color: #fff !important;
 } */
 </style>
+<style scoped>
+@import "@../../assets/whitetheme.css";
+</style>
 
+<!-- <style scoped>
+@import "@../../assets/blacktheme.css";
+</style> -->
+
+<style>
+@import "@../../assets/darktheme.css";
+</style>
+<style>
+@import "@../../assets/darkchart.css";
+</style>
 <!-- BLACK THEME ----------------------------------------------START --------------------------------------------------------------------->
 
 <!-- <link rel="stylesheet" href="../static/css/textbox-label-style.css" /> -->

@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 400px">
+  <div style="width: 100%; height: 400px; padding: 10px">
     <v-row style="">
       <v-col cols="6">Temperature and Humidity History</v-col>
       <v-col cols="6">
@@ -12,14 +12,14 @@
               :default_date_to="filter_to_date"
               :height="'40px'"
               style="float: right; text-align: right"
-              class="daterange-blacktheme"
+              :class="this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''"
             />
           </v-col>
-          <v-col style="max-width: 50px"
-            ><v-icon size="40" color="blue" @click="toggleLiveData()"
+          <v-col style="max-width: 50px">
+            <!-- <v-icon size="40" color="blue" @click="toggleLiveData()"
               >mdi-toggle-switch-off</v-icon
-            ></v-col
-          >
+            > -->
+          </v-col>
         </v-row>
         <!-- <span style="max-width: 250px"> </span
         ><span style="float: right"></span> -->

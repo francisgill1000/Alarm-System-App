@@ -288,7 +288,15 @@ class CompanyController extends Controller
         }
         return $this->response('Logo successfully updated.', $company, true);
     }
+    public function updateCompanySettings(CompanyUpdateRequest $request, $id)
+    {
+        $data = $request->validate(["theme" => "required"]);
 
+        $company = Company::find($id);
+        $company->update($data);
+
+        return $this->response('Company successfully updated.', null, true);
+    }
     public function updateCompany(CompanyUpdateRequest $request, $id)
     {
 

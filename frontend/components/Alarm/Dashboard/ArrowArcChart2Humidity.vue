@@ -4,7 +4,8 @@
     <v-row>
       <v-col class="text-center">
         <div style="font-size: 14px">
-          <v-icon color="#FFF">mdi-clock-outline</v-icon> Updated at :
+          <v-icon color="default-font-color">mdi-clock-outline</v-icon> Updated
+          at :
           {{ humidity_date_time }}
         </div>
       </v-col>
@@ -30,7 +31,18 @@ export default {
       series: [0],
       chart: null,
       interval: null,
-      chartOptions: {
+    };
+  },
+
+  computed: {
+    chartOptions() {
+      const isDark = this.$vuetify.theme.dark;
+
+      const textColor = isDark ? "#fff" : "#000";
+      const trackColor = isDark ? "#333" : "#333";
+      const fillColor = isDark ? "#2196F3" : "#2196F3";
+
+      return {
         chart: {
           type: "radialBar",
           offsetY: -20,
@@ -46,7 +58,7 @@ export default {
             startAngle: -135,
             endAngle: 135,
             track: {
-              background: "#333",
+              background: trackColor, // ← dynamic track color
               startAngle: -135,
               endAngle: 135,
             },
@@ -55,7 +67,8 @@ export default {
                 show: false,
               },
               value: {
-                fontSize: "40px",
+                fontSize: "30px",
+                color: textColor, // ← dynamic text color
                 show: true,
                 formatter: function (val) {
                   return val + " %";
@@ -67,26 +80,21 @@ export default {
         stroke: {
           lineCap: "butt",
         },
-
         labels: ["Humidity"],
         fill: {
           type: "solid",
-          colors: ["#0000FF"],
+          colors: [fillColor], // ← dynamic fill color
         },
-        // fill: {
-        //   type: "gradient",
-        //   gradient: {
-        //     shade: "dark",
-        //     type: "horizontal",
-        //     gradientToColors: ["#87D4F9"],
-        //     stops: [0, 100],
-        //   },
-        // },
-        // stroke: {
-        //   lineCap: "butt",
-        // },
-      },
-    };
+      };
+    },
+  },
+  watch: {
+    "$vuetify.theme.dark"(val) {
+      if (this.chart) {
+        this.chart.updateOptions(this.chartOptions);
+        this.getDataFromApi();
+      }
+    },
   },
   mounted() {
     // Set height from prop or default

@@ -1,4 +1,4 @@
-.theme--light span {
+/* .theme--light span {
   color: black !important;
 }
 
@@ -9,4 +9,16 @@
 .theme--light.v-icon
 {
  color: black !important;
+} */
+theme--light.v-icon
+{
+ color: black !important;
 }
+
+ .livedateTime .v-icon {
+  color: #fff !important;
+}
+.theme--light.v-app-bar.v-toolbar.v-sheet {
+background-color: #04253b;;
+}
+
