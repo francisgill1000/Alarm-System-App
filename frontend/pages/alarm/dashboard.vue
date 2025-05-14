@@ -3,25 +3,26 @@
     style="width: 100%"
     v-if="can('dashboard_access') && can('dashboard_view')"
   >
-    <!-- <v-row justify="end" style="display: none">
-      <v-col cols="3" class="pb-0">
-        <span style="float: left; width: 200px">
-          <v-select
-            style="z-index: 9999"
-            @change="ChangeDevice(device_serial_number)"
-            v-model="device_serial_number"
-            :items="devicesList"
-            dense
-            small
-            outlined
-            hide-details
-            class="ma-2"
-            label="Room"
-            item-value="serial_number"
-            item-text="name"
-          ></v-select>
-        </span>
-        <span style="float: left">
+    <v-row justify="end" style="display: none1" v-if="devicesList.length > 1">
+      <v-col></v-col>
+      <v-col style="max-width: 220px; padding: 0px">
+        <!-- <span style="float: left; width: 200px"> -->
+        <v-select
+          style="z-index: 9999"
+          @change="ChangeDevice(device_serial_number)"
+          v-model="device_serial_number"
+          :items="devicesList"
+          dense
+          small
+          outlined
+          hide-details
+          class="ma-2"
+          label="Room"
+          item-value="serial_number"
+          item-text="name"
+        ></v-select>
+        <!-- </span> -->
+        <!-- <span style="float: left">
           <v-menu
             style="z-index: 9999"
             v-model="from_menu"
@@ -57,10 +58,10 @@
               @change="getDataFromApi()"
             ></v-date-picker>
           </v-menu>
-        </span>
+        </span> -->
       </v-col>
-    </v-row> -->
-    <v-row>
+    </v-row>
+    <v-row style="margin-top: 0px">
       <v-col cols="6">
         <v-card
           v-if="!displayLiveData"
