@@ -581,6 +581,9 @@ label {
 .theme--light.v-label {
   color: black !important ;
 }
+.theme--light.v-label {
+  color: black !important ;
+}
 /* .theme--light {
   color: black !important ;
 } */

@@ -366,6 +366,20 @@
         </v-icon></v-btn
       >
 
+      <v-btn icon dark @click="openNotificationPopup()">
+        <v-badge
+          :color="'  ' + pendingNotificationsCount > 0 ? 'red' : 'green'"
+          :content="
+            pendingNotificationsCount == '' ? '0' : pendingNotificationsCount
+          "
+          style="top: 10px; left: -19px; z-index: 9999 !important"
+        >
+          <v-icon style="top: -10px; left: 10px" class="violet--text"
+            >mdi mdi-bell-ring</v-icon
+          >
+        </v-badge>
+      </v-btn>
+
       <v-btn
         v-if="getLoginType == 'company' || getLoginType == 'branch'"
         icon
@@ -501,7 +515,12 @@
             </v-card-title> -->
 
             <!-- <div @click="s()" class="toggle-sound"></div> -->
-            <v-toolbar color="error" dense flat>
+            <v-toolbar
+              color="error"
+              dense
+              flat
+              style="background-color: red !important"
+            >
               <v-toolbar-title
                 class="white--text text-center"
                 style="width: 100%"
@@ -562,7 +581,11 @@
                   </v-row>
                   <v-row
                     v-if="device.fire_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
+                    :style="
+                      notificationAlarmDevices.length > 1
+                        ? 'border-bottom: 1px solid #ddd'
+                        : ''
+                    "
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
@@ -593,7 +616,11 @@
 
                   <v-row
                     v-if="device.smoke_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
+                    :style="
+                      notificationAlarmDevices.length > 1
+                        ? 'border-bottom: 1px solid #ddd'
+                        : ''
+                    "
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
@@ -624,7 +651,11 @@
 
                   <v-row
                     v-if="device.door_open_status"
-                    style="border-bottom: 1px solid #ddd"
+                    :style="
+                      notificationAlarmDevices.length > 1
+                        ? 'border-bottom: 1px solid #ddd'
+                        : ''
+                    "
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
@@ -655,7 +686,11 @@
 
                   <v-row
                     v-if="device.power_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
+                    :style="
+                      notificationAlarmDevices.length > 1
+                        ? 'border-bottom: 1px solid #ddd'
+                        : ''
+                    "
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
@@ -686,7 +721,11 @@
 
                   <v-row
                     v-if="device.water_alarm_status"
-                    style="border-bottom: 1px solid #ddd"
+                    :style="
+                      notificationAlarmDevices.length > 1
+                        ? 'border-bottom: 1px solid #ddd'
+                        : ''
+                    "
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
@@ -736,8 +775,8 @@
                 > -->
               </div>
             </v-card-text>
-            <v-card-actions class="justify-end">
-              <!-- <v-btn text @click="alarmNotificationStatus = false">Close</v-btn> -->
+            <!-- <v-card-actions class="justify-end">
+
               <v-btn
                 style="float: right"
                 color="error"
@@ -747,7 +786,7 @@
                 "
                 >View Devices</v-btn
               >
-            </v-card-actions>
+            </v-card-actions> -->
           </v-card>
         </template>
       </v-dialog>
@@ -942,7 +981,7 @@ export default {
         },
       },
 
-      topMenu_Selected: "dashboard2",
+      topMenu_Selected: "dashboard",
       company_menus,
       employee_menus,
       branch_menus,
@@ -1136,7 +1175,7 @@ export default {
         (item) => item.to === "/" + menu_name && item.submenu == null
       );
 
-      console.log(loadSelectedMenu);
+      console.log("menu_name", loadSelectedMenu);
 
       if (loadSelectedMenu[0]) {
         menu_name = loadSelectedMenu[0].module;
@@ -1556,6 +1595,9 @@ export default {
         // this.notificationsMenuItems.push(menu2);
       });
     },
+    openNotificationPopup() {
+      this.alarmNotificationStatus = true;
+    },
     verifyAlarmStatus() {
       let company_id = this.$auth.user?.company?.id || 0;
       //console.log("company_id", company_id);
@@ -1571,10 +1613,11 @@ export default {
       let pendingcount = 0;
       this.timmerStatus = false;
       this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
+        this.pendingNotificationsCount = data.length;
         if (data.length > 0) {
           this.notificationAlarmDevices = data;
-          if (this.$route.name == "alarm/dashboard")
-            this.alarmNotificationStatus = true;
+          //if (this.$route.name == "alarm/dashboard")
+          this.alarmNotificationStatus = true;
           this.palysound();
         } else {
           this.alarmNotificationStatus = false;
@@ -1602,7 +1645,10 @@ export default {
     },
     setSubLeftMenuItems(menu_name, page, redirect = true) {
       this.topMenu_Selected = menu_name;
-
+      console.log(
+        "this.menuProperties.hasOwnProperty(menu_name)",
+        this.menuProperties.hasOwnProperty(menu_name)
+      );
       let bgColor = "violet";
       this.setMenus();
 

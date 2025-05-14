@@ -141,7 +141,7 @@
             class="btn-text-size"
             :elevation="menuProperties['dashboard'].elevation"
             :color="menuProperties['dashboard'].selected"
-            @click="setTopMenuItems('dashboard', '/dashboard2')"
+            @click="setTopMenuItems('dashboard', '/dashboard')"
           >
             <span>Dashboard</span>
 
@@ -557,7 +557,7 @@ export default {
     this.deviceList();
     this.getEmployeeList();
 
-    this.setTopMenuItems("dashboard", "/dashboard2");
+    this.setTopMenuItems("dashboard", "/dashboard");
   },
 
   mounted() {

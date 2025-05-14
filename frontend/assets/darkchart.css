@@ -132,10 +132,10 @@ color:black!important;
 .v-card-text {
   padding-top: 10px;
 }
-.theme--light.v-label
+/* .theme--light.v-label
 {
   color:#FFF!important;
-}
+} */
 
 .transparent-select ::v-deep .v-label {
   color: white !important;
