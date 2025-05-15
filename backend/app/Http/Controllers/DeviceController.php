@@ -1209,13 +1209,45 @@ class DeviceController extends Controller
     }
     public function getDeviceCompanyInfoForArduino(Request $request)
     {
-        if ($request->serial_number)
+        if ($request->has('serial_number')) {
+            $device = Device::with('company')->where('serial_number', $request->serial_number)->first();
 
-            return Device::with("company")->where("serial_number", $request->serial_number)->first();
+            if ($device && $device->company && $device->company->expiry) {
+                $expiryDate = Carbon::parse($device->company->expiry);
+                $today = Carbon::today();
+
+                $remainingDays = $today->diffInDays($expiryDate, false); // false = get negative if expired
+
+                return response()->json([
+                    'expiry_date' => $expiryDate->toDateString(),
+                    'remaining_days' => $remainingDays,
+                    'name' =>  $device->company->name,
+
+
+                ]);
+            } else {
+                return response()->json(['error' => 'Device or company expiry not found'], 404);
+            }
+        }
+
+        return response()->json(['error' => 'Serial number is required'], 400);
     }
     public function getDeviceConfigSettingsFromArduinoSocket(Request $request)
     {
         return $this->getDeviceConfig($request->serial_number);
+    }
+
+    public function commandCallSocketToDevice(Request $request)
+    {
+        if ($request->serial_number && $request->cmd) {
+
+            $config = [];
+
+            $config[$request->cmd] = $request->action;
+
+
+            return  $this->callDeviceCommand($request->serial_number, $config);
+        }
     }
 
     public function getDeviceConfig($serial_number)
@@ -1400,13 +1432,16 @@ class DeviceController extends Controller
             $config["door_alert_whatsapp"] = false;
         }
 
-
-        if ($request->filled('serial_number')) {
-            $url = 'http://165.22.222.17:6000/device-config-update/' . $request->serial_number;
+        return  $this->callDeviceCommand($request->serial_number, $config);
+    }
+    public function callDeviceCommand($serial_number, $config)
+    {
+        if ($serial_number) {
+            $url = 'http://165.22.222.17:6000/device-config-update/' . $serial_number;
 
             $postData = [
                 "action" => "UPDATE_CONFIG",
-                "serialNumber" => $request->serial_number,
+                "serialNumber" => $serial_number,
                 "config" => $config,
             ];
 

@@ -153,12 +153,17 @@
 
       <v-col cols="3">
         <v-card
-          class="dashboard-card-small"
+          :class="
+            relayStatus.relay0
+              ? 'dashboard-card-small-pink'
+              : 'dashboard-card-small'
+          "
           height="180px"
           elevation="24"
           loading="false"
           outlined
           style="border-radius: 20px; text-align: center"
+          @click="relayCommand('relay0', relayStatus.relay0)"
         >
           <div style="margin: auto">
             <img
@@ -172,11 +177,16 @@
 
       <v-col cols="3">
         <v-card
-          class="dashboard-card-small"
+          :class="
+            relayStatus.relay1
+              ? 'dashboard-card-small-pink'
+              : 'dashboard-card-small'
+          "
           height="180px"
           elevation="24"
           loading="false"
           outlined
+          @click="relayCommand('relay1', relayStatus.relay1)"
           style="border-radius: 20px; text-align: center"
         >
           <div style="margin: auto">
@@ -191,11 +201,16 @@
 
       <v-col cols="3">
         <v-card
-          class="dashboard-card-small"
+          :class="
+            relayStatus.relay2
+              ? 'dashboard-card-small-pink'
+              : 'dashboard-card-small'
+          "
           height="180px"
           elevation="24"
           loading="false"
           outlined
+          @click="relayCommand('relay2', relayStatus.relay2)"
           style="border-radius: 20px; text-align: center"
         >
           <div style="margin: auto">
@@ -208,11 +223,16 @@
         </v-card> </v-col
       ><v-col cols="3">
         <v-card
-          class="dashboard-card-small"
+          :class="
+            relayStatus.relay3
+              ? 'dashboard-card-small-pink'
+              : 'dashboard-card-small'
+          "
           height="180px"
           elevation="24"
           loading="false"
           outlined
+          @click="relayCommand('relay3', relayStatus.relay3)"
           style="border-radius: 20px; text-align: center"
         >
           <div style="margin: auto">
@@ -235,12 +255,28 @@ export default {
   props: ["device"],
   data() {
     return {
+      relayStatus: {
+        relay0: false,
+        relay1: false,
+        relay2: false,
+        relay3: false,
+      },
+      deviceSettings: null,
       branchList: [],
       selectedBranchName: "All Branches",
       seelctedBranchId: "",
       branch_id: "",
       overlay: false,
+      intervalObj: null,
+      loading: false,
     };
+  },
+  beforeDestroy() {
+    // 1. Clear interval (with null check)
+    if (this.intervalObj) {
+      clearInterval(this.intervalObj);
+      this.intervalObj = null; // Prevent memory leaks
+    }
   },
   // watch: {
   //   branch_id(branch_id) {
@@ -261,37 +297,13 @@ export default {
     //   this.$router.push(`/login`);
     //   return "";
     // }
+
+    this.intervalObj = setInterval(() => {
+      this.getDeviceSettings();
+    }, 1000 * 10);
   },
   async created() {
-    // if (this.$auth.user.branch_id == 0 && this.$auth.user.is_master == false) {
-    //   alert("You do not have permission to access this branch");
-    //   //this.$router.push("/login");
-    //   this.$axios.get(`/logout`).then(({ res }) => {
-    //     this.$auth.logout();
-    //     this.$router.push(`/login`);
-    //   });
-    //   this.$router.push(`/login`);
-    //   return "";
-    // }
-    // try {
-    //   await this.$store.dispatch("fetchDropDowns", {
-    //     key: "deviceList",
-    //     endpoint: "device-list",
-    //     refresh: true,
-    //   });
-    //   await this.$store.dispatch("fetchDropDowns", {
-    //     key: "employeeList",
-    //     endpoint: "employee-list",
-    //     refresh: true,
-    //   });
-    //   this.branchList = await this.$store.dispatch("fetchDropDowns", {
-    //     key: "branchList",
-    //     endpoint: "branch-list",
-    //     refresh: true,
-    //   });
-    // } catch (error) {
-    //   console.error("Error fetching data:", error);
-    // }
+    this.getDeviceSettings();
   },
   watch: {
     // overlay(val) {
@@ -302,6 +314,59 @@ export default {
     // },
   },
   methods: {
+    getDeviceSettings() {
+      if (this.loading) return;
+      this.message = "loading....";
+
+      this.deviceSettings = { config: null };
+
+      let options = {
+        params: {
+          company_id: this.$auth.user.company.id,
+          serial_number: this.device.serial_number,
+        },
+      };
+
+      this.$axios
+        .get(`get_device_settings_from_socket_arduino`, options)
+        .then(({ data }) => {
+          this.loading = false;
+
+          if (!data.error) {
+            this.deviceSettings = data.config;
+            this.relayStatus.relay0 = data.config.relay0;
+            this.relayStatus.relay1 = data.config.relay1;
+            this.relayStatus.relay2 = data.config.relay2;
+            this.relayStatus.relay3 = data.config.relay3;
+          } else this.message = data.error;
+        });
+    },
+    relayCommand(cmd, status) {
+      this.message = "loading....";
+
+      let options = {
+        params: {
+          company_id: this.$auth.user.company.id,
+          serial_number: this.device.serial_number,
+          cmd: cmd,
+          action: !status,
+        },
+      };
+
+      this.deviceSettings.deviceSettings;
+
+      this.$axios
+        .post(`command_call_device_to_arduino`, options.params)
+        .then(({ data }) => {
+          if (cmd == "relay0") this.relayStatus.relay0 = status;
+          if (cmd == "relay1") this.relayStatus.relay1 = status;
+          if (cmd == "relay2") this.relayStatus.relay2 = status;
+          if (cmd == "relay3") this.relayStatus.relay3 = status;
+
+          if (!data.error) this.deviceSettings = data;
+          else this.message = data.error;
+        });
+    },
     getPriorityColor(status) {
       return "";
       if (status == 1) {
