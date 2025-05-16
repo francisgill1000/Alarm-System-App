@@ -154,7 +154,7 @@
       <v-col cols="3">
         <v-card
           :class="
-            relayStatus.relay0
+            relayStatus && relayStatus.relay0
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
@@ -178,7 +178,7 @@
       <v-col cols="3">
         <v-card
           :class="
-            relayStatus.relay1
+            relayStatus && relayStatus.relay1
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
@@ -202,7 +202,7 @@
       <v-col cols="3">
         <v-card
           :class="
-            relayStatus.relay2
+            relayStatus && relayStatus.relay2
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
@@ -224,7 +224,7 @@
       ><v-col cols="3">
         <v-card
           :class="
-            relayStatus.relay3
+            relayStatus && relayStatus.relay3
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
@@ -255,12 +255,12 @@ export default {
   props: ["device"],
   data() {
     return {
-      relayStatus: {
-        relay0: false,
-        relay1: false,
-        relay2: false,
-        relay3: false,
-      },
+      relayStatusRelay0: false,
+      relayStatusRelay0: false,
+      relayStatusRelay0: false,
+      relayStatusRelay0: false,
+
+      relayStatus: {},
       deviceSettings: null,
       branchList: [],
       selectedBranchName: "All Branches",
@@ -306,6 +306,12 @@ export default {
     this.getDeviceSettings();
   },
   watch: {
+    relayStatus: {
+      deep: true,
+      handler(val) {
+        console.log("relayStatus updated:", val);
+      },
+    },
     // overlay(val) {
     //   val &&
     //     setTimeout(() => {
@@ -318,8 +324,6 @@ export default {
       if (this.loading) return;
       this.message = "loading....";
 
-      this.deviceSettings = { config: null };
-
       let options = {
         params: {
           company_id: this.$auth.user.company.id,
@@ -330,18 +334,28 @@ export default {
       this.$axios
         .get(`get_device_settings_from_socket_arduino`, options)
         .then(({ data }) => {
-          this.loading = false;
-
           if (!data.error) {
-            this.deviceSettings = data.config;
-            this.relayStatus.relay0 = data.config.relay0;
-            this.relayStatus.relay1 = data.config.relay1;
-            this.relayStatus.relay2 = data.config.relay2;
-            this.relayStatus.relay3 = data.config.relay3;
+            if (data.config) {
+              this.$set(this.relayStatus, "relay0", data.config.relay0);
+              this.$set(this.relayStatus, "relay1", data.config.relay1);
+              this.$set(this.relayStatus, "relay2", data.config.relay2);
+              this.$set(this.relayStatus, "relay3", data.config.relay3);
+
+              // this.relayStatus.relay0 = data.config.relay0;
+              // this.relayStatus.relay1 = data.config.relay1;
+              // this.relayStatus.relay2 = data.config.relay2;
+              // this.relayStatus.relay3 = data.config.relay3;
+            }
           } else this.message = data.error;
+
+          this.loading = false;
         });
     },
     relayCommand(cmd, status) {
+      console.log(cmd, status);
+
+      this.$set(this.relayStatus, cmd, !status);
+
       this.message = "loading....";
 
       let options = {
@@ -353,18 +367,17 @@ export default {
         },
       };
 
-      this.deviceSettings.deviceSettings;
+      // this.deviceSettings.deviceSettings;
 
       this.$axios
         .post(`command_call_device_to_arduino`, options.params)
         .then(({ data }) => {
-          if (cmd == "relay0") this.relayStatus.relay0 = status;
-          if (cmd == "relay1") this.relayStatus.relay1 = status;
-          if (cmd == "relay2") this.relayStatus.relay2 = status;
-          if (cmd == "relay3") this.relayStatus.relay3 = status;
-
-          if (!data.error) this.deviceSettings = data;
-          else this.message = data.error;
+          // if (cmd == "relay0") this.relayStatus.relay0 = status;
+          // if (cmd == "relay1") this.relayStatus.relay1 = status;
+          // if (cmd == "relay2") this.relayStatus.relay2 = status;
+          // if (cmd == "relay3") this.relayStatus.relay3 = status;
+          // if (!data.error) this.deviceSettings = data;
+          // else this.message = data.error;
         });
     },
     getPriorityColor(status) {

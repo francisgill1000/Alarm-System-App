@@ -46,6 +46,10 @@ class DeleteOldLogFiles extends Command
 
         $path = storage_path() . "/app/logs"; //"/mytime2cloud/backend/storage";
         $this->deleteAttendanceLogFiles($path);
+
+
+        $path = "../arduino-sdk"; // var/www/mytime2cloud/arduino-sdk
+        $this->deleteAttendanceLogFiles($path);
     }
 
     public function deleteAttendanceLogFiles($path)
@@ -63,14 +67,16 @@ class DeleteOldLogFiles extends Command
         echo $path . " - Files count - " . count($files);
 
         $now = time();
-        $days30 = 30 * 24 * 60 * 60; //30Days days
+        $days30 = 7 * 24 * 60 * 60; //30Days days
 
 
 
         foreach ($files as $file) {
             $extension = $file->getExtension();
-            if (in_array($extension, ['log', 'txt', '.zip']) && ($now - $file->getMTime() >= $days30)) {
+            if (in_array($extension, ['log', 'logs', 'txt', '.zip']) && ($now - $file->getMTime() >= $days30)) {
                 File::delete($file);
+
+
                 $this->info("Deleted: {$file->getFilename()}");
             }
         }
