@@ -380,6 +380,11 @@ export default {
           // if (cmd == "relay3") this.relayStatus.relay3 = status;
           // if (!data.error) this.deviceSettings = data;
           // else this.message = data.error;
+
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+          }, 1000 * 10);
         });
     },
     getPriorityColor(status) {
