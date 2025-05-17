@@ -184,7 +184,7 @@
     </v-row>
     <v-row>
       <v-col cols="6">
-        <AlarmDashboardFooterBlack :device="device" :key="key" />
+        <AlarmDashboardFooterBlack :device="device" />
       </v-col>
       <v-col cols="6">
         <v-card

@@ -170,7 +170,7 @@
               src="../../../static/blue-dashboard-icons/ac.png"
               style="width: 80px"
             />
-            <div>A/C Off</div>
+            <div>A/C {{ relayStatus?.relay0 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
@@ -194,7 +194,7 @@
               src="../../../static/blue-dashboard-icons/fan.png"
               style="width: 80px"
             />
-            <div>Fan Off</div>
+            <div>Fan {{ relayStatus?.relay1 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
@@ -218,10 +218,12 @@
               src="../../../static/blue-dashboard-icons/siren.png"
               style="width: 80px"
             />
-            <div>Siren Off</div>
+            <div>Siren {{ relayStatus?.relay2 ? "On" : "Off" }}</div>
           </div>
-        </v-card> </v-col
-      ><v-col cols="3">
+        </v-card>
+      </v-col>
+
+      <v-col cols="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay3
@@ -240,7 +242,7 @@
               src="../../../static/blue-dashboard-icons/lamp.png"
               style="width: 80px"
             />
-            <div>Lamp Off</div>
+            <div>Siren {{ relayStatus?.relay3 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
