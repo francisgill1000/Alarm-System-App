@@ -215,10 +215,10 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/blue-dashboard-icons/siren.png"
+              src="../../../static/blue-dashboard-icons/lamp.png"
               style="width: 80px"
             />
-            <div>Siren {{ relayStatus?.relay2 ? "On" : "Off" }}</div>
+            <div>Lamp {{ relayStatus?.relay2 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
@@ -239,7 +239,7 @@
         >
           <div style="margin: auto">
             <img
-              src="../../../static/blue-dashboard-icons/lamp.png"
+              src="../../../static/blue-dashboard-icons/siren.png"
               style="width: 80px"
             />
             <div>Siren {{ relayStatus?.relay3 ? "On" : "Off" }}</div>

@@ -89,11 +89,11 @@ class ApiAlarmControlController extends Controller
                 }
                 if ($request->filled("fire_alarm")) {
                     $fire_alarm = $request->fire_alarm;
-                    $smoke_alarm = $request->fire;
+                    //$smoke_alarm = $request->fire_alarm;
                 }
                 if ($request->filled("fire")) {
                     $fire_alarm = $request->fire;
-                    $smoke_alarm = $request->fire;
+                    //$smoke_alarm = $request->fire;
                 }
                 if ($request->filled("temperature_alarm")) {
                     $temperature_alarm = $request->temperature_alarm;
@@ -102,6 +102,7 @@ class ApiAlarmControlController extends Controller
 
                 if ($request->filled("smokeStatus")) {
                     $smoke_alarm = $request->smokeStatus;
+                    $fire_alarm = $request->smokeStatus;
                 }
                 if ($request->filled("waterLeakage")) {
                     $water_leakage = $request->waterLeakage;
@@ -142,9 +143,9 @@ class ApiAlarmControlController extends Controller
                     $humidity = 0;
                 }
 
-                if ($temparature == "-273.0" || $temparature == "0") {
-                    return false;
-                }
+                // if ($temparature == "-273.0" || $temparature == "0") {
+                //     return false;
+                // }
 
 
 
