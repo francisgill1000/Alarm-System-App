@@ -215,13 +215,19 @@ class ApiAlarmControlController extends Controller
                 //     $row["humidity_alarm_start_datetime"] = $log_time;
                 // }
 
+                if ($fire_alarm)
+                    $row["fire_alarm_status"] = $fire_alarm;
 
-                $row["fire_alarm_status"] = $fire_alarm;
-                $row["smoke_alarm_status"] = $smoke_alarm;
-                $row["water_alarm_status"] = $water_leakage;
-                $row["power_alarm_status"] = $power_failure;
-                $row["door_open_status"] = $door_status;
-                $row["temparature_alarm_status"] = $temperature_alarm;
+                if ($smoke_alarm)
+                    $row["smoke_alarm_status"] = $smoke_alarm;
+                if ($water_leakage)
+                    $row["water_alarm_status"] = $water_leakage;
+                if ($power_failure)
+                    $row["power_alarm_status"] = $power_failure;
+                if ($door_status)
+                    $row["door_open_status"] = $door_status;
+                if ($temperature_alarm)
+                    $row["temparature_alarm_status"] = $temperature_alarm;
 
 
                 if ($temperature_alarm == 1) {
