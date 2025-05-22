@@ -159,7 +159,7 @@ class ApiAlarmControlController extends Controller
 
 
                 $logs["humidity"] = $humidity;
-                if ($fire_alarm != null)
+                if ($smoke_alarm != null)
                     $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
                 if ($water_leakage != null)
                     $logs["water_leakage"] = $water_leakage;
