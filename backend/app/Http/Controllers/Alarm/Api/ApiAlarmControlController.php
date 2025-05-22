@@ -42,14 +42,16 @@ class ApiAlarmControlController extends Controller
             $temparature = 0;
             $humidity = 0;
 
-            $smoke_alarm = 0;
-            $water_leakage = 0;
-            $power_failure = 0;
-            $door_status = 0;
-            $fire_alarm = 0;
+            $smoke_alarm = null;
+            $water_leakage = null;
+            $power_failure = null;
+            $door_status = null;
+            $fire_alarm = null;
+            $temperature_alarm = null;
+
             $log_time = date('Y-m-d H:i:s');
 
-            $temperature_alarm = 0;
+            //$temperature_alarm = 0;
 
             $wifiipaddress = null;
             $wifissid = null;
@@ -102,7 +104,7 @@ class ApiAlarmControlController extends Controller
 
                 if ($request->filled("smokeStatus")) {
                     $smoke_alarm = $request->smokeStatus;
-                    $fire_alarm = $request->smokeStatus;
+                    //$fire_alarm = $request->smokeStatus;
                 }
                 if ($request->filled("waterLeakage")) {
                     $water_leakage = $request->waterLeakage;
@@ -152,17 +154,23 @@ class ApiAlarmControlController extends Controller
 
                 $logs["serial_number"] = $device_serial_number;
                 $logs["temparature"] = $temparature;
-                $logs["fire_alarm"] = $fire_alarm;
+                if ($fire_alarm != null)
+                    $logs["fire_alarm"] = $fire_alarm;
+
 
                 $logs["humidity"] = $humidity;
-                $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
+                if ($fire_alarm != null)
+                    $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
+                if ($water_leakage != null)
+                    $logs["water_leakage"] = $water_leakage;
+                if ($power_failure != null)
+                    $logs["power_failure"] = $power_failure;
+                if ($door_status != null)
+                    $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
 
-                $logs["water_leakage"] = $water_leakage;
-                $logs["power_failure"] = $power_failure;
-                $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
-
-                $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
-                $logs["temperature_alarm"] = $temperature_alarm; //== 1 ? 0 : 1;
+                // $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
+                if ($temperature_alarm != null)
+                    $logs["temperature_alarm"] = $temperature_alarm; //== 1 ? 0 : 1;
 
 
 
