@@ -19,7 +19,7 @@
         >
           <div style="margin: auto">
             <img
-              v-if="device.fire_alarm_status"
+              v-if="device.fire_alarm_status || device.smoke_alarm_status"
               src="../../../static/blue-dashboard-icons/fire_alarm.png"
               style="width: 80px"
             /><img
