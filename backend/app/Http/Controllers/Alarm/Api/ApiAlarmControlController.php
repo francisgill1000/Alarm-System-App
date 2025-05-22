@@ -42,12 +42,12 @@ class ApiAlarmControlController extends Controller
             $temparature = 0;
             $humidity = 0;
 
-            $smoke_alarm = 0;
-            $water_leakage = 0;
-            $power_failure = 0;
-            $door_status = 0;
-            $fire_alarm = 0;
-            $temperature_alarm = 0;
+            $smoke_alarm = null;
+            $water_leakage = null;
+            $power_failure = null;
+            $door_status = null;
+            $fire_alarm = null;
+            $temperature_alarm = null;
 
             $log_time = date('Y-m-d H:i:s');
 
@@ -162,18 +162,18 @@ class ApiAlarmControlController extends Controller
 
 
                 $logs["humidity"] = $humidity;
-                //if ($smoke_alarm != null)
-                $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
-                // if ($water_leakage != null)
-                $logs["water_leakage"] = $water_leakage;
-                // if ($power_failure != null)
-                $logs["power_failure"] = $power_failure;
-                //  if ($door_status != null)
-                $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
+                if ($smoke_alarm != null)
+                    $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
+                if ($water_leakage != null)
+                    $logs["water_leakage"] = $water_leakage;
+                if ($power_failure != null)
+                    $logs["power_failure"] = $power_failure;
+                if ($door_status != null)
+                    $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
 
                 // $logs["door_status"] = $door_status; //== 1 ? 0 : 1;
-                // if ($temperature_alarm != null)
-                $logs["temperature_alarm"] = $temperature_alarm; //== 1 ? 0 : 1;
+                if ($temperature_alarm != null)
+                    $logs["temperature_alarm"] = $temperature_alarm; //== 1 ? 0 : 1;
 
 
 
