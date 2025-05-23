@@ -114,8 +114,8 @@ export default {
           ctx.arc(baseX, baseY, radius, perpAngle1, perpAngle2, false);
           ctx.lineTo(tipX, tipY);
           ctx.closePath();
-          if (this.humidity < 25) ctx.fillStyle = "green";
-          else if (this.humidity < 30) ctx.fillStyle = "yellow";
+          if (this.humidity < 50) ctx.fillStyle = "green";
+          else if (this.humidity < 70) ctx.fillStyle = "yellow";
           else ctx.fillStyle = "red";
           ctx.fill();
 
