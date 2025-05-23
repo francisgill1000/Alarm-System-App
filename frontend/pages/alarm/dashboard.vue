@@ -124,13 +124,19 @@
                 /> -->
                 </v-col>
                 <v-col cols="10" class="pa-0">
-                  <ArrowArcChartTemperature
+                  <TemperatureChart3
+                    :name="'ArrowArcChartTemperature1'"
+                    :temperature="temperature_latest"
+                    :key="key"
+                    :temperature_date_time="temperature_date_time"
+                  />
+                  <!-- <ArrowArcChartTemperature
                     :name="'ArrowArcChartTemperature1'"
                     :height="'380'"
                     :temperature_latest="temperature_latest"
                     :temperature_date_time="temperature_date_time"
                     :key="key"
-                  />
+                  /> -->
                 </v-col>
               </v-row>
             </v-col>
@@ -161,13 +167,19 @@
                 /> -->
                 </v-col>
                 <v-col cols="10" class="pa-0">
-                  <ArrowArcChart2Humidity
+                  <HumidityChart3
+                    :name="'ArrowArcChart2Humidity'"
+                    :humidity="humidity_latest"
+                    :key="key"
+                    :humidity_date_time="humidity_date_time"
+                  />
+                  <!-- <ArrowArcChart2Humidity
                     :name="'ArrowArcChart2Humidity'"
                     :height="'380'"
                     :humidity_latest="humidity_latest"
                     :humidity_date_time="humidity_date_time"
                     :key="key"
-                  />
+                  /> -->
                   <!-- <AlarmDashboardHumidityChart1Black
                     :name="'AlarmDashboardHumidityChart1Black'"
                     :height="'220'"
@@ -218,6 +230,9 @@ import AlarmDashboardTemparatureChart2Black from "../../components/Alarm/Dashboa
 import AlarmDashboardTemparatureHistoryChart2Black from "../../components/Alarm/Dashboard/AlarmDashboardTemparatureHistoryChart2Black.vue";
 import ArrowArcChart2 from "../../components/Alarm/Dashboard/ArrowArcChart2Sample.vue";
 import ArrowArcChart2Humidity from "../../components/Alarm/Dashboard/ArrowArcChart2Humidity.vue";
+import TemperatureChart3 from "../../components/Alarm/Dashboard/TemperatureChart3.vue";
+
+import HumidityChart3 from "../../components/Alarm/Dashboard/HumidityChart3.vue";
 
 export default {
   // layout: "black",
@@ -229,6 +244,8 @@ export default {
     AlarmDashboardTemparatureHistoryChart2Black,
     ArrowArcChart2,
     ArrowArcChart2Humidity,
+    TemperatureChart3,
+    HumidityChart3,
   },
   data() {
     return {

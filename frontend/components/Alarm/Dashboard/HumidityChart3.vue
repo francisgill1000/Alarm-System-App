@@ -25,7 +25,7 @@
       <div style="font-size: 14px">
         <v-icon color="default-font-color">mdi-clock-outline</v-icon> Updated at
         :
-        {{ temperature_date_time }}
+        {{ humidity_date_time }}
       </div>
     </div>
   </span>
@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  props: ["temperature", "temperature_date_time", "name"],
+  props: ["humidity", "humidity_date_time", "name"],
   data() {
     return {
       currentValue: 0,
@@ -41,6 +41,7 @@ export default {
     };
   },
   mounted() {
+    //setTimeout(() => {
     if (!window.Chart) {
       const script = document.createElement("script");
       script.src = "/scripts/chart.js";
@@ -49,12 +50,18 @@ export default {
     } else {
       this.initChart();
     }
+    //}, 1000 * 5);
   },
   methods: {
     initChart() {
       const ctx = document
         .getElementById(this.name + "_canva")
         .getContext("2d");
+
+      if (this.chart) {
+        this.chart.destroy();
+      }
+
       // const gradient = ctx.createLinearGradient(0, 0, 300, 0);
       // gradient.addColorStop(0, "green");
       // gradient.addColorStop(0.2, "yellow");
@@ -107,8 +114,8 @@ export default {
           ctx.arc(baseX, baseY, radius, perpAngle1, perpAngle2, false);
           ctx.lineTo(tipX, tipY);
           ctx.closePath();
-          if (this.temperature < 25) ctx.fillStyle = "green";
-          else if (this.temperature < 30) ctx.fillStyle = "yellow";
+          if (this.humidity < 25) ctx.fillStyle = "green";
+          else if (this.humidity < 30) ctx.fillStyle = "yellow";
           else ctx.fillStyle = "red";
           ctx.fill();
 
@@ -148,8 +155,8 @@ export default {
       };
 
       this.chart = new window.Chart(ctx, config);
-      this.animateNeedle(this.temperature);
-      this.counterUp(this.temperature);
+      this.animateNeedle(this.humidity);
+      this.counterUp(this.humidity);
     },
 
     animateNeedle(target) {
@@ -177,14 +184,14 @@ export default {
       const counter = setInterval(() => {
         current += increment;
         if (current >= target) {
-          element.innerHTML = `${target}  <small>°C</small>`;
+          element.innerHTML = `${target}  <small>%</small>`;
           clearInterval(counter);
         } else {
           const value =
             target < 10
               ? "00.00"
               : (Math.round(current * 100) / 100).toFixed(2);
-          element.innerHTML = `${value}  <small style="font-size:20px">°C</small>`;
+          element.innerHTML = `${value}  <small>%</small>`;
         }
       }, interval);
     },
