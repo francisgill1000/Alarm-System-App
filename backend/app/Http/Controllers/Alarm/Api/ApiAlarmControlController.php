@@ -110,7 +110,14 @@ class ApiAlarmControlController extends Controller
                     //$fire_alarm = $request->smokeStatus;
                 }
                 if ($request->filled("waterLeakage")) {
+
+
+
                     $water_leakage = $request->waterLeakage;
+
+                    if ($device_serial_number == '24000001') {
+                        $water_leakage = 0;
+                    }
                 }
                 if ($request->filled("acPowerFailure")) {
                     $power_failure = $request->acPowerFailure;
