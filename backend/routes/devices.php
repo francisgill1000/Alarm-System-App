@@ -3,9 +3,12 @@
 use App\Http\Controllers\DeviceCameraModel2Controller;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\DeviceStatusController;
+use App\Http\Controllers\DeviceTemperatureSensorsController;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
 
 // Device
 Route::apiResource('device', DeviceController::class);
@@ -13,7 +16,7 @@ Route::get('device-list', [DeviceController::class, 'dropdownList']);
 Route::get('device-mode-list', [DeviceController::class, 'modes']);
 
 
-
+Route::apiResource('device_temperature_sensors',  DeviceTemperatureSensorsController::class);
 
 Route::get('device/search/{key}', [DeviceController::class, 'search']);
 Route::get('device-by-user/{id}', [DeviceController::class, 'getDeviceByUserId']);
@@ -72,6 +75,9 @@ Route::get('/open_door', [DeviceController::class, 'openDoor']);
 Route::get('/close_door', [DeviceController::class, 'closeDoor']);
 Route::get('/open_door_always', [DeviceController::class, 'openDoorAlways']);
 Route::get('/get_notifications_alarm', [DeviceController::class, 'getAlarmNotification']);
+
+
+
 
 
 

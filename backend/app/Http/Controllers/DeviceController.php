@@ -6,6 +6,7 @@ use App\Http\Requests\Device\StoreRequest;
 use App\Http\Requests\Device\UpdateRequest;
 use App\Mail\EmailNotificationForOfflineDevices;
 use App\Mail\SendEmailNotificationForOfflineDevices;
+use App\Models\Alarm\DeviceSensorLogs;
 use App\Models\AlarmLogs;
 use App\Models\AttendanceLog;
 use App\Models\Company;
@@ -14,6 +15,7 @@ use App\Models\DeviceActivesettings;
 use App\Models\DeviceNotification;
 use App\Models\DeviceNotificationsLog;
 use App\Models\DevicesActiveWeeklySettings;
+use App\Models\DeviceTemperatureSensors;
 use App\Models\Employee;
 use DateTime;
 use DateTimeZone;
@@ -1478,5 +1480,17 @@ class DeviceController extends Controller
 
             return $this->response('Updated Successfully', ['response' => $response, 'status' => $httpCode], true);
         }
+    }
+
+    public function getDevicesTemperatureSensors()
+    {
+        $model = DeviceTemperatureSensors::query();
+        $model->where('company_id', request('company_id'));
+
+        $model->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')));
+        $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
+
+
+        return $model->paginate($request->per_page ?? 10);
     }
 }

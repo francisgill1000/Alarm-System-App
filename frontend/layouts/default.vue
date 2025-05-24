@@ -2408,7 +2408,7 @@ body {
   margin-bottom: 20px !important;
   /* margin: 16px !important; */
   border-radius: 10px !important;
-  z-index: 99999 !important;
+  /* z-index: 99999 !important; */
 }
 
 .main_bg_header {

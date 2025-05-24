@@ -8,10 +8,10 @@
         border-radius: 20px;
         position: relative;
       }
-      .temperature {
+      .humidity {
         color: #fff;
         position: absolute;
-        bottom: 70px; /* Push to top */
+        bottom: 80px; /* Push to top 50 */
         left: 50%; /* Horizontal center */
         transform: translateX(-50%); /* Perfect center alignment */
         font-size: 30px;
@@ -21,7 +21,7 @@
     </style>
     <div class="chartBox text-center">
       <canvas :id="name + '_canva'" width="300" height="300"></canvas>
-      <div :id="name" class="temperature"></div>
+      <div :id="name" class="humidity"></div>
       <div style="font-size: 14px">
         <v-icon color="default-font-color">mdi-clock-outline</v-icon> Updated at
         :
@@ -72,7 +72,7 @@ export default {
       const gradient = ctx.createLinearGradient(0, 0, 300, 0);
       gradient.addColorStop(0, "green"); // 0% of the gradient
       gradient.addColorStop(0.15, "green"); // 25%
-      gradient.addColorStop(0.25, "yellow"); // transition to yellow
+      gradient.addColorStop(0.35, "yellow"); // transition to yellow
       gradient.addColorStop(0.65, "yellow"); // up to 70%
       gradient.addColorStop(0.71, "red"); // transition to red
       gradient.addColorStop(1, "red"); // 100%
@@ -85,8 +85,8 @@ export default {
             chartArea: { width },
           } = chart;
           const cx = width / 2;
-          const cy = 180;
-          const needleLength = 120;
+          const cy = 150; //needle top position //180 is bottom
+          const needleLength = 90; //150
           const needleWidth = 20;
           const radius = needleWidth / 2;
           const angle = Math.PI + (this.currentValue / 100) * Math.PI;
@@ -115,7 +115,7 @@ export default {
           ctx.lineTo(tipX, tipY);
           ctx.closePath();
           if (this.humidity < 50) ctx.fillStyle = "green";
-          else if (this.humidity < 70) ctx.fillStyle = "yellow";
+          else if (this.humidity < 65) ctx.fillStyle = "yellow";
           else ctx.fillStyle = "red";
           ctx.fill();
 

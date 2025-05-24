@@ -11,7 +11,7 @@
       .temperature {
         color: #fff;
         position: absolute;
-        bottom: 70px; /* Push to top */
+        bottom: 80px; /* Push to top 50 */
         left: 50%; /* Horizontal center */
         transform: translateX(-50%); /* Perfect center alignment */
         font-size: 30px;
@@ -78,8 +78,8 @@ export default {
             chartArea: { width },
           } = chart;
           const cx = width / 2;
-          const cy = 180;
-          const needleLength = 120;
+          const cy = 150; //needle top position //180 is bottom
+          const needleLength = 90; //150
           const needleWidth = 20;
           const radius = needleWidth / 2;
           const angle = Math.PI + (this.currentValue / 100) * Math.PI;

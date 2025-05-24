@@ -5,7 +5,33 @@
         {{ response }}
       </v-snackbar>
     </div>
-
+    <v-dialog
+      v-model="DialogDeviceSensors"
+      width="900px"
+      style="background-color: #fff !important"
+    >
+      <v-card elevation="2">
+        <v-card-title dense class="popup_background">
+          <span>Device Senosrs</span>
+          <v-spacer></v-spacer>
+          <v-icon @click="DialogDeviceSensors = false" outlined>
+            mdi mdi-close-circle
+          </v-icon>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <SensorsList
+              v-if="DialogDeviceSensors && editedItem"
+              :key="key"
+              :editedItem="editedItem"
+              :device_id="editedItem.id"
+              :device_serial_number="deviceSerialNumber"
+              @emitCloseEvent="DialogDeviceSettings = false"
+            />
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-dialog
       v-model="DialogDeviceSettings"
       width="900px"
@@ -44,7 +70,14 @@
       </v-col> -->
     </v-row>
     <!-- <Back color="primary" /> -->
-    <v-navigation-drawer v-model="editDialog" bottom temporary right fixed>
+    <v-navigation-drawer
+      style="z-index: 99999"
+      v-model="editDialog"
+      bottom
+      temporary
+      right
+      fixed
+    >
       <v-toolbar class="popup_background" dense>
         {{ this.editedIndex == -1 ? "New " : "Edit " }} Device
         <v-spacer></v-spacer>
@@ -522,16 +555,22 @@
               </div>
             </template>
             <v-list width="120" dense>
+              <v-list-item v-if="can(`device_edit`)" @click="SensorsList(item)">
+                <v-list-item-title style="cursor: pointer">
+                  <v-icon small> mdi-leak </v-icon>
+                  Sensors
+                </v-list-item-title>
+              </v-list-item>
               <v-list-item v-if="can(`device_edit`)" @click="editItem(item)">
                 <v-list-item-title style="cursor: pointer">
-                  <v-icon color="secondary" small> mdi-pencil </v-icon>
+                  <v-icon small> mdi-pencil </v-icon>
                   Edit
                 </v-list-item-title>
               </v-list-item>
 
               <v-list-item @click="showDeviceSettings(item)">
                 <v-list-item-title style="cursor: pointer">
-                  <v-icon color="secondary" small> mdi-cog </v-icon>
+                  <v-icon small> mdi-cog </v-icon>
                   Settings
                 </v-list-item-title>
               </v-list-item>
@@ -556,10 +595,12 @@
 import timeZones from "../../defaults/utc_time_zones.json";
 import DeviceAccessSettings from "../../components/DeviceAccessSettings.vue";
 import DeviceSettings from "../../components/Alarm/DeviceSettings.vue";
+import SensorsList from "../../components/Device/sensorsList.vue";
 export default {
-  components: { DeviceAccessSettings, DeviceSettings },
+  components: { DeviceAccessSettings, DeviceSettings, SensorsList },
 
   data: () => ({
+    DialogDeviceSensors: false,
     deviceSerialNumber: "",
 
     deviceCAMVIISettings: {},
@@ -874,6 +915,14 @@ export default {
   },
 
   methods: {
+    SensorsList(item) {
+      this.errors = [];
+      this.payload = {};
+      this.editedItem = item;
+      this.editedIndex = item.id;
+
+      this.DialogDeviceSensors = true;
+    },
     UpdateAlarmStatus(item, status) {
       if (status == 0) {
         if (confirm("Are you sure you want to TURN OFF the Alarm")) {

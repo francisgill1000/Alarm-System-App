@@ -29,7 +29,8 @@ class DeviceSensorLogsController extends Controller
     public function getDeliveLogs(Request $request)
     {
         $model = AlarmDeviceSensorLogs::with(["device"])->where("company_id", $request->company_id)
-            ->where("company_id", $request->company_id);
+            ->where("company_id", $request->company_id)
+            ->where("temparature", "!=", null);
 
         if ($request->filled("device_serial_number")) {
             $model->where("serial_number", $request->device_serial_number);
@@ -249,7 +250,7 @@ class DeviceSensorLogsController extends Controller
         $model = AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             // ->where("serial_number", $request->device_serial_number)
             ->where("serial_number", $request->device_serial_number)
-
+            ->where("temparature", '!=', null)
             ->where("temparature", '>', 0)
             ->where("temparature",  "!=", "NaN")
 

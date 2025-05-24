@@ -13,7 +13,6 @@
 
     <v-icon
       title="Reload Device Data from SDK"
-      color="black"
       class="pull-right"
       style="float: right"
       @click="getDataFromApi()"
@@ -267,7 +266,7 @@
                       <v-card elevation="2" outlined style="height: 100px">
                         <v-card-title
                           dense
-                          class="popup_background"
+                          class="popup_background1111"
                           style="padding: 2px"
                         >
                           <v-checkbox
@@ -329,7 +328,7 @@
                       <v-card elevation="2" outlined style="height: 100px">
                         <v-card-title
                           dense
-                          class="popup_background"
+                          class="popup_background1111"
                           style="padding: 2px"
                         >
                           <v-checkbox
@@ -389,7 +388,7 @@
                       <v-card elevation="2" outlined style="height: 100px">
                         <v-card-title
                           dense
-                          class="popup_background"
+                          class="popup_background1111"
                           style="padding: 2px"
                         >
                           <v-checkbox
@@ -446,7 +445,7 @@
                       <v-card elevation="2" style="height: 200px" outlined>
                         <v-card-title
                           dense
-                          class="popup_background"
+                          class="popup_background1111"
                           style="padding: 2px"
                         >
                           <v-checkbox
@@ -527,7 +526,7 @@
                       <v-card elevation="2" style="height: 200px" outlined>
                         <v-card-title
                           dense
-                          class="popup_background"
+                          class="popup_background1111"
                           style="padding: 2px"
                         >
                           <v-checkbox
@@ -609,7 +608,7 @@
                       <v-card elevation="2" style="height: 200px" outlined>
                         <v-card-title
                           dense
-                          class="popup_background"
+                          class="popup_background1111"
                           style="padding: 2px"
                         >
                           <v-checkbox

@@ -160,15 +160,14 @@ class ApiAlarmControlController extends Controller
                 // }
 
 
-
+                $logs = [];
 
                 $logs["serial_number"] = $device_serial_number;
-                $logs["temparature"] = $temparature;
+
                 if ($fire_alarm != null)
                     $logs["fire_alarm"] = $fire_alarm;
 
 
-                $logs["humidity"] = $humidity;
                 if ($smoke_alarm != null)
                     $logs["smoke_alarm"] = $smoke_alarm; //== 1 ? 0 : 1;
                 if ($water_leakage != null)
@@ -182,11 +181,20 @@ class ApiAlarmControlController extends Controller
                 if ($temperature_alarm != null)
                     $logs["temperature_alarm"] = $temperature_alarm; //== 1 ? 0 : 1;
 
+                if ($temparature != 0)
+                    $logs["temparature"] = $temparature;
+                if ($humidity != 0)
+
+                    $logs["humidity"] = $humidity;
 
 
 
+                $temperature_serial_address = null;
 
-
+                if ($request->filled("sensor_serial_address")) {
+                    $temperature_serial_address = $request->sensor_serial_address;
+                    $logs["temperature_serial_address"] = $temperature_serial_address; //== 1 ? 0 : 1;
+                }
                 $logs["log_time"] = $log_time;
 
 
