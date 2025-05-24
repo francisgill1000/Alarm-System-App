@@ -37,24 +37,24 @@ class DeviceSampleData extends Command
      */
     public function handle()
     {
-        $data = [
-            "serialNumber" => "24000001",
-            "temperature" =>  mt_rand(180, 260) / 10,
-            "humidity" =>  mt_rand(400, 600) / 10,
-            "fire_alarm" => 0,
-            "smokeStatus" =>  0,
-            "waterLeakage" =>  0,
-            "acPowerFailure" =>  0,
-            "doorOpen" =>  0,
+        // $data = [
+        //     "serialNumber" => "24000001",
+        //     "temperature" =>  mt_rand(180, 260) / 10,
+        //     "humidity" =>  mt_rand(400, 600) / 10,
+        //     "fire_alarm" => 0,
+        //     "smokeStatus" =>  0,
+        //     "waterLeakage" =>  0,
+        //     "acPowerFailure" =>  0,
+        //     "doorOpen" =>  0,
 
 
 
-        ];
-        $response = Http::withoutVerifying()->withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post("https://backend.xtremeguard.org/api/alarm_device_status", $data);
-        $data = $response->body();
+        // ];
+        // $response = Http::withoutVerifying()->withHeaders([
+        //     'Content-Type' => 'application/json',
+        // ])->post("https://backend.xtremeguard.org/api/alarm_device_status", $data);
+        // $data = $response->body();
 
-        return $data;
+        // return $data;
     }
 }
