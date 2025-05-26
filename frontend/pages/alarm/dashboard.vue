@@ -2,26 +2,54 @@
   <div
     style="width: 100%"
     v-if="can('dashboard_access') && can('dashboard_view')"
+    class="page-wrapper"
   >
+    <div class="text-center">
+      <v-snackbar v-model="snackbar" top outlined elevation="24">
+        {{ response }}
+      </v-snackbar>
+    </div>
+    <div
+      class="flip-overlay"
+      :class="{ flipped: flipped }"
+      @click="flipped = !flipped"
+    ></div>
     <v-row justify="end" style="display: none1" v-if="devicesList.length > 1">
       <v-col></v-col>
+      <v-col style="max-width: 40px">
+        <v-icon color="red" v-if="!playSlider" @click="playSlider = !playSlider"
+          >mdi-play-box</v-icon
+        >
+        <v-icon color="green" v-else @click="playSlider = !playSlider"
+          >mdi-pause-box</v-icon
+        >
+      </v-col>
       <v-col style="max-width: 220px; padding: 0px">
-        <!-- <span style="float: left; width: 200px"> -->
         <v-select
           style="z-index: 9999"
-          @change="ChangeDevice(device_serial_number)"
-          v-model="device_serial_number"
+          @change="ChangeDevice()"
+          v-model="device_serial_number_with_sensor"
           :items="devicesList"
           dense
           small
           outlined
           hide-details
-          class="ma-2"
           label="Room"
-          item-value="serial_number"
-          item-text="name"
+          class="ma-2"
+          :item-value="
+            (item) =>
+              `${item.serial_number}|${
+                item.temperature_serial_address ?? 'null'
+              }`
+          "
+          :item-text="
+            (item) =>
+              item.temperature_sensor_name
+                ? `${item.name} - ${item.temperature_sensor_name}`
+                : item.name
+          "
         ></v-select>
-        <!-- </span> -->
+
         <!-- <span style="float: left">
           <v-menu
             style="z-index: 9999"
@@ -75,6 +103,9 @@
             :nameChart="'AlarmDashboardTemparatureHistoryChart2Black'"
             :height="'300'"
             :device_serial_number="device_serial_number"
+            :device_temperature_serial_address="
+              device_temperature_serial_address
+            "
             :key="keyChart2"
             :from_date="from_date"
             :theme="'black'"
@@ -210,6 +241,10 @@
           <AlarmDashboardTemparatureChart2Black
             :name="'AlarmDashboardTemparatureChart2'"
             :height="'300'"
+            :device_temperature_serial_address="
+              device_temperature_serial_address
+            "
+            :key="keyChart2"
             :device_serial_number="device_serial_number"
             :from_date="from_date"
           /> </v-card
@@ -249,6 +284,14 @@ export default {
   },
   data() {
     return {
+      playSlider: true,
+      snackbar: false,
+      response: "",
+      currentDeviceIndex: 0,
+      autoCycleInterval: null,
+      flipped: false,
+      device_serial_number_with_sensor: null,
+      device_temperature_serial_address: null,
       displayLiveData: false,
       temperature: "",
       weatherCondition: "",
@@ -339,6 +382,12 @@ export default {
     }
     this.loading = true;
     setTimeout(() => {}, 1000);
+    // setInterval(() => {
+
+    // }, 1000 * 5);
+    setInterval(() => {
+      this.keyChart2++;
+    }, 1000 * 60 * 15);
     ///this.getDataFromApi(1);
 
     this.intervalObj = setInterval(() => {
@@ -346,7 +395,12 @@ export default {
         this.getDataFromApi(1);
         //this.key++;
       }
-    }, 1000 * 15);
+    }, 1000 * 30);
+  },
+  beforeDestroy() {
+    if (this.autoCycleInterval) {
+      clearInterval(this.autoCycleInterval);
+    }
   },
   async created() {
     if (window) {
@@ -372,19 +426,41 @@ export default {
     }
 
     try {
-      await this.$store.dispatch("fetchDropDowns", {
-        key: "deviceList",
-        endpoint: "device-list",
-        refresh: true,
+      // await this.$store.dispatch("fetchDropDowns", {
+      //   key: "deviceList",
+      //   endpoint: "device-list",
+      //   refresh: true,
+      // });
+      // this.devicesList = this.$store.state.deviceList;
+
+      let { data: devices } = await this.$axios.get(`devices_list_sensors`, {
+        params: { company_id: this.$auth.user.company_id },
       });
-      this.devicesList = this.$store.state.deviceList;
+      // console.log("devices", devices);
+
+      this.devicesList = devices;
 
       this.devicesList = this.devicesList.filter(
         (item) => item.serial_number != null
       );
-      if (this.$store.state.deviceList && this.$store.state.deviceList[0]) {
-        this.device_serial_number = this.$store.state.deviceList[0].device_id;
+
+      console.log("this.deviceList", this.devicesList);
+
+      if (this.devicesList && this.devicesList[0]) {
+        this.device_serial_number_with_sensor = `${
+          this.devicesList[0].serial_number
+        }|${this.devicesList[0].temperature_serial_address ?? "null"}`;
+        this.device_serial_number = this.devicesList[0].serial_number;
+        this.device_temperature_serial_address =
+          this.devicesList[0].temperature_serial_address;
+
+        console.log(
+          "this.device_temperature_serial_address",
+          this.device_temperature_serial_address
+        );
+
         //this.getDataFromApi();
+        if (this.devicesList.length > 1) this.startAutoDeviceCycle();
       }
 
       // await this.$store.dispatch("fetchDropDowns", {
@@ -417,15 +493,52 @@ export default {
     handleResize() {
       this.viewportHeight = window.innerHeight;
     },
-    ChangeDevice(serial_number) {
-      try {
-        this.device_serial_number = serial_number;
-        this.key++;
-        this.keyChart2++;
+    startAutoDeviceCycle() {
+      console.log("this.devicesList.lengt", this.devicesList.length);
+      //if (!this.devicesList.length) return;
 
-        this.getDataFromApi(1);
-        //console.log(this.device_serial_number, " this.device_serial_number");
-      } catch (e) {}
+      this.autoCycleInterval = setInterval(() => {
+        if (this.playSlider) {
+          this.currentDeviceIndex =
+            (this.currentDeviceIndex + 1) % this.devicesList.length;
+
+          console.log("currentDeviceIndex", this.currentDeviceIndex);
+          const item = this.devicesList[this.currentDeviceIndex];
+          this.device_serial_number = item.serial_number;
+          this.device_serial_number_with_sensor = `${item.serial_number}|${
+            item.temperature_serial_address ?? "null"
+          }`;
+          this.flipped = !this.flipped;
+          this.ChangeDevice(); // trigger data update
+          let sensorName =
+            item.temperature_sensor_name != null
+              ? " - " + item.temperature_sensor_name
+              : "";
+          this.response = "Loading Temperature from " + item.name + sensorName;
+          this.snackbar = true;
+        }
+      }, 1000 * 5); // 30 seconds
+    },
+
+    ChangeDevice() {
+      console.log(
+        "this.device_serial_number_with_sensor",
+        this.device_serial_number_with_sensor
+      );
+      const [serial_number, device_temperature_serial_address] =
+        this.device_serial_number_with_sensor.split("|");
+
+      this.device_serial_number = serial_number;
+      this.device_temperature_serial_address =
+        device_temperature_serial_address == "null"
+          ? null
+          : device_temperature_serial_address;
+
+      this.key++;
+      this.keyChart2++;
+
+      this.getDataFromApi(1);
+      //console.log(this.device_serial_number, " this.device_serial_number");
     },
     getDataFromApi(reset = 0) {
       // if (reset == 1) {
@@ -446,6 +559,8 @@ export default {
                 company_id: this.$auth.user.company_id,
 
                 device_serial_number: this.device_serial_number,
+                device_temperature_serial_address:
+                  this.device_temperature_serial_address,
               },
             })
             .then(({ data }) => {
@@ -499,3 +614,38 @@ export default {
   },
 };
 </script>
+<style scoped>
+.page-wrapper {
+  position: relative;
+
+  /* overflow: hidden; */
+}
+
+.main-content {
+  z-index: 1;
+  position: relative;
+  padding: 60px;
+  text-align: center;
+  font-size: 20px;
+}
+
+/* Flip overlay that covers the full body */
+.flip-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(63, 81, 181, 0.2); /* Indigo overlay */
+  pointer-events: none;
+  z-index: 999;
+  transform: rotateY(0deg);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease;
+}
+
+.flip-overlay.flipped {
+  transform: rotateY(180deg);
+}
+</style>

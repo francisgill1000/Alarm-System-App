@@ -29,8 +29,8 @@ class DeviceSensorLogsController extends Controller
     public function getDeliveLogs(Request $request)
     {
         $model = AlarmDeviceSensorLogs::with(["device"])->where("company_id", $request->company_id)
-            ->where("company_id", $request->company_id)
-            ->where("temparature", "!=", null);
+            ->where("company_id", $request->company_id);
+        //->where("temparature", "!=", null);
 
         if ($request->filled("device_serial_number")) {
             $model->where("serial_number", $request->device_serial_number);
@@ -41,6 +41,13 @@ class DeviceSensorLogsController extends Controller
         if ($request->filled("to_date")) {
             $model->where("log_time", '<=', $request->to_date . ' 23:59:59');
         }
+        // if ($request->filled("only_temperature") && $request->only_temperature == 'true') {
+        //     $model->where("temparature", "!=", null);
+        //     $model->where("temparature", "!=", 0);
+        //     $model->where("humidity", "!=", 0);
+        // }
+
+
         if ($request->filled("filter_alarm_status")) {
             if ($request->filter_alarm_status == 1) {
                 $model->where(function ($query) use ($request) {
@@ -119,6 +126,12 @@ class DeviceSensorLogsController extends Controller
                 Carbon::parse($fromDate)->startOfDay(),
                 Carbon::parse($toDate)->endOfDay()
             ])
+
+            ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+
+
+                $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+            })
             ->groupBy('date')
             ->orderBy('date', 'asc')
             ->get()
@@ -172,8 +185,8 @@ class DeviceSensorLogsController extends Controller
         if ($request->filled("from_date")) {
             $date = $request->from_date;
         }
-        $TemperatureData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
-        $HumidityData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date);
+        $TemperatureData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date, $request);
+        $HumidityData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date, $request);
 
 
         return [
@@ -191,7 +204,7 @@ class DeviceSensorLogsController extends Controller
         if ($request->filled("from_date")) {
             $date = $request->from_date;
         }
-        $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date);
+        $HouryData = $this->getTemparatureHourlyData($request->company_id, $request->device_serial_number, $date, $request);
 
         return [
 
@@ -205,7 +218,7 @@ class DeviceSensorLogsController extends Controller
         if ($request->filled("from_date")) {
             $date = $request->from_date;
         }
-        $HouryData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date);
+        $HouryData = $this->getHumidityHourlyData($request->company_id, $request->device_serial_number, $date, $request);
 
         return [
 
@@ -254,6 +267,12 @@ class DeviceSensorLogsController extends Controller
             ->where("temparature", '>', 0)
             ->where("temparature",  "!=", "NaN")
 
+            ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+
+
+                $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+            })
+
 
 
             // ->whereDate("log_time", $date)
@@ -272,6 +291,11 @@ class DeviceSensorLogsController extends Controller
         //----
         $model =   AlarmDeviceSensorLogs::where("company_id", $request->company_id)
             ->where("serial_number", $request->device_serial_number)
+            ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+
+
+                $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+            })
             ->whereDate("log_time", $date);
         $temperature  = $model->clone()->where(
             'temparature',
@@ -280,7 +304,13 @@ class DeviceSensorLogsController extends Controller
                 ->where("serial_number", $request->device_serial_number)
                 ->where("temparature", "!=", "0.0")
                 ->where("temparature", "!=", "NaN")
+                ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+
+
+                    $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+                })
                 ->whereDate("log_time", $date)->min('temparature')
+
         )->first();
         if ($temperature) {
             $temperature_min = $temperature->temparature;
@@ -293,8 +323,11 @@ class DeviceSensorLogsController extends Controller
             AlarmDeviceSensorLogs::where("company_id", $request->company_id)
                 ->where("serial_number", $request->device_serial_number)
                 ->where("temparature", "!=", "0.0")
-                ->where("temparature", "!=", "NaN")
+                ->where("temparature", "!=", "NaN")->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+                    $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+                })
                 ->whereDate("log_time", $date)->max('temparature')
+
         )->first();
         if ($temperature) {
             $temperature_max = $temperature->temparature;
@@ -307,7 +340,11 @@ class DeviceSensorLogsController extends Controller
             ->where("serial_number", $request->device_serial_number)
             ->where("humidity", '>', 0)
             ->where("humidity", "!=", "NaN")
+            ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+                $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+            })
             ->whereDate("log_time", $date);
+
         $humidity  = $model->clone()->where(
             'humidity',
             '=',
@@ -315,6 +352,9 @@ class DeviceSensorLogsController extends Controller
                 ->where("serial_number", $request->device_serial_number)
                 ->where("humidity", "!=", "0.0")
                 ->where("humidity", "!=", "NaN")
+                ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+                    $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+                })
                 ->whereDate("log_time", $date)->min('humidity')
         )->first();
         if ($humidity) {
@@ -329,6 +369,9 @@ class DeviceSensorLogsController extends Controller
                 ->where("serial_number", $request->device_serial_number)
                 ->where("humidity", "!=", "0.0")
                 ->where("humidity", "!=", "NaN")
+                ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+                    $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+                })
                 ->whereDate("log_time", $date)->max('humidity')
         )->first();
         if ($humidity) {
@@ -368,7 +411,7 @@ class DeviceSensorLogsController extends Controller
 
         ];
     }
-    public function getHumidityHourlyData($company_id, $device_serial_number, $date)
+    public function getHumidityHourlyData($company_id, $device_serial_number, $date, $request)
     {
         $finalArray = [];
 
@@ -382,6 +425,11 @@ class DeviceSensorLogsController extends Controller
             ->where('company_id', $company_id)
             ->where('serial_number', $device_serial_number)
             ->where('humidity', '!=', 'NaN')
+            ->where('humidity', '!=', null)
+
+            ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+                $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+            })
             ->whereDate('log_time', $date)
             ->groupBy('hour')
             ->get();
@@ -428,7 +476,7 @@ class DeviceSensorLogsController extends Controller
 
         // return  $finalarray;
     }
-    public function getTemparatureHourlyData($company_id, $device_serial_number, $date)
+    public function getTemparatureHourlyData($company_id, $device_serial_number, $date, $request)
     {
         $finalArray = [];
 
@@ -440,6 +488,12 @@ class DeviceSensorLogsController extends Controller
             ->where('company_id', $company_id)
             ->where('serial_number', $device_serial_number)
             ->where('temparature', '!=', 'NaN')
+            ->where('temparature', '!=', null)
+            ->when($request->filled("device_temperature_serial_address") && $request->device_temperature_serial_address > 0, function ($query) use ($request) {
+
+
+                $query->where("temperature_serial_address",   $request->device_temperature_serial_address);
+            })
             ->whereDate('log_time', $date)
             ->groupBy('hour')
             ->get();

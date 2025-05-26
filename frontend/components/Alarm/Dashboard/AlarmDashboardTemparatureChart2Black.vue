@@ -18,6 +18,7 @@ export default {
     "device_serial_number",
     "from_date",
     "theme",
+    "device_temperature_serial_address",
   ],
   data() {
     return {
@@ -275,16 +276,16 @@ export default {
 
   created() {
     // console.log("from_date", this.from_date);
-    this.getDataFromApi();
+    /////////this.getDataFromApi();
   },
   mounted() {
     this.chartOptions.chart.height = this.height;
     this.chartOptions.series = this.series;
     // setTimeout(() => {
     ////this.getDataFromApi();
-    this.intervalObj = setInterval(() => {
-      this.getDataFromApi();
-    }, 1000 * 60 * 15);
+    // this.intervalObj = setInterval(() => {
+    //   this.getDataFromApi();
+    // }, 1000 * 60 * 15);
 
     console.log("Mounted");
     /// }, 2000);
@@ -304,9 +305,9 @@ export default {
       this.getDataFromApi();
     }, 1000 * 10);
 
-    setTimeout(() => {
-      this.getDataFromApi();
-    }, 6000);
+    // setTimeout(() => {
+    //   this.getDataFromApi();
+    // }, 6000);
   },
 
   methods: {
@@ -337,6 +338,8 @@ export default {
             branch_id: this.branch_id > 0 ? this.branch_id : null,
             device_serial_number: this.device_serial_number,
             from_date: this.from_date,
+            device_temperature_serial_address:
+              this.device_temperature_serial_address,
           },
         })
         .then(({ data }) => {

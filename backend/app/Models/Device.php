@@ -33,6 +33,14 @@ class Device extends Model
     {
         return $this->belongsTo(CompanyBranch::class, "branch_id");
     }
+    public function temperatureSensors()
+    {
+        return $this->hasMany(DeviceTemperatureSensors::class, "device_id", "id");
+    }
+
+
+
+
     protected $casts = [
         'created_at' => 'datetime:d-M-y',
     ];

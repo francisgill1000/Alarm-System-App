@@ -45,6 +45,7 @@ export default {
     "device_serial_number",
     "from_date",
     "theme",
+    "device_temperature_serial_address",
   ],
   components: {
     DateRangeComponent,
@@ -299,6 +300,8 @@ export default {
               device_serial_number: this.device_serial_number,
               from_date: this.filter_from_date,
               to_date: this.filter_to_date,
+              device_temperature_serial_address:
+                this.device_temperature_serial_address,
             },
           }
         );

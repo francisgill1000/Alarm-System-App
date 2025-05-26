@@ -520,6 +520,7 @@ export default {
           from_date: this.filter_from_date,
           to_date: this.filter_to_date,
           filter_alarm_status: this.filter_alarm_status,
+          only_temperature: true,
         },
       };
 

@@ -37,7 +37,7 @@
           item-text="name"
           item-value="id"
         ></v-select>
-      </v-col> 
+      </v-col>
       <v-col md="4" sm="6" class="box" style="padding-top: 7px;">-->
 
       <date-picker
@@ -161,13 +161,13 @@ export default {
 
     const today = new Date();
 
-    if (!this.default_date_from) {
-      this.from_date = today.toISOString().slice(0, 10);
-    }
+    // if (!this.default_date_from) {
+    //   this.from_date = today.toISOString().slice(0, 10);
+    // }
 
-    if (!this.default_date_to) {
-      this.to_date = today.toISOString().slice(0, 10);
-    }
+    // if (!this.default_date_to) {
+    //   this.to_date = today.toISOString().slice(0, 10);
+    // }
 
     if (this.default_date_from && this.default_date_to) {
       this.from_date = this.default_date_from;

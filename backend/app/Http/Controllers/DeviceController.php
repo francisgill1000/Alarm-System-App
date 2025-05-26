@@ -45,6 +45,67 @@ class DeviceController extends Controller
         return $model->get(["id", "name", "location", "device_id", "device_type", "serial_number"]);
     }
 
+    // public function devicesDropdownListSensors()
+    // {
+    //     $model = Device::query();
+    //     $model->where('company_id', request('company_id'));
+    //     $model->where("device_type", "!=", "Manual");
+    //     $model->where("device_id", "!=", "Manual");
+    //     $model->Where("device_id",  'not like', "%Mobile%");
+    //     $model->with("temperatureSensors");
+    //     $model->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')));
+    //     $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
+    //     return $model->get(["id", "name", "location", "device_id", "device_type", "serial_number"]);
+    // }
+
+    public function devicesDropdownListSensors()
+    {
+        $devices = Device::query()
+            ->where('company_id', request('company_id'))
+            ->where('device_type', '!=', 'Manual')
+            ->where('device_id', '!=', 'Manual')
+            ->where('device_id', 'not like', '%Mobile%')
+            ->with('temperatureSensors')
+            ->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')))
+            ->orderBy(request('order_by', 'name'), request('sort_by_desc') ? 'desc' : 'asc')
+            ->get(['id', 'name', 'location', 'device_id', 'device_type', 'serial_number']);
+
+        $result = [];
+
+        foreach ($devices as $device) {
+            if ($device->temperatureSensors->isNotEmpty()) {
+                foreach ($device->temperatureSensors as $sensor) {
+                    $result[] = [
+                        'device_id'         => $device->id,
+                        'name'       => $device->name,
+                        'location'          => $device->location,
+                        'device_identifier' => $device->device_id,
+                        'device_type'       => $device->device_type,
+                        'serial_number'     => $device->serial_number,
+                        'temperature_sensor_id'         => $sensor->id,
+                        'temperature_sensor_name'       => $sensor->name,
+                        'temperature_serial_address'       => $sensor->temperature_serial_address,
+                    ];
+                }
+            } else {
+                $result[] = [
+                    'device_id'         => $device->id,
+                    'name'       => $device->name,
+                    'location'          => $device->location,
+                    'device_identifier' => $device->device_id,
+                    'device_type'       => $device->device_type,
+                    'serial_number'     => $device->serial_number,
+                    'temperature_sensor_id'         => null,
+                    'temperature_sensor_name'       => null,
+                    'temperature_serial_address'       => null,
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+
     public function index(Request $request)
     {
         $model = Device::query();
