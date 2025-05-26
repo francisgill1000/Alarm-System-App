@@ -17,10 +17,14 @@
     <v-row justify="end" style="display: none1" v-if="devicesList.length > 1">
       <v-col></v-col>
       <v-col style="max-width: 40px">
-        <v-icon color="red" v-if="!playSlider" @click="playSlider = !playSlider"
+        <v-icon
+          size="30"
+          color="red"
+          v-if="!playSlider"
+          @click="playSlider = !playSlider"
           >mdi-play-box</v-icon
         >
-        <v-icon color="green" v-else @click="playSlider = !playSlider"
+        <v-icon size="30" color="white" v-else @click="playSlider = !playSlider"
           >mdi-pause-box</v-icon
         >
       </v-col>
@@ -517,7 +521,7 @@ export default {
           this.response = "Loading Temperature from " + item.name + sensorName;
           this.snackbar = true;
         }
-      }, 1000 * 5); // 30 seconds
+      }, 1000 * 30); // 30 seconds
     },
 
     ChangeDevice() {

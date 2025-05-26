@@ -79,7 +79,7 @@ export default {
           } = chart;
           const cx = width / 2;
           const cy = 150; //needle top position //180 is bottom
-          const needleLength = 90; //150
+          const needleLength = 100; //150
           const needleWidth = 20;
           const radius = needleWidth / 2;
           const angle = Math.PI + (this.currentValue / 100) * Math.PI;
@@ -108,7 +108,7 @@ export default {
           ctx.lineTo(tipX, tipY);
           ctx.closePath();
           if (this.temperature < 25) ctx.fillStyle = "green";
-          else if (this.temperature < 30) ctx.fillStyle = "yellow";
+          else if (this.temperature < 35) ctx.fillStyle = "yellow";
           else ctx.fillStyle = "red";
           ctx.fill();
 
