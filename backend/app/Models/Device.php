@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Alarm\DeviceSensorLogs;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,7 +39,10 @@ class Device extends Model
         return $this->hasMany(DeviceTemperatureSensors::class, "device_id", "id");
     }
 
-
+    public function deviceSensorLogs()
+    {
+        return $this->belongsTo(DeviceSensorLogs::class, "device_sensor_logs_id");
+    }
 
 
     protected $casts = [

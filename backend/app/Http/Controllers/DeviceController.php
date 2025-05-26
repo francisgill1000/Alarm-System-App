@@ -685,16 +685,37 @@ class DeviceController extends Controller
     public function getAlarmNotification(Request $request)
     {
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();
-        $model = $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id);
-        return $model->where(function ($query) use ($request) {
+        $devices = Device::with(["branch", "zone", "deviceSensorLogs"])
+            ->where("company_id", $request->company_id)
+            ->where(function ($query) {
+                $query->where("smoke_alarm_status", 1)
+                    ->orWhere("fire_alarm_status", 1)
+                    ->orWhere("temparature_alarm_status", 1)
+                    ->orWhere("water_alarm_status", 1)
+                    ->orWhere("power_alarm_status", 1)
+                    ->orWhere("door_open_status", 1);
+            })
+            ->get();
 
-            $query->where("smoke_alarm_status", 1);
-            $query->orWhere("fire_alarm_status",  1);
-            $query->orWhere("temparature_alarm_status",  1);
-            $query->orWhere("water_alarm_status",  1);
-            $query->orWhere("power_alarm_status",  1);
-            $query->orWhere("door_open_status",  1);
-        })->get();
+        // Loop through each device and enrich log array with sensor info
+        $results = $devices->map(function ($device) {
+            $deviceArray = $device->toArray();
+
+            if ($deviceArray['device_sensor_logs']["temperature_serial_address"] != null) {
+                $sensor = \App\Models\DeviceTemperatureSensors::where("temperature_serial_address", $deviceArray['device_sensor_logs']["temperature_serial_address"])
+                    ->where("device_id", $device->id)
+                    ->first();
+
+                $deviceArray['device_sensor_logs']["sensor_info"] = $sensor ? $sensor->toArray() : null;
+            } else {
+                $deviceArray['device_sensor_logs']["sensor_info"] =  null;
+            }
+
+
+            return $deviceArray;
+        })->toArray();
+
+        return response()->json($results);
     }
     public function openDoorAlways(Request $request)
     {

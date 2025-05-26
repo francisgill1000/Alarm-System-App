@@ -19,12 +19,12 @@
       <v-col style="max-width: 40px">
         <v-icon
           size="30"
-          color="red"
+          color="white"
           v-if="!playSlider"
           @click="playSlider = !playSlider"
           >mdi-play-box</v-icon
         >
-        <v-icon size="30" color="white" v-else @click="playSlider = !playSlider"
+        <v-icon size="30" color="green" v-else @click="playSlider = !playSlider"
           >mdi-pause-box</v-icon
         >
       </v-col>
@@ -395,7 +395,7 @@ export default {
     ///this.getDataFromApi(1);
 
     this.intervalObj = setInterval(() => {
-      {
+      if (!this.playSlider) {
         this.getDataFromApi(1);
         //this.key++;
       }

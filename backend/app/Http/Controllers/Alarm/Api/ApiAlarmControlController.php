@@ -198,14 +198,18 @@ class ApiAlarmControlController extends Controller
                 $logs["log_time"] = $log_time;
 
 
+                $deviceModel = Device::where("serial_number", $device_serial_number);
+                $deviceObj = $deviceModel->clone()->get();
+
+                $logs["device_id"] = $deviceObj[0]['id'];
+
+
 
                 $insertedRecord = DeviceSensorLogs::create($logs);
 
                 //(new DeviceSensorLogsController)->updateCompanyIds();
 
-                $deviceModel = Device::where("serial_number", $device_serial_number);
 
-                $deviceObj = $deviceModel->clone()->get();
                 //update live status
                 $deviceModel->clone()->update(["status_id" => 1, "last_live_datetime" => date("Y-m-d H:i:s")]);
                 if (count($deviceObj) == 0) {
@@ -262,6 +266,8 @@ class ApiAlarmControlController extends Controller
 
 
 
+
+
                             $deviceModel->clone()->update($row);
                             $ignore15Minutes = true;
                         }
@@ -284,7 +290,7 @@ class ApiAlarmControlController extends Controller
                             $row["temparature_alarm_status"] = 0;
 
                             $row["temparature_alarm_end_datetime"] = $log_time;
-                            $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                            // $row["device_sensor_logs_id"] = $insertedRecord["id"];
                             $deviceModel->clone()->update($row);
                         }
                     }
@@ -296,7 +302,7 @@ class ApiAlarmControlController extends Controller
                         $row = [];
                         $row["temparature_alarm_status"] = $temperature_alarm;
                         $row["temparature_alarm_end_datetime"] = $log_time;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        // $row["device_sensor_logs_id"] = $insertedRecord["id"];
 
                         $ignore15Minutes = true;
                         $deviceModel->clone()->where("temparature_alarm_status", 1)->update($row);
@@ -362,7 +368,7 @@ class ApiAlarmControlController extends Controller
                         $row["smoke_alarm_status"] = $smoke_alarm;
                         $row["smoke_alarm_start_datetime"] = $log_time;
                         $row["smoke_alarm_end_datetime"] = null;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        // $row["device_sensor_logs_id"] = $insertedRecord["id"];
                         $deviceModel->clone()->update($row);
                     }
                     $message[] =  $this->SendWhatsappNotification($name . " - Smoke Alarm is ON",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
@@ -374,7 +380,7 @@ class ApiAlarmControlController extends Controller
                         $row = [];
                         $row["smoke_alarm_status"] = $smoke_alarm;
                         $row["smoke_alarm_end_datetime"] = $log_time;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        //$row["device_sensor_logs_id"] = $insertedRecord["id"];
                         $ignore15Minutes = true;
                         $deviceModel->clone()->where("smoke_alarm_status", 1)->update($row);
                         $message[] =  $this->SendWhatsappNotification($name . " - Smoke Alarm is OFF",   $deviceModel->clone()->first()->name, $deviceModel->clone()->first(), $log_time, $ignore15Minutes);
@@ -393,7 +399,7 @@ class ApiAlarmControlController extends Controller
                         $row["fire_alarm_status"] = $fire_alarm;
                         $row["fire_alarm_start_datetime"] = $log_time;
                         $row["fire_alarm_end_datetime"] = null;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        //$row["device_sensor_logs_id"] = $insertedRecord["id"];
 
                         $deviceModel->clone()->update($row);
                     }
@@ -409,7 +415,7 @@ class ApiAlarmControlController extends Controller
                         $row = [];
                         $row["fire_alarm_status"] = $fire_alarm;
                         $row["fire_alarm_end_datetime"] = $log_time;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        //$row["device_sensor_logs_id"] = $insertedRecord["id"];
                         $ignore15Minutes = true;
 
 
@@ -430,7 +436,7 @@ class ApiAlarmControlController extends Controller
                         $row["water_alarm_status"] = $water_leakage;
                         $row["water_alarm_start_datetime"] = $log_time;
                         $row["water_alarm_end_datetime"] = null;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        // $row["device_sensor_logs_id"] = $insertedRecord["id"];
 
 
 
@@ -446,7 +452,7 @@ class ApiAlarmControlController extends Controller
                         $row = [];
                         $row["water_alarm_status"] = $water_leakage;
                         $row["water_alarm_end_datetime"] = $log_time;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        // $row["device_sensor_logs_id"] = $insertedRecord["id"];
 
                         $ignore15Minutes = true;
 
@@ -463,7 +469,7 @@ class ApiAlarmControlController extends Controller
                         $row["power_alarm_status"] = $power_failure;
                         $row["power_alarm_start_datetime"] = $log_time;
                         $row["power_alarm_end_datetime"] = null;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        //$row["device_sensor_logs_id"] = $insertedRecord["id"];
                         $ignore15Minutes = true;
                         $deviceModel->clone()->update($row);
                     }
@@ -475,7 +481,7 @@ class ApiAlarmControlController extends Controller
                         $row = [];
                         $row["power_alarm_status"] = $power_failure;
                         $row["power_alarm_end_datetime"] = $log_time;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        //$row["device_sensor_logs_id"] = $insertedRecord["id"];
 
                         $ignore15Minutes = true;
 
@@ -493,7 +499,7 @@ class ApiAlarmControlController extends Controller
                         $row["door_open_status"] = $door_status;
                         $row["door_open_start_datetime"] = $log_time;
                         $row["door_open_end_datetime"] = null;
-                        $row["device_sensor_logs_id"] = $insertedRecord["id"];
+                        //$row["device_sensor_logs_id"] = $insertedRecord["id"];
                         $ignore15Minutes = true;
                         $deviceModel->clone()->update($row);
                     }
