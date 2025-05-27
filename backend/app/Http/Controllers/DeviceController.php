@@ -1402,6 +1402,16 @@ class DeviceController extends Controller
             return  $response;
         }
     }
+
+    public function updateTemperatureConfigSettingsFromArduinoSocket(Request $request)
+    {
+
+        $config = [];
+
+        $config["temperature_alerts_config"] = $request->temperature_alerts_config;
+
+        return  $this->callDeviceCommand($request->serial_number, $config);
+    }
     public function updateDeviceConfigSettingsFromArduinoSocket(Request $request)
     {
 

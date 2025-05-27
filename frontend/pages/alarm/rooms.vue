@@ -45,7 +45,7 @@
             mdi mdi-close-circle
           </v-icon>
         </v-card-title>
-        <v-card-text>
+        <v-card-text style="padding: 0px; margin: 0px">
           <v-container>
             <DeviceSettings
               v-if="DialogDeviceSettings"

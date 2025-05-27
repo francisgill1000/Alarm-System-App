@@ -57,6 +57,8 @@ Route::get('get_device_settings_from_socket_arduino', [DeviceController::class, 
 Route::post('command_call_device_to_arduino', [DeviceController::class, 'commandCallSocketToDevice']);
 
 Route::post('update_device_settings_from_socket_arduino', [DeviceController::class, 'updateDeviceConfigSettingsFromArduinoSocket']);
+Route::post('update_device_temperature_settings_from_socket_arduino', [DeviceController::class, 'updateTemperatureConfigSettingsFromArduinoSocket']);
+
 
 Route::get('/get_device_company_info_arduino', [DeviceController::class, 'getDeviceCompanyInfoForArduino']);
 

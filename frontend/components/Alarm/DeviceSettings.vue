@@ -31,6 +31,7 @@
           <v-tab> Netwrok Settings </v-tab>
           <v-tab>Alarm Settings</v-tab>
           <v-tab>Phone Numbers</v-tab>
+          <v-tab>Multiple Sensor Alers</v-tab>
 
           <v-tabs-items v-model="tab">
             <v-tab-item>
@@ -191,6 +192,18 @@
                   </v-row>
                 </v-card-text>
               </v-card>
+              <v-card-actions class="mt-5" v-if="!viewMode">
+                <!-- <v-btn @click="newItemDialog = false" dark filled color="red"
+        >Cancel</v-btn
+      > -->
+                <v-spacer></v-spacer>
+                <span
+                  v-if="errorValidateMessage != ''"
+                  style="color: red; padding-right: 50px"
+                  >Error: {{ errorValidateMessage }}</span
+                >
+                <v-btn @click="save()" dark filled color="primary">Save</v-btn>
+              </v-card-actions>
             </v-tab-item>
 
             <v-tab-item>
@@ -441,7 +454,7 @@
                       </v-card>
                     </v-col>
 
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                       <v-card elevation="2" style="height: 200px" outlined>
                         <v-card-title
                           dense
@@ -521,8 +534,8 @@
                           </v-row>
                         </v-card-text>
                       </v-card>
-                    </v-col>
-                    <v-col cols="12">
+                    </v-col> -->
+                    <!-- <v-col cols="12">
                       <v-card elevation="2" style="height: 200px" outlined>
                         <v-card-title
                           dense
@@ -603,7 +616,7 @@
                           </v-row>
                         </v-card-text>
                       </v-card>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12">
                       <v-card elevation="2" style="height: 200px" outlined>
                         <v-card-title
@@ -686,6 +699,18 @@
                   </v-row>
                 </v-col>
               </v-row>
+              <v-card-actions class="mt-5" v-if="!viewMode">
+                <!-- <v-btn @click="newItemDialog = false" dark filled color="red"
+        >Cancel</v-btn
+      > -->
+                <v-spacer></v-spacer>
+                <span
+                  v-if="errorValidateMessage != ''"
+                  style="color: red; padding-right: 50px"
+                  >Error: {{ errorValidateMessage }}</span
+                >
+                <v-btn @click="save()" dark filled color="primary">Save</v-btn>
+              </v-card-actions>
             </v-tab-item>
             <v-tab-item>
               <v-card elevation="2" outlined>
@@ -772,30 +797,41 @@
                   </v-row>
                 </v-card-text>
               </v-card>
+              <v-card-actions class="mt-5" v-if="!viewMode">
+                <!-- <v-btn @click="newItemDialog = false" dark filled color="red"
+        >Cancel</v-btn
+      > -->
+                <v-spacer></v-spacer>
+                <span
+                  v-if="errorValidateMessage != ''"
+                  style="color: red; padding-right: 50px"
+                  >Error: {{ errorValidateMessage }}</span
+                >
+                <v-btn @click="save()" dark filled color="primary">Save</v-btn>
+              </v-card-actions>
+            </v-tab-item>
+
+            <v-tab-item>
+              <DeviceTemperatureAlerts
+                :editedItem="editedItem"
+                :temperature_alerts_config="
+                  deviceSettings.config.temperature_alerts_config
+                "
+              />
             </v-tab-item>
           </v-tabs-items>
         </v-tabs>
       </v-col>
     </v-row>
-
-    <v-card-actions class="mt-5" v-if="!viewMode">
-      <!-- <v-btn @click="newItemDialog = false" dark filled color="red"
-        >Cancel</v-btn
-      > -->
-      <v-spacer></v-spacer>
-      <span
-        v-if="errorValidateMessage != ''"
-        style="color: red; padding-right: 50px"
-        >Error: {{ errorValidateMessage }}</span
-      >
-      <v-btn @click="save()" dark filled color="primary">Save</v-btn>
-    </v-card-actions>
   </div>
 
   <NoAccess v-else />
 </template>
 <script>
+import DeviceTemperatureAlerts from "./DeviceTemperatureAlerts.vue";
+
 export default {
+  components: { DeviceTemperatureAlerts },
   props: ["addNew", "editedItem"],
   data: () => ({
     //datatable varables
@@ -889,6 +925,10 @@ export default {
     ],
     heartBeatData: [],
     timeOptionsData: [],
+
+    Document: {
+      items: [{ title: "", file: "" }],
+    },
   }),
 
   created() {
@@ -904,7 +944,42 @@ export default {
         (u && u.permissions.some((e) => e == per || per == "/")) || u.is_master
       );
     },
+    addDocumentInfo() {
+      this.Document.items.push({
+        title: "",
+        file: "",
+      });
+    },
+    save_document_info() {
+      let options = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      let payload = new FormData();
 
+      this.Document.items.forEach((e) => {
+        payload.append(`items[][key]`, e.title);
+        payload.append(`items[][value]`, e.file || {});
+      });
+
+      payload.append(`company_id`, this.$auth?.user?.company?.id);
+
+      this.$axios
+        .post(`document`, payload, options)
+        .then(({ data }) => {
+          this.loading = false;
+
+          if (!data.status) {
+            this.errors = data.errors;
+          } else {
+          }
+        })
+        .catch((e) => console.log(e));
+    },
+    removeItem(index) {
+      this.Document.items.splice(index, 1);
+    },
     powerAlerts() {
       if (!this.deviceSettings.config.power_checkbox) {
         this.deviceSettings.config.power_alert_sms =
