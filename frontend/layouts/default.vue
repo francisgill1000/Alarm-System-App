@@ -568,12 +568,19 @@
                           )
                         }}
                       </div>
+                      <div
+                        class="bold1 pa-1"
+                        v-if="device.device_sensor_logs?.sensor_info"
+                      >
+                        Sensor Room :
+                        {{ device.device_sensor_logs.sensor_info.name }}
+                      </div>
                       <div class="bold1 pa-1">
                         Device Name :{{ device.name }}
                       </div>
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.branch?.branch_name }}
-                      </div>
+                      </div> -->
                       <div class="bold1 pa-1">
                         Device Location :{{ device.location }}
                       </div>
