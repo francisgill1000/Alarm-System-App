@@ -50,7 +50,7 @@
               ></v-select>
             </span> -->
             <span>
-              <v-autocomplete
+              <!-- <v-autocomplete
                 @change="getDataFromApi()"
                 style="height: 30px; width: 180px; margin-right: 21px"
                 label="Room"
@@ -65,7 +65,34 @@
                   ...devices,
                 ]"
                 placeholder="Room"
-              ></v-autocomplete>
+              ></v-autocomplete> -->
+
+              <v-select
+                style="height: 30px; width: 180px; margin-right: 21px"
+                @change="getDataFromApi()"
+                v-model="device_serial_number_with_sensor"
+                :items="[
+                  { name: `All Rooms`, serial_number: null },
+                  ...devices,
+                ]"
+                dense
+                small
+                outlined
+                hide-details
+                label="Room"
+                :item-value="
+                  (item) =>
+                    `${item.serial_number}|${
+                      item.temperature_serial_address ?? 'null'
+                    }`
+                "
+                :item-text="
+                  (item) =>
+                    item.temperature_sensor_name
+                      ? `${item.name} - ${item.temperature_sensor_name}`
+                      : item.name
+                "
+              ></v-select>
             </span>
             <span>
               <DateRangeComponent
@@ -112,6 +139,10 @@
 
             <template v-slot:item.device_name="{ item }">
               {{ item.device.name }}
+
+              <span v-if="item.device_temperature_sensor">
+                - {{ item.device_temperature_sensor.name }}
+              </span>
             </template>
             <template v-slot:item.log_time="{ item }">
               {{ $dateFormat.format6(item.log_time) }}
@@ -165,6 +196,7 @@ export default {
     DateRangeComponent,
   },
   data: () => ({
+    device_serial_number_with_sensor: null,
     cumulativeIndex: 1,
     filter_alarm_status: null,
     filter_device_serial_number: null,
@@ -217,7 +249,7 @@ export default {
     },
 
     ids: [],
-
+    device_temperature_serial_address: null,
     data: [],
     devices: [],
     total: 0,
@@ -253,6 +285,7 @@ export default {
         filterable: true,
         filterSpecial: false,
       },
+
       {
         text: "Date",
         align: "center",
@@ -482,7 +515,10 @@ export default {
           company_id: this.$auth.user.company_id,
         },
       };
-      this.$axios.get(`/device_list_not_manual`, payload).then(({ data }) => {
+      // this.$axios.get(`/device_list_not_manual`, payload).then(({ data }) => {
+      //   this.devices = data;
+      // });
+      this.$axios.get(`/devices_list_sensors`, payload).then(({ data }) => {
         this.devices = data;
       });
     },
@@ -509,6 +545,24 @@ export default {
       let sortedDesc = sortDesc ? sortDesc[0] : "";
       this.currentPage = page == undefined ? 1 : page;
 
+      console.log(
+        "this.device_serial_number_with_sensor",
+        this.device_serial_number_with_sensor
+      );
+
+      if (
+        this.device_serial_number_with_sensor &&
+        this.device_serial_number_with_sensor != "null|null"
+      ) {
+        const [serial_number, device_temperature_serial_address] =
+          this.device_serial_number_with_sensor.split("|");
+
+        this.filter_device_serial_number = serial_number;
+        this.device_temperature_serial_address =
+          device_temperature_serial_address == "null"
+            ? null
+            : device_temperature_serial_address;
+      }
       this.payloadOptions = {
         params: {
           page: page,
@@ -517,6 +571,9 @@ export default {
           per_page: itemsPerPage,
           company_id: this.$auth.user.company_id,
           device_serial_number: this.filter_device_serial_number,
+          device_temperature_serial_address:
+            this.device_temperature_serial_address,
+
           from_date: this.filter_from_date,
           to_date: this.filter_to_date,
           filter_alarm_status: this.filter_alarm_status,

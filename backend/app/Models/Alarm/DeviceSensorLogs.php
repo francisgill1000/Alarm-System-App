@@ -21,11 +21,12 @@ class DeviceSensorLogs extends Model
     {
         return $this->belongsTo(Device::class, "serial_number", "device_id")->withDefault(["name" => "Manual", "device_id" => "Manual"]);
     }
-    // public function deviceTemperatureSensor()
-    // {
-    //     return $this->hasOne(DeviceTemperatureSensors::class, 'temperature_serial_address', 'temperature_serial_address')
-    //         ->whereColumn('device_id', 'device_id'); // assuming serial_number in logs is same as device_id
-    // }
+
+    public function deviceTemperatureSensor()
+    {
+        return $this->belongsTo(DeviceTemperatureSensors::class, 'temperature_serial_address', 'temperature_serial_address')
+            ->whereColumn('device_id', 'device_id'); // assuming serial_number in logs is same as device_id
+    }
     // public function deviceTemperatureSensor()
     // {
     //     return $this->hasOne(DeviceTemperatureSensors::class, 'temperature_serial_address', 'temperature_serial_address');

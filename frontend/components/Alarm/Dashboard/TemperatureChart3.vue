@@ -177,7 +177,7 @@ export default {
       const counter = setInterval(() => {
         current += increment;
         if (current >= target) {
-          element.innerHTML = `${target}  <small>°C</small>`;
+          element.innerHTML = `${target}  <small style="font-size:20px">°C</small>`;
           clearInterval(counter);
         } else {
           const value =

@@ -448,8 +448,6 @@ export default {
         (item) => item.serial_number != null
       );
 
-      console.log("this.deviceList", this.devicesList);
-
       if (this.devicesList && this.devicesList[0]) {
         this.device_serial_number_with_sensor = `${
           this.devicesList[0].serial_number
@@ -457,11 +455,6 @@ export default {
         this.device_serial_number = this.devicesList[0].serial_number;
         this.device_temperature_serial_address =
           this.devicesList[0].temperature_serial_address;
-
-        console.log(
-          "this.device_temperature_serial_address",
-          this.device_temperature_serial_address
-        );
 
         //this.getDataFromApi();
         if (this.devicesList.length > 1) this.startAutoDeviceCycle();
@@ -525,10 +518,6 @@ export default {
     },
 
     ChangeDevice() {
-      console.log(
-        "this.device_serial_number_with_sensor",
-        this.device_serial_number_with_sensor
-      );
       const [serial_number, device_temperature_serial_address] =
         this.device_serial_number_with_sensor.split("|");
 

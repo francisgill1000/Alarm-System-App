@@ -65,7 +65,10 @@ class DeviceController extends Controller
             ->where('device_type', '!=', 'Manual')
             ->where('device_id', '!=', 'Manual')
             ->where('device_id', 'not like', '%Mobile%')
+
             ->with('temperatureSensors')
+
+
             ->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')))
             ->orderBy(request('order_by', 'name'), request('sort_by_desc') ? 'desc' : 'asc')
             ->get(['id', 'name', 'location', 'device_id', 'device_type', 'serial_number']);

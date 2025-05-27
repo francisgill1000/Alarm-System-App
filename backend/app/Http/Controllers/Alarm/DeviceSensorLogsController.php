@@ -28,12 +28,16 @@ class DeviceSensorLogsController extends Controller
 
     public function getDeliveLogs(Request $request)
     {
-        $model = AlarmDeviceSensorLogs::with(["device"])->where("company_id", $request->company_id)
+        $model = AlarmDeviceSensorLogs::with(["device", "deviceTemperatureSensor"])->where("company_id", $request->company_id)
             ->where("company_id", $request->company_id);
         //->where("temparature", "!=", null);
 
         if ($request->filled("device_serial_number")) {
             $model->where("serial_number", $request->device_serial_number);
+        }
+
+        if ($request->filled("device_temperature_serial_address")) {
+            $model->where("temperature_serial_address", $request->device_temperature_serial_address);
         }
         if ($request->filled("from_date")) {
             $model->where("log_time", '>=', $request->from_date . ' 00:00:00');
