@@ -175,7 +175,7 @@ export default {
       animate();
     },
 
-    counterUp(target, duration = 1000, steps = 2) {
+    counterUp(target, duration = 1000, steps = 1) {
       const element = document.getElementById(this.name);
       let current = 0;
       const increment = target / steps;

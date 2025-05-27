@@ -33,7 +33,7 @@
                   dense
                   small
                   :hide-details="true"
-                  placeholder="Start Price"
+                  placeholder="Sensor Name"
                 ></v-text-field>
                 <span dense v-if="errors && errors.name" class="error--text">{{
                   errors.name[0]
