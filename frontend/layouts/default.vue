@@ -575,6 +575,9 @@
                         Device Name : {{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
+                        Present Value : {{ device.temperature }}°C
+                      </div>
+                      <div class="bold1 pa-1">
                         Threshold Max : {{ device.temperature_max }}°C
                       </div>
                       <!-- <div class="bold1 pa-1">
