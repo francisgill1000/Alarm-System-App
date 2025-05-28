@@ -293,7 +293,7 @@ export default {
       response: "",
       currentDeviceIndex: 0,
       autoCycleInterval: null,
-      flipped: false,
+      flipped: true,
       device_serial_number_with_sensor: null,
       device_temperature_serial_address: null,
       displayLiveData: false,
