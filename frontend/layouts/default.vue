@@ -601,9 +601,7 @@
                         style="font-size: 20px; font-weight: bold"
                       >
                         Fire Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.fire_alarm_start_datetime)
-                        }}
+                        {{ $dateFormat.format5(device.alarm_start_datetime) }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
@@ -702,9 +700,7 @@
                         style="font-size: 20px; font-weight: bold"
                       >
                         AC Power Off Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.power_alarm_start_datetime)
-                        }}
+                        {{ $dateFormat.format5(device.alarm_start_datetime) }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
@@ -737,9 +733,7 @@
                         style="font-size: 20px; font-weight: bold"
                       >
                         Water Leakage Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.water_alarm_start_datetime)
-                        }}
+                        {{ $dateFormat.format5(device.alarm_start_datetime) }}
                       </div>
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
