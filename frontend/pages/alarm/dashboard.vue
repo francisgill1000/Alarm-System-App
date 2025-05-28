@@ -14,85 +14,7 @@
       :class="{ flipped: flipped }"
       @click="flipped = !flipped"
     ></div>
-    <v-row justify="end" style="display: none1" v-if="devicesList.length > 1">
-      <v-col></v-col>
-      <v-col style="max-width: 40px">
-        <v-icon
-          size="30"
-          color="white"
-          v-if="!playSlider"
-          @click="playSlider = !playSlider"
-          >mdi-play-box</v-icon
-        >
-        <v-icon size="30" color="green" v-else @click="playSlider = !playSlider"
-          >mdi-pause-box</v-icon
-        >
-      </v-col>
-      <v-col style="max-width: 220px; padding: 0px">
-        <v-select
-          style="z-index: 9999"
-          @change="ChangeDevice()"
-          v-model="device_serial_number_with_sensor"
-          :items="devicesList"
-          dense
-          small
-          outlined
-          hide-details
-          label="Room"
-          class="ma-2"
-          :item-value="
-            (item) =>
-              `${item.serial_number}|${
-                item.temperature_serial_address ?? 'null'
-              }`
-          "
-          :item-text="
-            (item) =>
-              item.temperature_sensor_name
-                ? `${item.name} - ${item.temperature_sensor_name}`
-                : item.name
-          "
-        ></v-select>
 
-        <!-- <span style="float: left">
-          <v-menu
-            style="z-index: 9999"
-            v-model="from_menu"
-            :close-on-content-click="false"
-            :nudge-left="50"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                style="
-                  width: 230px;
-                  float: right;
-                  z-index: 9999;
-                  height: 5px;
-                  padding-top: 8px;
-                "
-                outlined
-                v-model="from_date"
-                v-bind="attrs"
-                v-on="on"
-                dense
-                class="custom-text-box shadow-none"
-                label="Date Filter"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              no-title
-              scrollable
-              v-model="from_date"
-              @input="from_menu = false"
-              @change="getDataFromApi()"
-            ></v-date-picker>
-          </v-menu>
-        </span> -->
-      </v-col>
-    </v-row>
     <v-row style="margin-top: 0px">
       <v-col cols="6">
         <v-card
@@ -135,7 +57,57 @@
           loading="false"
           outlined
           style="border-radius: 10px"
-          ><v-row>
+        >
+          <v-row
+            justify="end"
+            style="display: none1; margin-top: -30px"
+            v-if="devicesList.length > 1"
+          >
+            <v-col></v-col>
+            <v-col style="max-width: 40px">
+              <v-icon
+                size="30"
+                color="white"
+                v-if="!playSlider"
+                @click="playSlider = !playSlider"
+                >mdi-play-box</v-icon
+              >
+              <v-icon
+                size="30"
+                color="green"
+                v-else
+                @click="playSlider = !playSlider"
+                >mdi-pause-box</v-icon
+              >
+            </v-col>
+            <v-col style="max-width: 220px; padding: 0px">
+              <v-select
+                style="z-index: 9999"
+                @change="ChangeDevice()"
+                v-model="device_serial_number_with_sensor"
+                :items="devicesList"
+                dense
+                small
+                outlined
+                hide-details
+                label="Room"
+                class="ma-2"
+                :item-value="
+                  (item) =>
+                    `${item.serial_number}|${
+                      item.temperature_serial_address ?? 'null'
+                    }`
+                "
+                :item-text="
+                  (item) =>
+                    item.temperature_sensor_name
+                      ? `${item.name} - ${item.temperature_sensor_name}`
+                      : item.name
+                "
+              ></v-select>
+            </v-col>
+          </v-row>
+          <v-row style="display: none1">
             <v-col cols="5">
               <v-row>
                 <v-col cols="12" class="text-center"
@@ -151,14 +123,14 @@
               <v-row>
                 <v-col
                   cols="2"
-                  class="align-items-center justify-content-center pt-10"
+                  class="align-items-center justify-content-center pt-0"
                 >
                   <!-- <img
                     src="../../static/alarm-icons/temperature.png"
                     width="70px"
                 /> -->
                 </v-col>
-                <v-col cols="10" class="pa-0">
+                <v-col cols="10" class="pa-0" style="margin-top: -30px">
                   <TemperatureChart3
                     :name="'ArrowArcChartTemperature1'"
                     :temperature="temperature_latest"
@@ -194,14 +166,14 @@
               <v-row>
                 <v-col
                   cols="2"
-                  class="align-items-center justify-content-center pt-10"
+                  class="align-items-center justify-content-center pt-0"
                 >
                   <!-- <img
                     src="../../static/alarm-icons/humidity.png"
                     width="70px"
                 /> -->
                 </v-col>
-                <v-col cols="10" class="pa-0">
+                <v-col cols="10" class="pa-0" style="margin-top: -30px">
                   <HumidityChart3
                     :name="'ArrowArcChart2Humidity'"
                     :humidity="humidity_latest"
@@ -240,7 +212,7 @@
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 10px"
+          style="border-radius: 10px; height: 380px"
         >
           <AlarmDashboardTemparatureChart2Black
             :name="'AlarmDashboardTemparatureChart2'"
@@ -506,6 +478,10 @@ export default {
             item.temperature_serial_address ?? "null"
           }`;
           this.flipped = !this.flipped;
+
+          setTimeout(() => {
+            this.flipped = !this.flipped;
+          }, 1000 * 1);
           this.ChangeDevice(); // trigger data update
           let sensorName =
             item.temperature_sensor_name != null

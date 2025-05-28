@@ -535,6 +535,7 @@
                 @click="
                   alarmNotificationStatus = false;
                   stopsound();
+                  hidepopupfor5Minutes();
                 "
               >
                 mdi-close-circle
@@ -549,7 +550,11 @@
                 <v-col cols="12">
                   <v-row
                     v-if="device.temperature_alarm"
-                    style="border-bottom: 1px solid #ddd"
+                    :style="
+                      pendingNotificationsCount > 0
+                        ? 'border-bottom: 1px solid #ddd'
+                        : ''
+                    "
                   >
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
@@ -575,23 +580,25 @@
                         Device Name : {{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Present Value : {{ device.temparature }}°C
+                        Temperature : {{ device.temparature }}
+                        <span style="font-size: 12px">°C</span>
                       </div>
                       <div class="bold1 pa-1">
-                        Threshold Max : {{ device.temperature_max }}°C
+                        Threshold Max : {{ device.temperature_max }}
+                        <span style="font-size: 12px">°C</span>
                       </div>
                       <!-- <div class="bold1 pa-1">
                         Branch Name :{{  device.device.branch?.branch_name }}
                       </div> -->
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
                   <v-row
                     v-if="device.fire_alarm"
                     :style="
-                      notificationAlarmDevices.length > 1
+                      pendingNotificationsCount.length > 1
                         ? 'border-bottom: 1px solid #ddd'
                         : ''
                     "
@@ -615,16 +622,16 @@
                       <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
                       </div> -->
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
 
                   <v-row
                     v-if="device.smoke_alarm"
                     :style="
-                      notificationAlarmDevices.length > 1
+                      pendingNotificationsCount.length > 1
                         ? 'border-bottom: 1px solid #ddd'
                         : ''
                     "
@@ -648,16 +655,16 @@
                       <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
                       </div> -->
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
 
                   <v-row
                     v-if="device.door_status"
                     :style="
-                      notificationAlarmDevices.length > 1
+                      pendingNotificationsCount.length > 1
                         ? 'border-bottom: 1px solid #ddd'
                         : ''
                     "
@@ -681,16 +688,16 @@
                       <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
                       </div>
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
 
                   <v-row
                     v-if="device.power_failure"
                     :style="
-                      notificationAlarmDevices.length > 1
+                      pendingNotificationsCount.length > 1
                         ? 'border-bottom: 1px solid #ddd'
                         : ''
                     "
@@ -714,16 +721,16 @@
                       <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
                       </div> -->
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
 
                   <v-row
                     v-if="device.water_leakage"
                     :style="
-                      notificationAlarmDevices.length > 1
+                      pendingNotificationsCount.length > 1
                         ? 'border-bottom: 1px solid #ddd'
                         : ''
                     "
@@ -747,9 +754,9 @@
                       <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
                       </div> -->
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
-                      </div>
+                      </div> -->
                     </v-col>
                   </v-row>
                 </v-col>
@@ -952,6 +959,7 @@ import employee_top_menu from "../menus/employee_modules_top.json";
 export default {
   data() {
     return {
+      popupNotificationHide5MinutesActive: false,
       displayLeftMenu: false,
       currentTime: "00:00:00",
       todayDate: "---",
@@ -1017,7 +1025,7 @@ export default {
       clipped: true,
 
       miniVariant: true, //hide leftmenu
-      title: "Xtreme Guards",
+      title: "Xtreme Guard",
       socket: null,
       logout_btn: {
         icon: "mdi-logout",
@@ -1152,7 +1160,13 @@ export default {
     // }, 1000 * 10);
 
     this.intervalObj = setInterval(() => {
-      if (this.timmerStatus == true) this.verifyAlarmStatus();
+      console.log(this.popupNotificationHide5MinutesActive);
+
+      if (
+        this.timmerStatus == true &&
+        !this.popupNotificationHide5MinutesActive
+      )
+        this.verifyAlarmStatus();
     }, 1000 * 10);
     // setInterval(() => {
     //   this.loadNotificationMenu();
@@ -1292,6 +1306,15 @@ export default {
     //     ? this.$vuetify.theme.themes.dark.primary
     //     : this.$vuetify.theme.themes.light.primary;
     // },
+
+    hidepopupfor5Minutes() {
+      this.snackNotification = true;
+      this.snackNotificationText = "Popup is closed and Re-open in few minutes";
+      this.popupNotificationHide5MinutesActive = true;
+      setTimeout(() => {
+        this.popupNotificationHide5MinutesActive = false;
+      }, 1000 * 60 * 5);
+    },
     palysound() {
       this.audio = new Audio(
         process.env.BACKEND_URL2 + "alarm_sounds/alarm-sound1.mp3"
@@ -2410,7 +2433,7 @@ body {
 }
 .app-header-main {
   margin: 12px !important;
-  margin-bottom: 20px !important;
+  margin-bottom: 0px !important;
   /* margin: 16px !important; */
   border-radius: 10px !important;
   /* z-index: 99999 !important; */
@@ -2419,6 +2442,11 @@ body {
 .main_bg_header {
   padding-top: 74px !important;
   margin-top: 10px;
+}
+
+.container {
+  padding-top: 0px !important;
+  margin-top: -5px !important;
 }
 
 /* .livedateTime span {

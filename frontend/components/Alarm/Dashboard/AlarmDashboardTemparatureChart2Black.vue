@@ -290,16 +290,16 @@ export default {
     console.log("Mounted");
     /// }, 2000);
 
-    this.$store.commit(
-      "AlarmDashboard/alarm_temperature_chart2_date",
-      this.from_date
-    );
-    try {
-      new ApexCharts(
-        document.querySelector("#" + this.name),
-        this.chartOptions
-      ).render();
-    } catch (error) {}
+    // this.$store.commit(
+    //   "AlarmDashboard/alarm_temperature_chart2_date",
+    //   this.from_date
+    // );
+    // try {
+    //   new ApexCharts(
+    //     document.querySelector("#" + this.name),
+    //     this.chartOptions
+    //   ).render();
+    // } catch (error) {}
     // this.getDataFromApi();
     setTimeout(() => {
       this.getDataFromApi();
@@ -368,12 +368,15 @@ export default {
       this.chartOptions.series[0]["data"] = [];
       data1.forEach((item, index) => {
         this.chartOptions.series[0]["data"][index] = item.count; //parseInt(item.count);
+        console.log("item.hour", item.hour);
 
         this.chartOptions.labels[index] = item.hour;
         counter++;
       });
+      counter = 0;
       data2.forEach((item, index) => {
         this.chartOptions.series[1]["data"][index] = item.count; //parseInt(item.count);
+        console.log("item.hour", item.hour);
 
         this.chartOptions.labels[index] = item.hour;
         counter++;
@@ -385,6 +388,7 @@ export default {
         this.chartOptions
       );
       if (this.chart) this.chart.render();
+      // if (this.chart) this.chart.render();
     },
   },
 };

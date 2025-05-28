@@ -23,8 +23,7 @@
       <canvas :id="name + '_canva'" width="300" height="300"></canvas>
       <div :id="name" class="humidity"></div>
       <div style="font-size: 14px">
-        <v-icon color="default-font-color">mdi-clock-outline</v-icon> Updated at
-        :
+        <v-icon color="default-font-color">mdi-clock-outline</v-icon>
         {{ humidity_date_time }}
       </div>
     </div>
@@ -176,6 +175,9 @@ export default {
     },
 
     counterUp(target, duration = 1000, steps = 1) {
+      if (isNaN(target)) {
+        target = 0;
+      }
       const element = document.getElementById(this.name);
       let current = 0;
       const increment = target / steps;

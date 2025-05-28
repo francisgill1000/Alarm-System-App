@@ -16,7 +16,7 @@
       <v-col class="text-center">
         <div style="font-size: 14px">
           <v-icon color="#FFF">mdi-clock-outline</v-icon>
-          Updated at: {{ temperature_date_time }}
+          {{ temperature_date_time }}
         </div>
       </v-col>
     </v-row>
