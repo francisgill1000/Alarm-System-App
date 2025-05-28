@@ -57,22 +57,23 @@ class ApiAlarmControlController extends Controller
 
             $messages = [];
 
+            if ($temperature != 0 && $humidity != 0) {
+                //record temeprature logs
+                $log = [
+                    'company_id' => $device->company_id,
+                    'serial_number' => $serial,
+                    'device_id' => $device->id,
+                    'log_time' => $log_time,
+                    'temparature' => $temperature,
+                    'humidity' => $humidity,
+                    'temperature_serial_address' => $request->sensor_serial_address ?? null,
+                    "temperature_alarm" => $request->temperature_alarm ?? null,
+                    "humidity_alarm" => $request->humidity_alarm ?? null
 
-            //record temeprature logs
-            $log = [
-                'company_id' => $device->company_id,
-                'serial_number' => $serial,
-                'device_id' => $device->id,
-                'log_time' => $log_time,
-                'temparature' => $temperature,
-                'humidity' => $humidity,
-                'temperature_serial_address' => $request->sensor_serial_address ?? null,
-                "temperature_alarm" => $request->temperature_alarm ?? null,
-                "humidity_alarm" => $request->humidity_alarm ?? null
+                ];
 
-            ];
-
-            DeviceTemperatureLogs::create($log);
+                DeviceTemperatureLogs::create($log);
+            }
             //ONLY FOR ALARAM -------------------------------------------
             // Reusable alarm handler
 
