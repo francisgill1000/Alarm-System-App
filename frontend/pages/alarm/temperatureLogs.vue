@@ -165,7 +165,12 @@
                 >mdi mdi-alarm-light
               </v-icon>
             </template>
-            <template v-slot:item.water_leakage="{ item }">
+            <template v-slot:item.humidity_alarm="{ item }">
+              <v-icon :style="getPriorityColor(item.humidity_alarm)"
+                >mdi mdi-alarm-light
+              </v-icon>
+            </template>
+            <!-- <template v-slot:item.water_leakage="{ item }">
               <v-icon :style="getPriorityColor(item.water_leakage)"
                 >mdi mdi-alarm-light
               </v-icon>
@@ -179,7 +184,7 @@
               <v-icon :style="getPriorityColor(item.door_status)"
                 >mdi mdi-alarm-light
               </v-icon>
-            </template>
+            </template> -->
           </v-data-table>
         </v-card>
       </v-col>
@@ -224,7 +229,7 @@ export default {
     snackText: "",
     departments: [],
     Model: "Log",
-    endpoint: "alarm_device_logs",
+    endpoint: "alarm_temperature_logs",
 
     from_date: null,
     from_menu: false,
@@ -275,16 +280,6 @@ export default {
         key: "sno",
         value: "sno",
       },
-      {
-        text: "Room",
-        align: "left",
-        sortable: false,
-        key: "device_name",
-        value: "device_name",
-
-        filterable: true,
-        filterSpecial: false,
-      },
 
       {
         text: "Date",
@@ -293,6 +288,16 @@ export default {
         key: "log_time",
         value: "log_time",
         width: "150px",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Room",
+        align: "left",
+        sortable: false,
+        key: "device_name",
+        value: "device_name",
+
         filterable: true,
         filterSpecial: false,
       },
@@ -317,11 +322,21 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Threshold Detected",
+        text: "Temperature Alarm",
         align: "center",
         sortable: false,
         key: "temperature_alarm", //sorting
         value: "temperature_alarm", //edit purpose
+
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Humidity Alarm",
+        align: "center",
+        sortable: false,
+        key: "humidity_alarm", //sorting
+        value: "humidity_alarm", //edit purpose
 
         filterable: true,
         filterSpecial: false,

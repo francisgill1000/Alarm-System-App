@@ -79,6 +79,10 @@ Route::get('/open_door', [DeviceController::class, 'openDoor']);
 Route::get('/close_door', [DeviceController::class, 'closeDoor']);
 Route::get('/open_door_always', [DeviceController::class, 'openDoorAlways']);
 Route::get('/get_notifications_alarm', [DeviceController::class, 'getAlarmNotification']);
+Route::get('/get_notifications_alarm_active', [DeviceController::class, 'getAlarmNotificationActive']);
+
+
+
 
 
 

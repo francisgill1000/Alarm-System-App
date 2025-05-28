@@ -684,7 +684,18 @@ class DeviceController extends Controller
             return $this->response("Unkown Error. Please retry again after 1 min or contact   technical team", null, false);
         }
     }
+    public function getAlarmNotificationActive(Request $request)
+    {
 
+
+        return   DeviceSensorLogs::with(["device", "deviceTemperatureSensor"])->where("company_id", $request->company_id)
+            ->where("alarm_status", 1)
+            ->orderBy("log_time", "desc")
+
+
+
+            ->get();
+    }
     public function getAlarmNotification(Request $request)
     {
         //return  $devices = Device::with(["branch", "zone"])->where("company_id", $request->company_id)->where("alarm_status", 1)->get();

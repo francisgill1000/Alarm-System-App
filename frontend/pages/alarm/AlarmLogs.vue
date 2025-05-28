@@ -39,8 +39,9 @@
                 item-value="value"
                 :items="[
                   // { name: `All`, value: null },
-                  { name: `Any Alarm Detected`, value: 1 },
-                  { name: `Smoke/Fire Detected `, value: 2 },
+                  { name: `All`, value: 1 },
+                  { name: `Fire Detected `, value: 2 },
+                  { name: `Smoke Detected `, value: 6 },
                   { name: `Water  Leakage`, value: 3 },
                   { name: `Door  Open`, value: 4 },
                   { name: `AC Power Off`, value: 5 },
@@ -115,11 +116,22 @@
               {{ item.device.name }}
             </template>
             <template v-slot:item.log_time="{ item }">
-              {{ $dateFormat.format6(item.log_time) }}
+              {{ $dateFormat.format6(item.alarm_start_datetime) }}
               <div class="secondary-value">
-                {{ $dateFormat.format1(item.log_time) }}
+                {{ $dateFormat.format1(item.alarm_start_datetime) }}
               </div>
             </template>
+
+            <template v-slot:item.end_time="{ item }">
+              <div v-if="item.alarm_status == 0">
+                {{ $dateFormat.format6(item.alarm_end_datetime) }}
+                <div class="secondary-value">
+                  {{ $dateFormat.format1(item.alarm_end_datetime) }}
+                </div>
+              </div>
+              <div v-else>---</div>
+            </template>
+
             <template v-slot:item.temperature="{ item }">
               <span
                 v-if="item.temparature"
@@ -132,6 +144,15 @@
             </template>
             <template v-slot:item.temperature_alarm="{ item }">
               <v-icon :style="getPriorityColor(item.temperature_alarm)"
+                >mdi mdi-alarm-light
+              </v-icon>
+            </template>
+            <template v-slot:item.humidity_alarm="{ item }">
+              <v-icon :style="getPriorityColor(item.humidity_alarm)"
+                >mdi mdi-alarm-light
+              </v-icon> </template
+            ><template v-slot:item.fire_alarm="{ item }">
+              <v-icon :style="getPriorityColor(item.fire_alarm)"
                 >mdi mdi-alarm-light
               </v-icon>
             </template>
@@ -198,7 +219,7 @@ export default {
     snackText: "",
     departments: [],
     Model: "Log",
-    endpoint: "alarm_device_logs",
+    endpoint: "alarm_alarm_logs",
 
     from_date: null,
     from_menu: false,
@@ -263,6 +284,16 @@ export default {
         filterSpecial: false,
       },
       {
+        text: "End Date",
+        align: "center",
+        sortable: true,
+        key: "end_time",
+        value: "end_time",
+        width: "150px",
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
         text: "Temperature",
         align: "center",
         sortable: false,
@@ -283,7 +314,7 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Temperature Threshold  ",
+        text: "Temperature  ",
         align: "center",
         sortable: false,
         key: "temperature_alarm", //sorting
@@ -292,8 +323,28 @@ export default {
         filterable: true,
         filterSpecial: false,
       },
+      // {
+      //   text: "Humidity ",
+      //   align: "center",
+      //   sortable: false,
+      //   key: "humidity_alarm", //sorting
+      //   value: "humidity_alarm", //edit purpose
+
+      //   filterable: true,
+      //   filterSpecial: false,
+      // },
       {
-        text: "Smoke/Fire Detected",
+        text: "Fire",
+        align: "center",
+        sortable: false,
+        key: "fire_alarm", //sorting
+        value: "fire_alarm", //edit purpose
+
+        filterable: true,
+        filterSpecial: false,
+      },
+      {
+        text: "Smoke",
         align: "center",
         sortable: false,
         key: "smoke_alarm", //sorting
@@ -303,7 +354,7 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "Water Leakage",
+        text: "Water",
         align: "center",
         sortable: false,
         key: "water_leakage", //sorting
@@ -313,7 +364,7 @@ export default {
         filterSpecial: false,
       },
       {
-        text: "AC Power Failure  ",
+        text: "AC Power  ",
         align: "center",
         sortable: false,
         key: "power_failure", //sorting

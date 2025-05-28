@@ -7,6 +7,7 @@ use App\Models\Alarm\DeviceSensorLogs as AlarmDeviceSensorLogs;
 use App\Models\Company;
 use App\Models\Device;
 use App\Models\DeviceSensorLogs;
+use App\Models\DeviceTemperatureLogs;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use DateInterval;
@@ -25,6 +26,136 @@ class DeviceSensorLogsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {}
+    public function getTemperatureLogs(Request $request)
+    {
+        $model = DeviceTemperatureLogs::with(["device", "deviceTemperatureSensor"])->where("company_id", $request->company_id)
+            ->where("company_id", $request->company_id);
+        //->where("temparature", "!=", null);
+
+        if ($request->filled("device_serial_number")) {
+            $model->where("serial_number", $request->device_serial_number);
+        }
+
+        if ($request->filled("device_temperature_serial_address")) {
+            $model->where("temperature_serial_address", $request->device_temperature_serial_address);
+        }
+        if ($request->filled("from_date")) {
+            $model->where("log_time", '>=', $request->from_date . ' 00:00:00');
+        }
+        if ($request->filled("to_date")) {
+            $model->where("log_time", '<=', $request->to_date . ' 23:59:59');
+        }
+        // if ($request->filled("only_temperature") && $request->only_temperature == 'true') {
+        //     $model->where("temparature", "!=", null);
+        //     $model->where("temparature", "!=", 0);
+        //     $model->where("humidity", "!=", 0);
+        // }
+
+
+
+        // { name: `Smoke  Only`, value: `1` },
+        // { name: `Water  Only`, value: `2` },
+        // { name: `Door  Only`, value: `3` },
+        // { name: `C Power  Only`, value: `4` },
+
+        $model->when(
+            $request->filled('sortBy'),
+            function ($q) use ($request) {
+                $sortDesc = $request->input('sortDesc'); {
+                    $q->orderBy($request->sortBy . "", $sortDesc == 'true' ? 'desc' : 'asc'); {
+                    }
+                }
+            }
+        );
+
+        if (!$request->sortBy) {
+            $model->orderBy('log_time', 'DESC');
+        }
+
+
+
+        return    $model->paginate($request->per_page);
+    }
+
+    public function getAlarmLogs(Request $request)
+    {
+        $model = AlarmDeviceSensorLogs::with(["device", "deviceTemperatureSensor"])->where("company_id", $request->company_id)
+            ->where("company_id", $request->company_id);
+        //->where("temparature", "!=", null);
+
+        if ($request->filled("device_serial_number")) {
+            $model->where("serial_number", $request->device_serial_number);
+        }
+
+        if ($request->filled("device_temperature_serial_address")) {
+            $model->where("temperature_serial_address", $request->device_temperature_serial_address);
+        }
+        if ($request->filled("from_date")) {
+            $model->where("log_time", '>=', $request->from_date . ' 00:00:00');
+        }
+        if ($request->filled("to_date")) {
+            $model->where("log_time", '<=', $request->to_date . ' 23:59:59');
+        }
+        // if ($request->filled("only_temperature") && $request->only_temperature == 'true') {
+        //     $model->where("temparature", "!=", null);
+        //     $model->where("temparature", "!=", 0);
+        //     $model->where("humidity", "!=", 0);
+        // }
+
+
+        if ($request->filled("filter_alarm_status")) {
+            if ($request->filter_alarm_status == 1) {
+                $model->where(function ($query) use ($request) {
+
+                    $query->where("water_leakage", 1);
+                    $query->orWhere("temperature_alarm", 1);
+                    $query->orWhere("power_failure",  1);
+                    $query->orWhere("door_status",  1);
+                    $query->orWhere("smoke_alarm",  1);
+                });
+            } else if ($request->filter_alarm_status == 0) {
+                $model->where(function ($query) use ($request) {
+                    $query->orWhere("temperature_alarm", 0);
+                    $query->where("water_leakage", 0);
+                    $query->Where("power_failure",  0);
+                    $query->Where("door_status",  0);
+                    $query->Where("smoke_alarm",  0);
+                });
+            } else  if ($request->filter_alarm_status == 2) {
+                $model->where("fire_alarm", 1);
+            } else  if ($request->filter_alarm_status == 3) {
+                $model->where("water_leakage", 1);
+            } else  if ($request->filter_alarm_status == 4) {
+                $model->where("door_status", 1);
+            } else  if ($request->filter_alarm_status == 5) {
+                $model->where("power_failure", 1);
+            } else  if ($request->filter_alarm_status == 6) {
+                $model->where("smoke_alarm", 1);
+            }
+        }
+        // { name: `Smoke  Only`, value: `1` },
+        // { name: `Water  Only`, value: `2` },
+        // { name: `Door  Only`, value: `3` },
+        // { name: `C Power  Only`, value: `4` },
+
+        $model->when(
+            $request->filled('sortBy'),
+            function ($q) use ($request) {
+                $sortDesc = $request->input('sortDesc'); {
+                    $q->orderBy($request->sortBy . "", $sortDesc == 'true' ? 'desc' : 'asc'); {
+                    }
+                }
+            }
+        );
+
+        if (!$request->sortBy) {
+            $model->orderBy('log_time', 'DESC');
+        }
+
+
+
+        return    $model->paginate($request->per_page);
+    }
 
     public function getDeliveLogs(Request $request)
     {

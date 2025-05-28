@@ -37,4 +37,10 @@ Route::get('alarm_dashboard_get_humidity_temperature_monthly_data', [DeviceSenso
 
 
 Route::get('alarm_device_logs', [DeviceSensorLogsController::class, 'getDeliveLogs']);
+Route::get('alarm_alarm_logs', [DeviceSensorLogsController::class, 'getAlarmLogs']);
+
+Route::get('alarm_temperature_logs', [DeviceSensorLogsController::class, 'getTemperatureLogs']);
+
+
+
 Route::get('delete_alarm_device_logs', [DeviceSensorLogsController::class, 'deleteOneMonthOldLogs']);

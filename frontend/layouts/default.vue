@@ -548,7 +548,7 @@
               >
                 <v-col cols="12">
                   <v-row
-                    v-if="device.temparature_alarm_status"
+                    v-if="device.temperature_alarm"
                     style="border-bottom: 1px solid #ddd"
                   >
                     <v-col cols="2" class="pt-10 text-center"
@@ -562,32 +562,28 @@
                         style="font-size: 16px; font-weight: bold"
                       >
                         Temperature Threshold Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(
-                            device.temparature_alarm_start_datetime
-                          )
-                        }}
+                        {{ $dateFormat.format5(device.alarm_start_datetime) }}
                       </div>
                       <div
                         class="bold1 pa-1"
-                        v-if="device.device_sensor_logs?.sensor_info"
+                        v-if="device.device_temperature_sensor"
                       >
                         Sensor Room :
-                        {{ device.device_sensor_logs.sensor_info.name }}
+                        {{ device.device_temperature_sensor.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
+                        Device Name :{{ device.device.name }}
                       </div>
                       <!-- <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
+                        Branch Name :{{  device.device.branch?.branch_name }}
                       </div> -->
                       <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
+                        Device Location :{{ device.device.location }}
                       </div>
                     </v-col>
                   </v-row>
                   <v-row
-                    v-if="device.fire_alarm_status"
+                    v-if="device.fire_alarm"
                     :style="
                       notificationAlarmDevices.length > 1
                         ? 'border-bottom: 1px solid #ddd'
@@ -610,19 +606,19 @@
                         }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
+                        Device Name :{{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
+                        Branch Name :{{ device.device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
+                        Device Location :{{ device.device.location }}
                       </div>
                     </v-col>
                   </v-row>
 
                   <v-row
-                    v-if="device.smoke_alarm_status"
+                    v-if="device.smoke_alarm"
                     :style="
                       notificationAlarmDevices.length > 1
                         ? 'border-bottom: 1px solid #ddd'
@@ -639,25 +635,23 @@
                         class="pa-3 pt-0"
                         style="font-size: 20px; font-weight: bold"
                       >
-                        Fire/Smoke Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.smoke_alarm_start_datetime)
-                        }}
+                        Smoke Alarm Triggered at :
+                        {{ $dateFormat.format5(device.alarm_start_datetime) }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
+                        Device Name :{{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
+                        Branch Name :{{ device.device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
+                        Device Location :{{ device.device.location }}
                       </div>
                     </v-col>
                   </v-row>
 
                   <v-row
-                    v-if="device.door_open_status"
+                    v-if="device.door_status"
                     :style="
                       notificationAlarmDevices.length > 1
                         ? 'border-bottom: 1px solid #ddd'
@@ -675,24 +669,22 @@
                         style="font-size: 20px; font-weight: bold"
                       >
                         Door Keep Open Alarm Triggered at :
-                        {{
-                          $dateFormat.format5(device.door_open_start_datetime)
-                        }}
+                        {{ $dateFormat.format5(device.alarm_start_datetime) }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
+                        Device Name :{{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
+                        Branch Name :{{ device.device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
+                        Device Location :{{ device.device.location }}
                       </div>
                     </v-col>
                   </v-row>
 
                   <v-row
-                    v-if="device.power_alarm_status"
+                    v-if="device.power_failure"
                     :style="
                       notificationAlarmDevices.length > 1
                         ? 'border-bottom: 1px solid #ddd'
@@ -715,19 +707,19 @@
                         }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
+                        Device Name :{{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
+                        Branch Name :{{ device.device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
+                        Device Location :{{ device.device.location }}
                       </div>
                     </v-col>
                   </v-row>
 
                   <v-row
-                    v-if="device.water_alarm_status"
+                    v-if="device.water_leakage"
                     :style="
                       notificationAlarmDevices.length > 1
                         ? 'border-bottom: 1px solid #ddd'
@@ -750,13 +742,13 @@
                         }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.name }}
+                        Device Name :{{ device.device.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Branch Name :{{ device.branch?.branch_name }}
+                        Branch Name :{{ device.device.branch?.branch_name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Location :{{ device.location }}
+                        Device Location :{{ device.device.location }}
                       </div>
                     </v-col>
                   </v-row>
@@ -1619,21 +1611,23 @@ export default {
       //this.pendingNotificationsCount = 0;
       let pendingcount = 0;
       this.timmerStatus = false;
-      this.$axios.get(`get_notifications_alarm`, options).then(({ data }) => {
-        this.pendingNotificationsCount = data.length;
-        if (data.length > 0) {
-          this.notificationAlarmDevices = data;
-          //if (this.$route.name == "alarm/dashboard")
-          this.alarmNotificationStatus = true;
-          this.palysound();
-        } else {
-          this.alarmNotificationStatus = false;
+      this.$axios
+        .get(`get_notifications_alarm_active`, options)
+        .then(({ data }) => {
+          this.pendingNotificationsCount = data.length;
+          if (data.length > 0) {
+            this.notificationAlarmDevices = data;
+            //if (this.$route.name == "alarm/dashboard")
+            this.alarmNotificationStatus = true;
+            this.palysound();
+          } else {
+            this.alarmNotificationStatus = false;
 
-          this.stopsound();
-        }
+            this.stopsound();
+          }
 
-        this.timmerStatus = true;
-      });
+          this.timmerStatus = true;
+        });
     },
 
     getBranchName() {
