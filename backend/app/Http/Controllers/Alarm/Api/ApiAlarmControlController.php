@@ -30,14 +30,19 @@ class ApiAlarmControlController extends Controller
             $log_time = now()->format('Y-m-d H:i:s');
             $temperature = $this->sanitizeSensorValue($request->temperature);
             $humidity = $this->sanitizeSensorValue($request->humidity);
-
+            // reuqest alarm query strings Keys
             $alarmData = [
                 'fire_alarm'       => $request->fire_alarm ?? $request->fire,
                 'smoke_alarm'      => $request->smoke_alarm ?? $request->smokeStatus,
                 'water_leakage'    => ($serial == '24000001') ? 0 : $request->waterLeakage,
                 'power_failure'    => $request->acPowerFailure,
                 'door_status'      => $request->doorOpen,
-                'temperature_alarm' => $request->temperature_alarm,
+                'temperature_alarm'      => $request->temperature_alarm,
+                'humidity_alarm'      => $request->humidity_alarm,
+
+
+
+
             ];
             if ($request->wifiipaddress) {
                 Device::where("serial_number", $serial)
@@ -81,6 +86,8 @@ class ApiAlarmControlController extends Controller
             foreach (
                 [
                     'temperature_alarm' => 'Temperature Alarm',
+                    'humidity_alarm' => 'Humidity Alarm',
+
                     'fire_alarm'        => 'Fire Alarm',
                     'smoke_alarm'       => 'Smoke Alarm',
                     'water_leakage'     => 'Water Leakage Alarm',
@@ -97,7 +104,8 @@ class ApiAlarmControlController extends Controller
                         $key,
                         $value,
                         $log_time,
-                        ['temparature' => $temperature, 'humidity' => $humidity, 'temperature_serial_address' => $request->sensor_serial_address]
+                        ['temparature' => $temperature, 'humidity' => $humidity, 'temperature_serial_address' => $request->sensor_serial_address],
+                        $request
                     );
 
 
@@ -234,7 +242,7 @@ class ApiAlarmControlController extends Controller
             }
         }
     }
-    private function logAlarmEvent($device, $serialNumber, $alarmType, $status,   $logTime = null, $extraData = [])
+    private function logAlarmEvent($device, $serialNumber, $alarmType, $status,   $logTime = null, $extraData = [], $request)
     {
         $logTime = $logTime ?? now();
 
@@ -249,6 +257,11 @@ class ApiAlarmControlController extends Controller
             $alarmType => 1,
             'alarm_status' => $status,
             'log_time' => $logTime,
+            'temperature_min' => $request->temperature_min ?? null,
+            'temperature_max' => $request->temperature_max ?? null,
+            'humidity_min' => $request->humidity_min ?? null,
+            'humidity_max' =>  $request->humidity_max ?? null,
+
         ];
 
         if ($status == 1) {

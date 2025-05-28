@@ -572,7 +572,10 @@
                         {{ device.device_temperature_sensor.name }}
                       </div>
                       <div class="bold1 pa-1">
-                        Device Name :{{ device.device.name }}
+                        Device Name : {{ device.device.name }}
+                      </div>
+                      <div class="bold1 pa-1">
+                        Threshold Max : {{ device.temperature_max }}°C
                       </div>
                       <!-- <div class="bold1 pa-1">
                         Branch Name :{{  device.device.branch?.branch_name }}
@@ -606,9 +609,9 @@
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
                       </div>
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
-                      </div>
+                      </div> -->
                       <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
                       </div>
@@ -639,9 +642,9 @@
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
                       </div>
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
-                      </div>
+                      </div> -->
                       <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
                       </div>
@@ -705,9 +708,9 @@
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
                       </div>
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
-                      </div>
+                      </div> -->
                       <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
                       </div>
@@ -738,9 +741,9 @@
                       <div class="bold1 pa-1">
                         Device Name :{{ device.device.name }}
                       </div>
-                      <div class="bold1 pa-1">
+                      <!-- <div class="bold1 pa-1">
                         Branch Name :{{ device.device.branch?.branch_name }}
-                      </div>
+                      </div> -->
                       <div class="bold1 pa-1">
                         Device Location :{{ device.device.location }}
                       </div>
