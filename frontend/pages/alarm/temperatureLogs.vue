@@ -373,19 +373,24 @@ export default {
       // },
     ],
     filterApplied: true,
+    intervalObj: null,
   }),
-
+  beforeDestroy() {
+    // 1. Clear interval (with null check)
+    if (this.intervalObj) {
+      clearInterval(this.intervalObj);
+      this.intervalObj = null; // Prevent memory leaks
+    }
+  },
   mounted() {
     this.tableHeight = window.innerHeight - 270;
     window.addEventListener("resize", () => {
       this.tableHeight = window.innerHeight - 270;
     });
 
-    setInterval(() => {
-      if (this.$route.name == "alarm-temperaturelogs") {
-        this.getDataFromApi();
-      }
-    }, 1000 * 60 * 2);
+    this.intervalObj = setInterval(() => {
+      this.getDataFromApi();
+    }, 1000 * 60 * 1);
   },
   created() {
     if (this.$auth.user.branch_id == null) {

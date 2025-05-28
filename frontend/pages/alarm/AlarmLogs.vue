@@ -114,6 +114,10 @@
 
             <template v-slot:item.device_name="{ item }">
               {{ item.device.name }}
+
+              <span v-if="item.temperature_serial_address">
+                - {{ item.device_temperature_sensor.name }}
+              </span>
             </template>
             <template v-slot:item.log_time="{ item }">
               <div v-if="item.alarm_start_datetime">
@@ -388,6 +392,10 @@ export default {
     ],
     filterApplied: true,
   }),
+  beforeDestroy() {
+    if (this.intervalObj) clearInterval(this.intervalObj);
+    this.intervalObj = null;
+  },
 
   mounted() {
     this.tableHeight = window.innerHeight - 270;
@@ -395,11 +403,11 @@ export default {
       this.tableHeight = window.innerHeight - 270;
     });
 
-    setInterval(() => {
-      if (this.$route.name == "alarm-temperaturelogs") {
+    this.intervalObj = setInterval(() => {
+      {
         this.getDataFromApi();
       }
-    }, 1000 * 60 * 2);
+    }, 1000 * 60 * 1);
   },
   created() {
     if (this.$auth.user.branch_id == null) {
