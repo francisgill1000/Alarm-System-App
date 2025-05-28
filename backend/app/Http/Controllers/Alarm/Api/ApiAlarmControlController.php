@@ -251,26 +251,44 @@ class ApiAlarmControlController extends Controller
         ];
 
         if ($status == 1) {
-            // Alarm ON — Create new log
-            $log['alarm_start_datetime'] = $logTime;
 
-            // Add sensor readings or extra alarm data (temperature, humidity, etc.)
-            $log += array_filter($extraData, fn($v) => !is_null($v));
+            $lastOpen = DeviceSensorLogs::where('serial_number', $serialNumber)
+                ->where('alarm_type', $alarmType)
+                ->where('alarm_status', 1)
+                ->when(
+                    $alarmType === "temperature_alarm",
+                    fn($query) => $query->where('temperature_serial_address', $extraData["temperature_serial_address"] ?? null)
+                )
 
-            //try {
-            $record = DeviceSensorLogs::create($log);
+                ->whereNull('alarm_end_datetime')
+                ->latest('alarm_start_datetime')
+                ->first();
 
-            return $record->id;
-            // } catch (\Exception $e) {
+            if (!$lastOpen) { //create new only if alarm is closed
 
-            //     return $e->getMessage();
-            //     // \Log::error("Alarm ON log creation failed", [
-            //     //     'device' => $device->id,
-            //     //     'type' => $alarmType,
-            //     //     'error' => $e->getMessage(),
-            //     //     'data' => $log
-            //     // ]);
-            // }
+
+                // Alarm ON — Create new log
+                $log['alarm_start_datetime'] = $logTime;
+
+                // Add sensor readings or extra alarm data (temperature, humidity, etc.)
+                $log += array_filter($extraData, fn($v) => !is_null($v));
+
+                //try {
+                $record = DeviceSensorLogs::create($log);
+
+                return $record->id;
+                // } catch (\Exception $e) {
+
+                //     return $e->getMessage();
+                //     // \Log::error("Alarm ON log creation failed", [
+                //     //     'device' => $device->id,
+                //     //     'type' => $alarmType,
+                //     //     'error' => $e->getMessage(),
+                //     //     'data' => $log
+                //     // ]);
+                // }
+
+            }
         } elseif ($status == 0) {
 
 
@@ -286,7 +304,7 @@ class ApiAlarmControlController extends Controller
 
 
                 ->when(
-                    $alarmType === "temperature",
+                    $alarmType === "temperature_alarm",
                     fn($query) => $query->where('temperature_serial_address', $extraData["temperature_serial_address"] ?? null)
                 )
 
