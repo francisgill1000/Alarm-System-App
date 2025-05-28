@@ -1149,8 +1149,7 @@ export default {
     // }, 1000 * 10);
 
     this.intervalObj = setInterval(() => {
-      if (this.$route.name == "alarm-dashboard")
-        if (this.timmerStatus == true) this.verifyAlarmStatus();
+      if (this.timmerStatus == true) this.verifyAlarmStatus();
     }, 1000 * 10);
     // setInterval(() => {
     //   this.loadNotificationMenu();
@@ -1619,8 +1618,8 @@ export default {
           this.pendingNotificationsCount = data.length;
           if (data.length > 0) {
             this.notificationAlarmDevices = data;
-            //if (this.$route.name == "alarm-dashboard")
-            this.alarmNotificationStatus = true;
+            if (this.$route.name == "alarm-dashboard")
+              this.alarmNotificationStatus = true;
             this.palysound();
           } else {
             this.alarmNotificationStatus = false;
