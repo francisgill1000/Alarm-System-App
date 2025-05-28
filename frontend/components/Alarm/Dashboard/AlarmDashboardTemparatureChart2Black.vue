@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div style="width: 100%; height: 380px">
     <v-row>
       <v-col>Today - Temperature and Humidity Chart</v-col>
       <v-col> </v-col>
