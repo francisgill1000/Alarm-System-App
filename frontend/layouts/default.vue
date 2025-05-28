@@ -1027,6 +1027,7 @@ export default {
       audio: null,
       timmerStatus: true,
       currentTheme: "light",
+      intervalObj: null,
       // themes: {
       //   light: {
       //     primary: "#6946dd",
@@ -1128,7 +1129,10 @@ export default {
         this.$dateFormat.format_date_with_dayname(formattedDateTime);
     }, 1000);
   },
-
+  beforeDestroy() {
+    if (this.intervalObj) clearInterval(this.intervalObj);
+    this.intervalObj = null;
+  },
   mounted() {
     setTimeout(() => {
       this.audio = new Audio(
@@ -1144,9 +1148,10 @@ export default {
     //   this.verifyAlarmStatus();
     // }, 1000 * 10);
 
-    setInterval(() => {
-      if (this.timmerStatus == true) this.verifyAlarmStatus();
-    }, 1000 * 4);
+    this.intervalObj = setInterval(() => {
+      if (this.$route.name == "alarm-dashboard")
+        if (this.timmerStatus == true) this.verifyAlarmStatus();
+    }, 1000 * 10);
     // setInterval(() => {
     //   this.loadNotificationMenu();
     // }, 1000 * 60 * 2);
@@ -1614,7 +1619,7 @@ export default {
           this.pendingNotificationsCount = data.length;
           if (data.length > 0) {
             this.notificationAlarmDevices = data;
-            //if (this.$route.name == "alarm/dashboard")
+            //if (this.$route.name == "alarm-dashboard")
             this.alarmNotificationStatus = true;
             this.palysound();
           } else {
