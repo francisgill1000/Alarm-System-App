@@ -116,9 +116,11 @@
               {{ item.device.name }}
             </template>
             <template v-slot:item.log_time="{ item }">
-              {{ $dateFormat.format6(item.alarm_start_datetime) }}
-              <div class="secondary-value">
-                {{ $dateFormat.format1(item.alarm_start_datetime) }}
+              <div v-if="item.alarm_start_datetime">
+                {{ $dateFormat.format6(item.alarm_start_datetime) }}
+                <div class="secondary-value">
+                  {{ $dateFormat.format1(item.alarm_start_datetime) }}
+                </div>
               </div>
             </template>
 
