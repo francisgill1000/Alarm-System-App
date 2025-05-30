@@ -246,7 +246,7 @@ class DeviceSensorLogsController extends Controller
         $toDate = $request->to_date;
 
         // 1. First get your actual data
-        $dailyAverages = AlarmDeviceSensorLogs::selectRaw("DATE(log_time) as date,
+        $dailyAverages = DeviceTemperatureLogs::selectRaw("DATE(log_time) as date,
     (ROUND(AVG(CAST(temparature AS FLOAT)) * 100) / 100) as avg_temperature,
     (ROUND(AVG(CAST(humidity AS FLOAT)) * 100) / 100) as avg_humidity")
             ->where('company_id', $request->company_id)
@@ -554,7 +554,7 @@ class DeviceSensorLogsController extends Controller
         // $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
-        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(humidity) AS avg_humidity")
+        $hourlyAverages = DeviceTemperatureLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(humidity) AS avg_humidity")
 
 
             ->where('company_id', $company_id)
@@ -619,7 +619,7 @@ class DeviceSensorLogsController extends Controller
         // $date = date('Y-m-d');
 
         // Fetch hourly averages in a single query
-        $hourlyAverages = AlarmDeviceSensorLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(temparature) AS avg_temperature")
+        $hourlyAverages = DeviceTemperatureLogs::selectRaw("EXTRACT(HOUR FROM log_time) AS hour, AVG(temparature) AS avg_temperature")
             ->where('company_id', $company_id)
             ->where('serial_number', $device_serial_number)
             ->where('temparature', '!=', 'NaN')
