@@ -17,6 +17,7 @@ use App\Models\DeviceNotificationsLog;
 use App\Models\DevicesActiveWeeklySettings;
 use App\Models\DeviceTemperatureSensors;
 use App\Models\Employee;
+use App\Services\MqttService;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -27,6 +28,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use PhpMqtt\Client\ConnectionSettings;
+use PhpMqtt\Client\MqttClient;
 
 class DeviceController extends Controller
 {
@@ -1351,37 +1354,8 @@ class DeviceController extends Controller
     public function getDeviceConfig($serial_number)
     {
 
-        //         $config["config"] = json_decode('{
-        //   "wifi_ssid": "akil",
-        //   "wifi_password": "Akil1234",
-        //   "wifi_ip": "192.168.3.20",
-        //   "wifi_or_ethernet": "1",
-        //   "eth_ip": "192.168.1.20",
-        //   "eth_gateway": "192.168.1.1",
-        //   "eth_subnet": "255.255.255.0",
-        //   "device_serial_number": "XT123456",
-        //   "server_url": "https://backend.xtremeguard.org/api",
-        //   "heartbeat": "10",
-        //   "server_ip": "165.22.222.17",
-        //   "server_port": "6002",
-        //   "min_temperature": "",
-        //   "max_temperature": "",
-        //   "max_humidity": "",
-        //   "max_doorcontact": "",
-        //   "max_siren_play": "",
-        //   "max_siren_pause": "",
-        //   "door_checkbox": false,
-        //   "humidity_checkbox": false,
-        //   "temp_checkbox": false,
-        //   "water_checkbox": false,
-        //   "fire_checkbox": false,
-        //   "power_checkbox": false,
-        //   "siren_checkbox": false
-        // }
-        // ');
-
-        //         return $config;
-        if ($serial_number) {
+        $isAPIResponseCompleted = false;
+        if ($serial_number && !env("DEVICE_CONFIG_MQTT")) {
 
 
             $curl = curl_init();
@@ -1403,14 +1377,46 @@ class DeviceController extends Controller
 
 
             $response = json_decode($response, true);
+            $response['service'] = "socket";
+
 
             if (isset($response["error"]))
                 $response['error'] = $response["error"];
-            else if (isset($response['config']))
-                $response['config'] = json_decode($response['config'], true);
-            else   $response['error'] = "Device Communication error";
+            else if (isset($response['config'])) { {
+                    $response['config'] = json_decode($response['config'], true);
 
-            return  $response;
+                    $isAPIResponseCompleted = true;
+                }
+            } else   $response['error'] = "Device Communication error";
+            if ($isAPIResponseCompleted)
+                return  $response;
+        } else  if ($serial_number && env("DEVICE_CONFIG_MQTT")) {
+
+
+            $config = Cache::get("device_config_$serial_number");
+            if ($config) {
+                return response()->json([
+                    'serialNumber' => $serial_number,
+                    'config' =>  json_decode($config, true),
+                    'service' => "mqtt"
+                ]);
+            }
+
+            return response()->json([
+                'serialNumber' => $serial_number,
+                'config' => [],
+                'service' => "mqtt"
+            ]);
+
+
+            // // Clear old response
+            //   Cache::forget("device_config_$serial_number");
+
+            // // Publish GET_CONFIG to MQTT
+            // $mqtt = new MqttService();
+            // $mqtt->publish(env('MQTT_DEVICE_CLIENTID') . "/{$serial_number}/config/request", "GET_CONFIG", $serial_number);
+
+
         }
     }
 
@@ -1544,7 +1550,7 @@ class DeviceController extends Controller
     }
     public function callDeviceCommand($serial_number, $config)
     {
-        if ($serial_number) {
+        if ($serial_number &&  !env("DEVICE_CONFIG_MQTT")) {
             $url = 'http://165.22.222.17:6000/device-config-update/' . $serial_number;
 
             $postData = [
@@ -1585,6 +1591,18 @@ class DeviceController extends Controller
             }
 
             return $this->response('Updated Successfully', ['response' => $response, 'status' => $httpCode], true);
+        } else if ($serial_number && env("DEVICE_CONFIG_MQTT")) {
+
+
+            $postData = [
+                "action" => "UPDATE_CONFIG",
+                "serialNumber" => $serial_number,
+                "config" => $config,
+            ];
+
+            // Publish GET_CONFIG to MQTT
+            $mqtt = new MqttService();
+            $mqtt->publish(env('MQTT_DEVICE_CLIENTID') . "/{$serial_number}/config/request",  json_encode($postData), $serial_number);
         }
     }
 

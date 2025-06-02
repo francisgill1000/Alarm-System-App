@@ -39,7 +39,7 @@ class CheckDeviceHealth extends Command
         Device::where("company_id", ">", 0)->update(["status_id" => 2]);
 
 
-        echo (new DeviceController())->checkDevicesHealthCompanyId();
+        /* echo (new DeviceController())->checkDevicesHealthCompanyId(); */
 
 
         // $devices = Device::where("device_type", "!=", "Mobile")

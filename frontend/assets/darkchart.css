@@ -42,6 +42,10 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)!important;
   /* background: linear-gradient(135deg, #7d66e5 0%, #0071bd 100%)!important; */
   background: linear-gradient(135deg, #7d66e5 0%, #d45cb3 100%)!important;
+    /* background: linear-gradient(135deg, #7d66e5 0%, #ff0000 100%)!important;*/
+
+
+
 
   color: white!important;
   display: flex!important;
