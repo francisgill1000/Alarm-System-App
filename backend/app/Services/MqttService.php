@@ -2,12 +2,16 @@
 
 namespace App\Services;
 
+use App\Http\Controllers\Alarm\Api\ApiAlarmControlController;
 use PhpMqtt\Client\MqttClient;
 use PhpMqtt\Client\ConnectionSettings;
 use Illuminate\Support\Facades\Log;
 use App\Models\Device;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+
+use Illuminate\Http\Request;
+
 
 class MqttService
 {
@@ -75,7 +79,7 @@ class MqttService
                 $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/config', function ($topic, $message) {
                     $serialNumber = $this->extractSerial($topic);
 
-
+                    //echo $message;
                     $json = json_decode($message, true);
 
                     if (isset($json['config'])) {
@@ -85,6 +89,19 @@ class MqttService
 
                         $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
                         File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
+                    }
+                    if (isset($json['type']) && $json['type'] == "alarm") {
+
+                        echo "Alarm";
+
+
+                        $data = $json;
+
+                        // Create request object with data
+                        $request = new Request($data);
+                        // Call the method with your custom request
+                        $controller = new ApiAlarmControlController();
+                        $controller->LogDeviceStatus($request);
                     }
                 });
 
