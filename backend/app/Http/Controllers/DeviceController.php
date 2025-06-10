@@ -1434,13 +1434,46 @@ class DeviceController extends Controller
 
         $config = [];
 
-        $config["server_url"] = $request->config["server_url"];
 
-        $config["heartbeat"] = $request->config["heartbeat"];
 
-        $config["server_ip"] = $request->config["server_ip"];
+        $config["heartbeat"] = $request->config["heartbeat"] == '' ? 10 : $request->config["heartbeat"];
+        $config["reset_settings_duration"] = $request->config["reset_settings_duration"] == '' ? 10 : $request->config["reset_settings_duration"];
+        $config["secondsCountFrom10to60"] = $request->config["secondsCountFrom10to60"] == '' ? 60 : $request->config["secondsCountFrom10to60"];
 
-        $config["server_port"] = $request->config["server_port"];
+
+
+
+        if (isset($request->config["mqtt_communication"]) && $request->config["mqtt_communication"] == true) {
+            $config["mqtt_communication"] = true;
+            $config["mqtt_server"] = $request->config["mqtt_server"];
+            $config["mqtt_port"] = $request->config["mqtt_port"];
+            $config["mqtt_clientId"] = $request->config["mqtt_clientId"];
+        } else {
+            $config["mqtt_communication"] = false;
+            $config["mqtt_server"] = "";
+            $config["mqtt_port"] = "";
+            $config["mqtt_clientId"] = "";
+        }
+        if (isset($request->config["socket_communication"]) && $request->config["socket_communication"] == true) {
+            $config["socket_communication"] = true;
+            $config["server_ip"] = $request->config["server_ip"];
+            $config["server_port"] = $request->config["server_port"];
+        } else {
+            $config["socket_communication"] = true;
+            $config["server_ip"] = "";
+            $config["server_port"] =  "";
+        }
+
+        if (isset($request->config["http_communication"]) && $request->config["http_communication"] == true) {
+            $config["http_communication"] = true;
+            $config["http_link"] = $request->config["http_link"];
+        } else {
+            $config["http_communication"] = false;
+            $config["http_link"] = "";
+        }
+        // $config["server_url"] = $request->config["server_url"];
+        // $config["server_ip"] = $request->config["server_ip"];
+        // $config["server_port"] = $request->config["server_port"];
 
         $config["phone_number1"] = isset($request->config["phone_number1"]) ? $request->config["phone_number1"] : '';
         $config["phone_number2"] = isset($request->config["phone_number2"]) ? $request->config["phone_number2"] : '';

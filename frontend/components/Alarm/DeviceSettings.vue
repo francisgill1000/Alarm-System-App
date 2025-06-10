@@ -28,10 +28,10 @@
       <v-col cols="12">
         <v-tabs v-model="tab">
           <v-tab> Device Info </v-tab>
-          <v-tab> Netwrok Settings </v-tab>
-          <v-tab>Alarm Settings</v-tab>
+          <v-tab> Communication </v-tab>
+          <v-tab>Alarms</v-tab>
           <v-tab>Phone Numbers</v-tab>
-          <v-tab>Multiple Sensor Alers</v-tab>
+          <v-tab>Sensor Alers</v-tab>
 
           <v-tabs-items v-model="tab">
             <v-tab-item>
@@ -152,46 +152,151 @@
               </v-card>
             </v-tab-item>
             <v-tab-item>
-              <v-card color="basil">
+              <v-card elevation="2" style="height: 250px" outlined>
+                <v-card-title
+                  dense
+                  class="popup_background1111"
+                  style="padding: 2px"
+                >
+                  <v-checkbox
+                    color="primary"
+                    style="margin-top: -3px"
+                    @click="doorAlerts()"
+                    :hide-details="true"
+                    v-model="deviceSettings.config.mqtt_communication"
+                    label="MQTT"
+                  ></v-checkbox>
+                </v-card-title>
+
                 <v-card-text>
+                  <br />
                   <v-row>
-                    <v-col cols="12">
+                    <v-col cols="6">
                       <v-text-field
+                        :disabled="!deviceSettings.config.mqtt_communication"
+                        v-model="deviceSettings.config.mqtt_server"
+                        outlined
+                        dense
+                        small
+                        number
+                        :hide-details="true"
+                        label="MQTT Server"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        :disabled="!deviceSettings.config.mqtt_communication"
+                        v-model="deviceSettings.config.mqtt_port"
+                        outlined
+                        dense
+                        small
+                        number
+                        :hide-details="true"
+                        label="MQTT Port"
+                      ></v-text-field>
+                    </v-col> </v-row
+                  ><v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        :disabled="!deviceSettings.config.mqtt_communication"
+                        v-model="deviceSettings.config.mqtt_clientId"
+                        outlined
+                        dense
+                        small
+                        number
+                        :hide-details="true"
+                        label="MQTT Client Id"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+
+              <v-card elevation="2" style="height: 200px" outlined>
+                <v-card-title
+                  dense
+                  class="popup_background1111"
+                  style="padding: 2px"
+                >
+                  <v-checkbox
+                    color="primary"
+                    style="margin-top: -3px"
+                    @click="doorAlerts()"
+                    :hide-details="true"
+                    v-model="deviceSettings.config.socket_communication"
+                    label="Server/Socket"
+                  ></v-checkbox>
+                </v-card-title>
+
+                <v-card-text>
+                  <br />
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        :disabled="!deviceSettings.config.socket_communication"
                         v-model="deviceSettings.config.server_ip"
                         outlined
                         dense
                         small
                         number
                         :hide-details="true"
-                        label="Server/Socket IP"
+                        label="Server IP"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12">
+                  </v-row>
+                  <v-row>
+                    <v-col cols="6">
                       <v-text-field
+                        :disabled="!deviceSettings.config.socket_communication"
                         v-model="deviceSettings.config.server_port"
                         outlined
                         dense
                         small
                         number
                         :hide-details="true"
-                        label="Server/Socket Port"
-                      ></v-text-field>
-                    </v-col>
-
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="deviceSettings.config.server_url"
-                        outlined
-                        dense
-                        small
-                        number
-                        :hide-details="true"
-                        label="Server event URL"
+                        label="Server Port"
                       ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-card-text>
               </v-card>
+              <v-card elevation="2" style="height: 150px" outlined>
+                <v-card-title
+                  dense
+                  class="popup_background1111"
+                  style="padding: 2px"
+                >
+                  <v-checkbox
+                    color="primary"
+                    style="margin-top: -3px"
+                    @click="doorAlerts()"
+                    :hide-details="true"
+                    v-model="deviceSettings.config.http_communication"
+                    label="HTTP Notification"
+                  ></v-checkbox>
+                </v-card-title>
+
+                <v-card-text>
+                  <br />
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        :disabled="!deviceSettings.config.http_communication"
+                        v-model="deviceSettings.config.http_link"
+                        outlined
+                        dense
+                        small
+                        number
+                        :hide-details="true"
+                        label="HTTP URL"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+
               <v-card-actions class="mt-5" v-if="!viewMode">
                 <!-- <v-btn @click="newItemDialog = false" dark filled color="red"
         >Cancel</v-btn
@@ -209,7 +314,7 @@
             <v-tab-item>
               <v-row>
                 <v-col cols="12">
-                  <v-card elevation="2" outlined style="height: 280px">
+                  <v-card elevation="2" outlined style="height: 350px">
                     <v-card-text>
                       <v-row>
                         <v-col cols="6">
@@ -223,6 +328,38 @@
                                 :hide-details="true"
                                 label="Device Heartbeat"
                                 :items="heartBeatData"
+                                item-value="value"
+                                item-text="label"
+                              ></v-select>
+                            </v-col>
+
+                            <v-col cols="12">
+                              <v-select
+                                v-model="
+                                  deviceSettings.config.reset_settings_duration
+                                "
+                                outlined
+                                dense
+                                small
+                                :hide-details="true"
+                                label="Reset Settins Duration Count"
+                                :items="secondsCountFrom10to60"
+                                item-value="value"
+                                item-text="label"
+                              ></v-select>
+                            </v-col>
+                            <v-col cols="12">
+                              <v-select
+                                v-model="
+                                  deviceSettings.config
+                                    .temperature_read_interval
+                                "
+                                outlined
+                                dense
+                                small
+                                :hide-details="true"
+                                label="Temperature Read Interval"
+                                :items="secondsCountFrom10to60"
                                 item-value="value"
                                 item-text="label"
                               ></v-select>
@@ -924,6 +1061,8 @@ export default {
       1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
     ],
     heartBeatData: [],
+    secondsCountFrom10to60: [],
+
     timeOptionsData: [],
 
     Document: {
@@ -1042,19 +1181,28 @@ export default {
       }
     },
     generateTimeOptionsHeartBeat() {
-      const options = [];
+      let options = [];
       const increments = [5, 10, 15, 30]; // Time increments in seconds and minutes
 
       // Generate options for seconds (5s to 55s)
       for (let sec = 1; sec <= 10; sec += 1) {
         options.push({
-          id: "heartbeat",
           value: sec + "",
           label: `${sec} seconds`,
         });
       }
 
       this.heartBeatData = options;
+      options = [];
+      // Generate options for seconds (5s to 55s)
+      for (let sec = 10; sec <= 30; sec += 1) {
+        options.push({
+          value: sec + "",
+          label: `${sec} seconds`,
+        });
+      }
+
+      this.secondsCountFrom10to60 = options;
     },
     generateTimeOptions() {
       const options = [];
