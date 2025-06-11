@@ -70,7 +70,7 @@ class MqttService
                     echo "\n";
 
 
-                    $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
+                    $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                     File::prepend($logPath, "[" . now() . "] Received heartbeat from device: $serialNumber\n");
 
                     Device::where("serial_number", $serialNumber)->update([
@@ -109,7 +109,7 @@ class MqttService
 
                         Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
 
-                        $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
+                        $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                         File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
                     }
                     if (isset($json['type']) && $json['type'] == "alarm" || $json['type'] == "sensor") {
@@ -127,6 +127,9 @@ class MqttService
                         // Call the method with your custom request
                         $controller = new ApiAlarmControlController();
                         $controller->LogDeviceStatus($request);
+
+                        $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
+                        File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " received from $serialNumber\n");
                     }
                 });
 
@@ -134,7 +137,7 @@ class MqttService
             } catch (\Throwable $e) {
 
                 echo "ERROR\n";
-                $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
+                $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                 File::prepend($logPath, "[" . now() . "] ❌ MQTT Exception: " . $e->getMessage() . "\n");
 
                 Log::error("❌ MQTT Exception: " . $e->getMessage());
