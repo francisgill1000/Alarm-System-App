@@ -162,9 +162,9 @@ class MqttService
                 $this->mqtt->loop(true); // Blocking loop
             } catch (\Throwable $e) {
 
-                echo "ERROR SERVICE\n";
-                $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                File::prepend($logPath, "[" . now() . "] ❌ MQTT SERVICE Exception: " . $e->getMessage() . "\n");
+                // echo "ERROR SERVICE\n";
+                // $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
+                // File::prepend($logPath, "[" . now() . "] ❌ MQTT SERVICE Exception: " . $e->getMessage() . "\n");
 
                 //Log::error("❌ MQTT SERVICE Exception: " . $e->getMessage());
 
