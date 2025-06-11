@@ -906,6 +906,22 @@ class DeviceController extends Controller
     {
 
 
+
+        $devices = Device::whereNotIn("device_type", ["Mobile", "Manual"])
+            ->where("device_id", '!=', "Manual")
+            ->where("serial_number", '!=', "Manual")
+            ->when($company_id > 0, fn($q) => $q->where('company_id', $company_id))
+            ->get();
+
+        $totalDevicesCount = $devices->count();
+        $onlineCount = $devices->where('status_id', 1)->count();
+        $offline_devices_count = $totalDevicesCount - $onlineCount;
+
+        return "$offline_devices_count Devices offline. $onlineCount Devices online. $totalDevicesCount records found.";
+
+
+        /*
+
         $devices = Device::whereNotIn("device_type", ["Mobile", "Manual"])
             ->where("device_id", "!=", "Manual")
             ->where("serial_number", "!=", "Manual")
@@ -921,7 +937,7 @@ class DeviceController extends Controller
         $updates = [];
 
         foreach ($devices as $device) {
-            $deviceConfig = $this->getDeviceConfig($device["serial_number"]);
+            return  $deviceConfig = $this->getDeviceConfig($device["serial_number"]);
             if ($deviceConfig)
 
                 $isOnline = isset($deviceConfig["config"]);
@@ -955,7 +971,7 @@ class DeviceController extends Controller
         $offline_devices_count = $totalDevicesCount - $onlineCount;
 
         return "$offline_devices_count Devices offline. $onlineCount Devices online. $totalDevicesCount records found.";
-
+*/
 
 
         // $total_devices_count = Device::where("device_type", "!=", "Mobile")
