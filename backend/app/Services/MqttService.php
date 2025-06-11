@@ -56,9 +56,19 @@ class MqttService
     public function subscribeAndListen()
     {
         while (true) {
+            // echo "heartbeat";
             try {
                 $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/heartbeat', function ($topic, $message) {
+
+                    echo "heartbeat\n";
+
+
                     $serialNumber = $this->extractSerial($topic);
+
+                    Log::info($message);
+
+                    echo "\n";
+
 
                     $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
                     File::prepend($logPath, "[" . now() . "] Received heartbeat from device: $serialNumber\n");
@@ -72,27 +82,42 @@ class MqttService
 
                     $json = json_decode($message, true);
                     if (isset($json['config'])) {
-                        Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(5));
+
+                        //Cache::forget("device_config_$serialNumber");
+
+                        echo "Config is Available\n";
+                        Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
                     }
                 });
 
                 $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/config', function ($topic, $message) {
+
+                    echo "All\n";
+
+                    Log::info($message);
+                    echo "\n";
                     $serialNumber = $this->extractSerial($topic);
 
-                    //echo $message;
+                    echo $message;
                     $json = json_decode($message, true);
 
                     if (isset($json['config'])) {
+                        //Cache::forget("device_config_$serialNumber");
 
 
-                        Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(2));
+                        echo "Config is Available\n";
+
+                        Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
 
                         $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
                         File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
                     }
-                    if (isset($json['type']) && $json['type'] == "alarm") {
+                    if (isset($json['type']) && $json['type'] == "alarm" || $json['type'] == "sensor") {
 
-                        echo "Alarm";
+                        echo "alarm or sensor info \n";
+
+                        Log::info($message);
+                        echo "\n";
 
 
                         $data = $json;
@@ -107,6 +132,8 @@ class MqttService
 
                 $this->mqtt->loop(true); // Blocking loop
             } catch (\Throwable $e) {
+
+                echo "ERROR\n";
                 $logPath = base_path('../../mytime2cloud/arduino-sdk/' . date("Y-m-d") . '.log');
                 File::prepend($logPath, "[" . now() . "] ❌ MQTT Exception: " . $e->getMessage() . "\n");
 

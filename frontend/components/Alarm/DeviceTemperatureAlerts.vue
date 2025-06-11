@@ -202,7 +202,9 @@
 
     <!-- Save/Load Buttons -->
     <v-col cols="12" class="text-right mt-4">
-      <v-btn color="primary" @click="saveAlertsAsJSON">Save </v-btn>
+      <v-btn :loading="loading" color="primary" @click="saveAlertsAsJSON"
+        >Update
+      </v-btn>
     </v-col>
   </v-container>
 </template>
@@ -212,6 +214,7 @@ export default {
   props: ["editedItem", "temperature_alerts_config"],
   data() {
     return {
+      loading: false,
       snackbar: false,
       snackbarColor: "black",
       snackbarResponse: "",
@@ -276,7 +279,7 @@ export default {
     },
     saveAlertsAsJSON() {
       const json = JSON.stringify(this.alertConfigs, null, 2);
-
+      this.loading = true;
       console.log("json", json);
 
       let options = {
@@ -293,9 +296,14 @@ export default {
           options.params
         )
         .then(({ data }) => {
+          this.loading = false;
+
           this.snackbar = true;
           this.snackbarResponse = "Device Settings Updated successfully";
         });
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000 * 30);
     },
 
     loadAlertsFromFile(event) {

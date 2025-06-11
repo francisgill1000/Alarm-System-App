@@ -1355,7 +1355,10 @@ class DeviceController extends Controller
     {
 
         $isAPIResponseCompleted = false;
-        if ($serial_number && !env("DEVICE_CONFIG_MQTT")) {
+
+
+        //if ($serial_number && !env("DEVICE_CONFIG_MQTT"))
+        {
 
 
             $curl = curl_init();
@@ -1386,37 +1389,65 @@ class DeviceController extends Controller
                     $response['config'] = json_decode($response['config'], true);
 
                     $isAPIResponseCompleted = true;
+
+                    return response()->json([
+                        'serialNumber' => $serial_number,
+                        'config' => [],
+                        'service' => "scoket"
+                    ]);
                 }
             } else   $response['error'] = "Device Communication error";
-            if ($isAPIResponseCompleted)
-                return  $response;
-        } else  if ($serial_number && env("DEVICE_CONFIG_MQTT")) {
+            // if ($isAPIResponseCompleted)
+            //     return  $response;
+        }
+        //else  if ($serial_number && env("DEVICE_CONFIG_MQTT"))
+        {
+            //Cache::forget("device_config_$serial_number");
+            // // Publish GET_CONFIG to MQTT
+            $mqtt = new MqttService();
+            $mqtt->publish(env('MQTT_DEVICE_CLIENTID') . "/{$serial_number}/config/request", "GET_CONFIG", $serial_number);
 
 
-            $config = Cache::get("device_config_$serial_number");
-            if ($config) {
-                return response()->json([
-                    'serialNumber' => $serial_number,
-                    'config' =>  json_decode($config, true),
-                    'service' => "mqtt"
-                ]);
+            // Wait max 3 seconds for response from device
+            $timeoutMs = 3000;
+            $interval = 100; // check every 100ms
+            $elapsed = 0;
+
+            while ($elapsed < $timeoutMs) {
+                usleep($interval * 1000);
+                $config = Cache::get("device_config_$serial_number");
+                if ($config) {
+
+
+                    return response()->json([
+                        'serialNumber' => $serial_number,
+                        'config' => json_decode($config),
+                        'service' => "mqtt"
+                    ]);
+                }
+                $elapsed += $interval;
             }
+
+
+            // $config = Cache::get("device_config_$serial_number");
+            // if ($config) {
+            //     return response()->json([
+            //         'serialNumber' => $serial_number,
+            //         'config' =>  json_decode($config, true),
+            //         'service' => "mqtt"
+            //     ]);
+            // }
+
+            // // // Clear old response
+            // Cache::forget("device_config_$serial_number");
+
+
 
             return response()->json([
                 'serialNumber' => $serial_number,
                 'config' => [],
                 'service' => "mqtt"
             ]);
-
-
-            // // Clear old response
-            //   Cache::forget("device_config_$serial_number");
-
-            // // Publish GET_CONFIG to MQTT
-            // $mqtt = new MqttService();
-            // $mqtt->publish(env('MQTT_DEVICE_CLIENTID') . "/{$serial_number}/config/request", "GET_CONFIG", $serial_number);
-
-
         }
     }
 
@@ -1438,7 +1469,7 @@ class DeviceController extends Controller
 
         $config["heartbeat"] = $request->config["heartbeat"] == '' ? 10 : $request->config["heartbeat"];
         $config["reset_settings_duration"] = $request->config["reset_settings_duration"] == '' ? 10 : $request->config["reset_settings_duration"];
-        $config["secondsCountFrom10to60"] = $request->config["secondsCountFrom10to60"] == '' ? 60 : $request->config["secondsCountFrom10to60"];
+        // $config["secondsCountFrom10to60"] = $request->config["secondsCountFrom10to60"] == '' ? 60 : $request->config["secondsCountFrom10to60"];
 
 
 
@@ -1459,7 +1490,7 @@ class DeviceController extends Controller
             $config["server_ip"] = $request->config["server_ip"];
             $config["server_port"] = $request->config["server_port"];
         } else {
-            $config["socket_communication"] = true;
+            $config["socket_communication"] = false;
             $config["server_ip"] = "";
             $config["server_port"] =  "";
         }
@@ -1583,60 +1614,68 @@ class DeviceController extends Controller
     }
     public function callDeviceCommand($serial_number, $config)
     {
-        if ($serial_number &&  !env("DEVICE_CONFIG_MQTT")) {
-            $url = 'http://165.22.222.17:6000/device-config-update/' . $serial_number;
+        // if ($serial_number &&  !env("DEVICE_CONFIG_MQTT")) {
+        $url = 'http://165.22.222.17:6000/device-config-update/' . $serial_number;
 
-            $postData = [
-                "action" => "UPDATE_CONFIG",
-                "serialNumber" => $serial_number,
-                "config" => $config,
-            ];
-
-
+        $postData = [
+            "action" => "UPDATE_CONFIG",
+            "serialNumber" => $serial_number,
+            "config" => $config,
+        ];
 
 
-            $curl = curl_init();
-
-            curl_setopt_array($curl, [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => '',
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode($postData),
-                CURLOPT_HTTPHEADER => [
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen(json_encode($postData))
-                ],
-            ]);
-
-            $response = curl_exec($curl);
-            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            $curlError = curl_error($curl);
-
-            curl_close($curl);
-
-            if ($response === false) {
-                return $this->response('cURL Error: ' . $curlError, null, false);
-            }
-
-            return $this->response('Updated Successfully', ['response' => $response, 'status' => $httpCode], true);
-        } else if ($serial_number && env("DEVICE_CONFIG_MQTT")) {
 
 
-            $postData = [
-                "action" => "UPDATE_CONFIG",
-                "serialNumber" => $serial_number,
-                "config" => $config,
-            ];
+        $curl = curl_init();
 
-            // Publish GET_CONFIG to MQTT
-            $mqtt = new MqttService();
-            $mqtt->publish(env('MQTT_DEVICE_CLIENTID') . "/{$serial_number}/config/request",  json_encode($postData), $serial_number);
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => json_encode($postData),
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen(json_encode($postData))
+            ],
+        ]);
+
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($curl);
+
+        curl_close($curl);
+
+        // if ($response === false) {
+        //     return $this->response('cURL Error: ' . $curlError, null, false);
+        // }
+
+        //   return $this->response('Updated Successfully', ['response' => $response, 'status' => $httpCode], true);
+        // } else if ($serial_number && env("DEVICE_CONFIG_MQTT")) {
+
+
+        $postData = [
+            "action" => "UPDATE_CONFIG",
+            "serialNumber" => $serial_number,
+            "config" => $config,
+        ];
+
+        // Publish  to MQTT
+        $mqtt = new MqttService();
+        $mqtt->publish(env('MQTT_DEVICE_CLIENTID') . "/{$serial_number}/config/request",  json_encode($postData), $serial_number);
+
+
+        //}
+
+        if ($response === false) {
+            return $this->response('cURL Error: ' . $curlError, null, false);
         }
+
+        return $this->response('Updated Successfully', null, true);
     }
 
     public function getDevicesTemperatureSensors()

@@ -15,7 +15,7 @@
       title="Reload Device Data from SDK"
       class="pull-right"
       style="float: right"
-      @click="getDataFromApi()"
+      @click="getConfigDataFromAPI()"
       dark
       >mdi-sync</v-icon
     ><br />
@@ -307,7 +307,14 @@
                   style="color: red; padding-right: 50px"
                   >Error: {{ errorValidateMessage }}</span
                 >
-                <v-btn @click="save()" dark filled color="primary">Save</v-btn>
+                <v-btn
+                  :loading="loading"
+                  @click="save()"
+                  dark
+                  filled
+                  color="primary"
+                  >Update</v-btn
+                >
               </v-card-actions>
             </v-tab-item>
 
@@ -846,7 +853,14 @@
                   style="color: red; padding-right: 50px"
                   >Error: {{ errorValidateMessage }}</span
                 >
-                <v-btn @click="save()" dark filled color="primary">Save</v-btn>
+                <v-btn
+                  :loading="loading"
+                  @click="save()"
+                  dark
+                  filled
+                  color="primary"
+                  >Update</v-btn
+                >
               </v-card-actions>
             </v-tab-item>
             <v-tab-item>
@@ -944,7 +958,14 @@
                   style="color: red; padding-right: 50px"
                   >Error: {{ errorValidateMessage }}</span
                 >
-                <v-btn @click="save()" dark filled color="primary">Save</v-btn>
+                <v-btn
+                  :loading="loading"
+                  @click="save()"
+                  dark
+                  filled
+                  color="primary"
+                  >Update</v-btn
+                >
               </v-card-actions>
             </v-tab-item>
 
@@ -1074,7 +1095,7 @@ export default {
     this.generateTimeOptions();
     this.generateTimeOptionsHeartBeat();
 
-    this.getDataFromApi();
+    this.getConfigDataFromAPI();
   },
   methods: {
     can(per) {
@@ -1235,6 +1256,14 @@ export default {
 
       this.timeOptionsData = options;
     },
+
+    getConfigDataFromAPI() {
+      this.getDataFromApi();
+
+      setTimeout(() => {
+        this.getDataFromApi();
+      }, 1000 * 20);
+    },
     getDataFromApi() {
       this.message = "loading....";
 
@@ -1259,24 +1288,27 @@ export default {
       return pattern.test(value);
     },
     save() {
+      this.loading = true;
       this.errorValidateMessage = "";
 
-      if (this.deviceSettings.config.temp_checkbox) {
-        let maxTemp = parseFloat(this.deviceSettings.config.max_temperature);
-        if (isNaN(maxTemp)) {
-          this.errorValidateMessage = "Temperature Max value is invalid";
-        }
+      // if (this.deviceSettings.config.temp_checkbox) {
+      //   let maxTemp = parseFloat(this.deviceSettings.config.max_temperature);
+      //   if (isNaN(maxTemp)) {
+      //     this.errorValidateMessage = "Temperature Max value is invalid";
+      //   }
 
-        let minTemp = parseFloat(this.deviceSettings.config.min_temperature);
-        if (isNaN(minTemp) && this.errorValidateMessage == "") {
-          this.errorValidateMessage = "Temperature Min value is invalid";
-        }
-      } else if (this.deviceSettings.config.humidity_checkbox) {
-        let maxHumidity = parseFloat(this.deviceSettings.config.max_humidity);
-        if (isNaN(maxHumidity)) {
-          this.errorValidateMessage = "Humidity Max value is invalid";
-        }
-      } else if (this.deviceSettings.config.doorcontact_checkbox) {
+      //   let minTemp = parseFloat(this.deviceSettings.config.min_temperature);
+      //   if (isNaN(minTemp) && this.errorValidateMessage == "") {
+      //     this.errorValidateMessage = "Temperature Min value is invalid";
+      //   }
+      // } else if (this.deviceSettings.config.humidity_checkbox) {
+      //   let maxHumidity = parseFloat(this.deviceSettings.config.max_humidity);
+      //   if (isNaN(maxHumidity)) {
+      //     this.errorValidateMessage = "Humidity Max value is invalid";
+      //   }
+      // } else
+
+      if (this.deviceSettings.config.doorcontact_checkbox) {
         let maxDoorContact = parseFloat(
           this.deviceSettings.config.max_doorcontact
         );
@@ -1341,10 +1373,16 @@ export default {
           this.snackbar = true;
           this.snackbarResponse = "Device Settings Updated successfully";
 
+          this.loading = false;
+
           setTimeout(() => {
             this.$emit("emitCloseEvent");
           }, 1000 * 2);
         });
+
+      setTimeout(() => {
+        this.loading = false;
+      }, 1000 * 30);
     },
   },
 };
