@@ -495,13 +495,14 @@ export default {
           let options = {
             params: JSON.parse(payload.toString()),
           };
-
           // console.log(options);
 
-          this.$axios.get(`alarm_device_status`, options).then(({ data }) => {
-            // if (!data.error) this.deviceSettings = data;
-            // else this.message = data.error;
-          });
+          this.$axios
+            .post(`alarm_device_status`, options.params)
+            .then(({ data }) => {
+              // if (!data.error) this.deviceSettings = data;
+              // else this.message = data.error;
+            });
         }
 
         // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
