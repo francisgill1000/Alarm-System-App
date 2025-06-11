@@ -16,12 +16,28 @@ use App\Http\Controllers\WhatsappController;
 use App\Models\DeviceTemperatureLogs;
 use Carbon\Carbon;
 use DateTime;
+use Illuminate\Support\Facades\Cache;
 
+//timestamp
 class ApiAlarmControlController extends Controller
 {
     public function LogDeviceStatus(Request $request)
     {
         try {
+
+            $serial = $request->serialNumber ?? $request->deviceID ?? '';
+
+            $alarmTimestamp = Cache::get("device_alarm_timestamp_$serial");
+            if ($alarmTimestamp && $alarmTimestamp == $request->timestamp) {
+
+                return "Already Timestamp is Exist";
+            }
+
+            Cache::put("device_alarm_timestamp_$serial", $request->timestamp, now()->addMinutes(1));
+
+
+
+
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . json_encode($request->all()));
 
             $serial = $request->serialNumber ?? $request->deviceID ?? '';
@@ -95,6 +111,8 @@ class ApiAlarmControlController extends Controller
                     'door_status'       => 'Door Open Alarm',
                 ] as $key => $label
             ) {
+
+
                 $value = $alarmData[$key] ?? null;
                 if (!is_null($value)) {
 
