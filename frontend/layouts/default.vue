@@ -483,7 +483,6 @@
         top="top"
         v-model="snackNotification"
         location="right"
-        :timeout="5000"
         :color="snackNotificationColor"
       >
         {{ snackNotificationText }}

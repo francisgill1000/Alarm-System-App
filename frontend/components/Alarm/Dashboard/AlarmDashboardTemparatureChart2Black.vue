@@ -368,7 +368,7 @@ export default {
       this.chartOptions.series[0]["data"] = [];
       data1.forEach((item, index) => {
         this.chartOptions.series[0]["data"][index] = item.count; //parseInt(item.count);
-        console.log("item.hour", item.hour);
+        // console.log("item.hour", item.hour);
 
         this.chartOptions.labels[index] = item.hour;
         counter++;
@@ -376,7 +376,7 @@ export default {
       counter = 0;
       data2.forEach((item, index) => {
         this.chartOptions.series[1]["data"][index] = item.count; //parseInt(item.count);
-        console.log("item.hour", item.hour);
+        // console.log("item.hour", item.hour);
 
         this.chartOptions.labels[index] = item.hour;
         counter++;

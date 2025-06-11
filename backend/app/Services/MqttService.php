@@ -26,7 +26,7 @@ class MqttService
         $this->clientId = env('MQTT_CLIENT_ID', 'laravel-client-' . uniqid());
         $this->mqttDeviceClientId = env('MQTT_DEVICE_CLIENTID');
 
-        Log::info($this->clientId);
+        Log::info("MQTT Initialied " . $this->clientId);
 
         $connectionSettings = new ConnectionSettings();
 
