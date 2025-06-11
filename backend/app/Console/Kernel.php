@@ -26,15 +26,15 @@ class Kernel extends ConsoleKernel
 
 
 
-        try {
-            $schedule
-                ->command('task:alarm_update_company_ids')
-                // ->everyThirtyMinutes()
-                ->everyMinute()
-                //->withoutOverlapping()
-                ->appendOutputTo(storage_path("logs/alarm_update_company_ids-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
-        } catch (\Exception $e) {
-        }
+        // try {
+        //     $schedule
+        //         ->command('task:alarm_update_company_ids')
+        //         // ->everyThirtyMinutes()
+        //         ->everyMinute()
+        //         //->withoutOverlapping()
+        //         ->appendOutputTo(storage_path("logs/alarm_update_company_ids-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+        // } catch (\Exception $e) {
+        // }
         // try {
         //     $schedule
         //         ->command('task:device_sample_data') //dummy data
@@ -83,7 +83,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command('mqtt:subscribe')
             // ->hourly() // Runs once per hour instead of every minute
-            ->everyMinute()
+            ->dailyAt('10:30')
             ->runInBackground()
             ->withoutOverlapping()
             ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
