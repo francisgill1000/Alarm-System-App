@@ -1104,7 +1104,7 @@ export default {
     this.generateTimeOptions();
     this.generateTimeOptionsHeartBeat();
 
-    await this.getConfigDataFromAPI();
+    // await this.getConfigDataFromAPI();
   },
   methods: {
     connectMQTT() {
@@ -1333,6 +1333,8 @@ export default {
     },
 
     async getConfigDataFromAPI() {
+      // this.connectMQTT();
+
       await this.getDataFromApi();
 
       await this.getConfigFromcache();
