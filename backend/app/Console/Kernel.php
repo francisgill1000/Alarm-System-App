@@ -81,12 +81,12 @@ class Kernel extends ConsoleKernel
 
         ;;
 
-        // $schedule->command('mqtt:subscribe')
-        //     // ->hourly() // Runs once per hour instead of every minute
-        //     ->everyMinute()
-        //     ->runInBackground()
-        //     // ->withoutOverlapping()
-        //     ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
+        $schedule->command('mqtt:subscribe')
+            // ->hourly() // Runs once per hour instead of every minute
+            ->everyMinute()
+            ->runInBackground()
+            // ->withoutOverlapping()
+            ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
     }
 
     /**
