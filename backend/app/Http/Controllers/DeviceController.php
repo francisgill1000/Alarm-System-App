@@ -922,9 +922,9 @@ class DeviceController extends Controller
 
         foreach ($devices as $device) {
             $deviceConfig = $this->getDeviceConfig($device["serial_number"]);
+            if ($deviceConfig)
 
-
-            $isOnline = isset($deviceConfig["config"]);
+                $isOnline = isset($deviceConfig["config"]);
 
             $onlineStatus = $isOnline ? 1 : 2;
             if ($isOnline && $deviceConfig["serialNumber"] == $device["serial_number"]) {
