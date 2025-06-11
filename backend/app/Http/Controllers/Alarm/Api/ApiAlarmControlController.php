@@ -27,15 +27,16 @@ class ApiAlarmControlController extends Controller
 
             $serial = $request->serialNumber ?? $request->deviceID ?? '';
 
-            $alarmTimestamp = Cache::get("device_alarm_timestamp_$serial");
-            if ($alarmTimestamp && $alarmTimestamp == $request->timestamp) {
 
-                return "Already Timestamp is Exist";
+            if ($request->timestamp) {
+                $alarmTimestamp = Cache::get("device_alarm_timestamp_$serial");
+                if ($alarmTimestamp && $alarmTimestamp == $request->timestamp) {
+
+                    return "Already Timestamp is Exist";
+                }
+
+                Cache::put("device_alarm_timestamp_$serial", $request->timestamp, now()->addMinutes(1));
             }
-
-            Cache::put("device_alarm_timestamp_$serial", $request->timestamp, now()->addMinutes(1));
-
-
 
 
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . json_encode($request->all()));
