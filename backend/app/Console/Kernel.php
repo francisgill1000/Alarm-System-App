@@ -24,6 +24,12 @@ class Kernel extends ConsoleKernel
     {
         $monthYear = date("d-m-Y");
 
+        $schedule->command('mqtt:subscribe')
+            ->hourly() // Runs once per hour instead of every minute
+            ->runInBackground()
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/mqtt-kernal-$monthYear-logs.log'));
+
         try {
             $schedule
                 ->command('task:alarm_update_company_ids')
