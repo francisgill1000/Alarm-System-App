@@ -36,9 +36,9 @@ class Kernel extends ConsoleKernel
             $schedule
                 ->command('task:alarm_update_company_ids')
                 // ->everyThirtyMinutes()
-                ->everyMinute();
-            //->withoutOverlapping()
-            //->appendOutputTo(storage_path("logs/fire-alarm-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
+                ->everyMinute()
+                //->withoutOverlapping()
+                ->appendOutputTo(storage_path("logs/alarm_update_company_ids-$monthYear-logs.log")); //->emailOutputOnFailure(env("ADMIN_MAIL_RECEIVERS"));
         } catch (\Exception $e) {
         }
         // try {
