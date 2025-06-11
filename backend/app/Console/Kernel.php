@@ -25,12 +25,6 @@ class Kernel extends ConsoleKernel
         $monthYear = date("d-m-Y");
 
 
-        $schedule->command('mqtt:subscribe')
-            // ->hourly() // Runs once per hour instead of every minute
-            ->everyMinute()
-            // ->runInBackground()
-            // ->withoutOverlapping()
-            ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
 
         try {
             $schedule
@@ -86,6 +80,13 @@ class Kernel extends ConsoleKernel
             //->appendOutputTo(storage_path("kernal_logs/$monthYear-delete-old-logs.log"))
 
         ;;
+
+        $schedule->command('mqtt:subscribe')
+            // ->hourly() // Runs once per hour instead of every minute
+            ->everyMinute()
+            ->runInBackground()
+            // ->withoutOverlapping()
+            ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
     }
 
     /**
