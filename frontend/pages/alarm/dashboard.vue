@@ -244,6 +244,7 @@ import ArrowArcChart2Humidity from "../../components/Alarm/Dashboard/ArrowArcCha
 import TemperatureChart3 from "../../components/Alarm/Dashboard/TemperatureChart3.vue";
 
 import HumidityChart3 from "../../components/Alarm/Dashboard/HumidityChart3.vue";
+import mqtt from "mqtt";
 
 export default {
   // layout: "black",
@@ -260,6 +261,8 @@ export default {
   },
   data() {
     return {
+      mqttClient: null,
+      configPayload: "",
       playSlider: true,
       snackbar: false,
       response: "",
@@ -372,6 +375,8 @@ export default {
         //this.key++;
       }
     }, 1000 * 30);
+
+    this.connectMQTT();
   },
   beforeDestroy() {
     if (this.autoCycleInterval) {
@@ -449,6 +454,78 @@ export default {
   },
 
   methods: {
+    connectMQTT() {
+      console.log("connectMQTT");
+      const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
+      const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
+
+      this.mqttClient = mqtt.connect(host, {
+        clientId: clientId,
+        clean: true,
+        connectTimeout: 4000,
+      });
+
+      this.mqttClient.on("connect", () => {
+        this.isConnected = true;
+        console.log("✅ MQTT Connected");
+
+        // // Subscribe to a topic
+        // const topic = `xtremevision/${this.editedItem.serial_number}/config`;
+        // this.mqttClient.subscribe(topic, (err) => {
+        //   if (err) console.error("❌ Subscribe failed:", err);
+        //   else console.log(`📡 Subscribed to ${topic}`);
+        // });
+
+        // this.sendConfigRequest();
+
+        const topic = "xtremevision/+/config";
+        this.mqttClient.subscribe(topic, (err) => {
+          if (err) console.error("❌ Subscribe failed:", err);
+          else console.log(`📡 Subscribed to ${topic}`);
+        });
+      });
+
+      this.mqttClient.on("message", (topic, payload) => {
+        //console.log("Message", payload.toString());
+        //console.log("topic", topic);
+
+        let message = JSON.parse(payload.toString());
+        //console.log(message.type);
+        if (message.type == "alarm") {
+          let options = {
+            params: JSON.parse(payload.toString()),
+          };
+
+          // console.log(options);
+
+          this.$axios.get(`alarm_device_status`, options).then(({ data }) => {
+            // if (!data.error) this.deviceSettings = data;
+            // else this.message = data.error;
+          });
+        }
+
+        // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
+        //   let jsonconfig = JSON.parse(payload.toString());
+        //   if (jsonconfig.type == "config") {
+        //     this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
+        //     //this.deviceSettings = jsonconfig;
+        //     let config = JSON.parse(jsonconfig.config);
+        //     this.deviceSettings.config = config;
+        //     console.log(this.deviceSettings.config);
+        //   }
+        //   // this.message = payload.toString();
+        // }
+      });
+
+      this.mqttClient.on("error", (err) => {
+        console.error("MQTT Error:", err);
+      });
+
+      this.mqttClient.on("close", () => {
+        this.isConnected = false;
+        console.log("❌ MQTT Disconnected");
+      });
+    },
     can(per) {
       return this.$pagePermission.can(per, this);
     },
