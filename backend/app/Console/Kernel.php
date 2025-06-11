@@ -29,7 +29,7 @@ class Kernel extends ConsoleKernel
             ->everyMinute()
             ->runInBackground()
             ->withoutOverlapping()
-            ->appendOutputTo(storage_path('logs/mqtt-kernal-$monthYear-logs.log'));
+            ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
 
         try {
             $schedule
