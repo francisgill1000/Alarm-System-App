@@ -112,7 +112,7 @@ class MqttService
                         echo "\n";
                         $serialNumber = $this->extractSerial($topic);
 
-                        echo $message;
+                        //echo $message;
                         $json = json_decode($message, true);
 
                         // if (isset($json['config'])) {
