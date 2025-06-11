@@ -85,7 +85,7 @@ class Kernel extends ConsoleKernel
             // ->hourly() // Runs once per hour instead of every minute
             ->everyMinute()
             ->runInBackground()
-            // ->withoutOverlapping()
+            ->withoutOverlapping()
             ->appendOutputTo(storage_path("logs/mqtt-kernal-$monthYear-logs.log"));
     }
 
