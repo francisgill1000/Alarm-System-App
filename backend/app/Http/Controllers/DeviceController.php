@@ -917,7 +917,7 @@ class DeviceController extends Controller
         $onlineCount = $devices->where('status_id', 1)->count();
         $offline_devices_count = $totalDevicesCount - $onlineCount;
 
-        return "$offline_devices_count Devices offline. $onlineCount Devices online. $totalDevicesCount records found.";
+        return "$onlineCount Devices online. $offline_devices_count Devices offline.  $totalDevicesCount records found.";
 
 
         /*
@@ -1352,6 +1352,28 @@ class DeviceController extends Controller
     public function getDeviceConfigSettingsFromArduinoSocket(Request $request)
     {
         return $this->getDeviceConfig($request->serial_number);
+    }
+
+    public function getDeviceConfigSettingsFromCache(Request $request)
+    {
+
+        $serial_number = $request->serial_number;
+        $config = Cache::get("device_config_$serial_number");
+        if ($config) {
+
+
+            return response()->json([
+                'serialNumber' => $serial_number,
+                'config' => json_decode($config),
+                'service' => "mqtt"
+            ]);
+        } else {
+            return response()->json([
+                'serialNumber' => $serial_number,
+                'config' => null,
+                'service' => "mqtt"
+            ]);
+        }
     }
 
     public function commandCallSocketToDevice(Request $request)

@@ -57,111 +57,121 @@ class MqttService
     {
         while (true) {
             // echo "heartbeat";
-
-            $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/heartbeat', function ($topic, $message) {
-
-
-
-                echo "heartbeat\n";
-                try {
-
-                    $serialNumber = $this->extractSerial($topic);
-
-                    Log::info($message);
-
-                    echo "\n";
+            try {
+                $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/heartbeat', function ($topic, $message) {
 
 
-                    $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                    File::prepend($logPath, "[" . now() . "] Received heartbeat from device: $serialNumber\n");
 
-                    Device::where("serial_number", $serialNumber)->update([
-                        'status_id' => 1,
-                        'last_live_datetime' => date("Y-m-d H:i:s"),
-                    ]);
+                    echo "heartbeat\n";
+                    try {
 
-                    //get config details
+                        $serialNumber = $this->extractSerial($topic);
 
-                    $json = json_decode($message, true);
-                    if (isset($json['config'])) {
+                        Log::info($message);
 
-                        //Cache::forget("device_config_$serialNumber");
-
-                        echo "Config is Available\n";
-                        Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
-                    }
-                } catch (\Throwable $e) {
-
-                    echo "ERROR\n";
-                    $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                    File::prepend($logPath, "[" . now() . "] ❌ MQTT heartbeat Exception: " . $e->getMessage() . "\n");
-
-                    Log::error("❌ MQTT heartbeat Exception: " . $e->getMessage());
-
-                    sleep(5); // Wait and retry
-                    $this->reconnect();
-                }
-            });
-
-            $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/config', function ($topic, $message) {
-
-                try {
-
-                    echo "All\n";
-
-                    Log::info($message);
-                    echo "\n";
-                    $serialNumber = $this->extractSerial($topic);
-
-                    echo $message;
-                    $json = json_decode($message, true);
-
-                    if (isset($json['config'])) {
-                        //Cache::forget("device_config_$serialNumber");
-
-
-                        echo "Config is Available\n";
-
-                        Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
+                        echo "\n";
 
                         $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                        File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
-                    }
-                    if (isset($json['type']) && $json['type'] == "alarm" || $json['type'] == "sensor") {
+                        File::prepend($logPath, "[" . now() . "] Received heartbeat from device: $serialNumber\n");
 
-                        echo "alarm or sensor info \n";
+                        Device::where("serial_number", $serialNumber)->update([
+                            'status_id' => 1,
+                            'last_live_datetime' => date("Y-m-d H:i:s"),
+                        ]);
+
+                        //get config details
+                        /*
+                        $json = json_decode($message, true);
+                        if (isset($json['config'])) {
+
+                            //Cache::forget("device_config_$serialNumber");
+
+                            echo "Config is Available\n";
+                            Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
+                        }*/
+                    } catch (\Throwable $e) {
+
+                        echo "ERROR\n";
+                        $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
+                        File::prepend($logPath, "[" . now() . "] ❌ MQTT heartbeat Exception: " . $e->getMessage() . "\n");
+
+                        Log::error("❌ MQTT heartbeat Exception: " . $e->getMessage());
+
+                        sleep(5); // Wait and retry
+                        $this->reconnect();
+                    }
+                });
+
+                $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/config', function ($topic, $message) {
+
+                    try {
+
+                        echo "All\n";
 
                         Log::info($message);
                         echo "\n";
+                        $serialNumber = $this->extractSerial($topic);
+
+                        echo $message;
+                        $json = json_decode($message, true);
+
+                        // if (isset($json['config'])) {
+                        //     //Cache::forget("device_config_$serialNumber");
 
 
-                        $data = $json;
+                        //     echo "Config is Available\n";
 
-                        // Create request object with data
-                        $request = new Request($data);
-                        // Call the method with your custom request
-                        $controller = new ApiAlarmControlController();
-                        $controller->LogDeviceStatus($request);
+                        //     Cache::put("device_config_$serialNumber", $json['config'], now()->addMinutes(1));
 
+                        //     $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
+                        //     File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
+                        // }
+                        if (isset($json['type']) && $json['type'] == "alarm" || $json['type'] == "sensor") {
+
+                            echo "alarm or sensor info \n";
+
+                            Log::info($message);
+                            echo "\n";
+
+
+                            $data = $json;
+
+                            // Create request object with data
+                            $request = new Request($data);
+                            // Call the method with your custom request
+                            $controller = new ApiAlarmControlController();
+                            $controller->LogDeviceStatus($request);
+
+                            $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
+                            File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " received from $serialNumber\n");
+                        }
+                    } catch (\Throwable $e) {
+
+                        echo "ERROR\n";
                         $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                        File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " received from $serialNumber\n");
+                        File::prepend($logPath, "[" . now() . "] ❌ MQTT config Exception: " . $e->getMessage() . "\n");
+
+                        Log::error("❌ MQTT config Exception: " . $e->getMessage());
+
+                        sleep(5); // Wait and retry
+                        $this->reconnect();
                     }
-                } catch (\Throwable $e) {
+                });
 
-                    echo "ERROR\n";
-                    $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                    File::prepend($logPath, "[" . now() . "] ❌ MQTT config Exception: " . $e->getMessage() . "\n");
 
-                    Log::error("❌ MQTT config Exception: " . $e->getMessage());
+                $this->mqtt->loop(true); // Blocking loop
+            } catch (\Throwable $e) {
 
-                    sleep(5); // Wait and retry
-                    $this->reconnect();
-                }
-            });
+                echo "ERROR SERVICE\n";
+                $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
+                File::prepend($logPath, "[" . now() . "] ❌ MQTT SERVICE Exception: " . $e->getMessage() . "\n");
 
-            $this->mqtt->loop(true); // Blocking loop
+                Log::error("❌ MQTT SERVICE Exception: " . $e->getMessage());
 
-        }
+                sleep(5); // Wait and retry
+                $this->reconnect();
+            }
+        } //loop
     }
 
     protected function reconnect()

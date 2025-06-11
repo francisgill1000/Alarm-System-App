@@ -15,7 +15,7 @@
       title="Reload Device Data from SDK"
       class="pull-right"
       style="float: right"
-      @click="getConfigDataFromAPI()"
+      @click="connectMQTT()"
       dark
       >mdi-sync</v-icon
     ><br />
@@ -987,11 +987,14 @@
 </template>
 <script>
 import DeviceTemperatureAlerts from "./DeviceTemperatureAlerts.vue";
+import mqtt from "mqtt";
 
 export default {
   components: { DeviceTemperatureAlerts },
   props: ["addNew", "editedItem"],
   data: () => ({
+    mqttClient: null,
+    configPayload: "",
     //datatable varables
     tab: 0,
     errorValidateMessage: "",
@@ -1090,14 +1093,86 @@ export default {
       items: [{ title: "", file: "" }],
     },
   }),
+  mounted() {
+    this.connectMQTT();
+  },
 
-  created() {
+  beforeDestroy() {
+    if (this.mqttClient) this.mqttClient.end();
+  },
+  async created() {
     this.generateTimeOptions();
     this.generateTimeOptionsHeartBeat();
 
-    this.getConfigDataFromAPI();
+    await this.getConfigDataFromAPI();
   },
   methods: {
+    connectMQTT() {
+      console.log("connectMQTT");
+      const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
+      const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
+
+      this.mqttClient = mqtt.connect(host, {
+        clientId: clientId,
+        clean: true,
+        connectTimeout: 4000,
+      });
+
+      this.mqttClient.on("connect", () => {
+        this.isConnected = true;
+        console.log("✅ MQTT Connected");
+
+        // Subscribe to a topic
+        const topic = `xtremevision/${this.editedItem.serial_number}/config`;
+        this.mqttClient.subscribe(topic, (err) => {
+          if (err) console.error("❌ Subscribe failed:", err);
+          else console.log(`📡 Subscribed to ${topic}`);
+        });
+
+        this.sendConfigRequest();
+      });
+
+      this.mqttClient.on("message", (topic, payload) => {
+        if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
+          let jsonconfig = JSON.parse(payload.toString());
+          if (jsonconfig.type == "config") {
+            this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
+            //this.deviceSettings = jsonconfig;
+
+            let config = JSON.parse(jsonconfig.config);
+
+            this.deviceSettings.config = config;
+
+            console.log(this.deviceSettings.config);
+          }
+
+          // this.message = payload.toString();
+        }
+      });
+
+      this.mqttClient.on("error", (err) => {
+        console.error("MQTT Error:", err);
+      });
+
+      this.mqttClient.on("close", () => {
+        this.isConnected = false;
+        console.log("❌ MQTT Disconnected");
+      });
+    },
+
+    sendConfigRequest() {
+      const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
+      const payload = "GET_CONFIG";
+
+      this.mqttClient.publish(topic, payload, {}, (err) => {
+        if (err) {
+          console.error("❌ Publish failed:", err);
+        } else {
+          console.log(`📤 Published to ${topic}:`, payload);
+        }
+      });
+    },
+
     can(per) {
       let u = this.$auth.user;
       return (
@@ -1257,14 +1332,16 @@ export default {
       this.timeOptionsData = options;
     },
 
-    getConfigDataFromAPI() {
-      this.getDataFromApi();
+    async getConfigDataFromAPI() {
+      await this.getDataFromApi();
+
+      await this.getConfigFromcache();
 
       setTimeout(() => {
-        this.getDataFromApi();
-      }, 1000 * 20);
+        this.loading = false;
+      }, 1000 * 10);
     },
-    getDataFromApi() {
+    async getDataFromApi() {
       this.message = "loading....";
 
       this.deviceSettings = { config: null };
@@ -1276,11 +1353,35 @@ export default {
         },
       };
 
-      this.$axios
+      // const { data } = await this.$axios.get(
+      //   `get_device_settings_from_socket_arduino`,
+      //   options
+      // );
+
+      await this.$axios
         .get(`get_device_settings_from_socket_arduino`, options)
+        .then(({ data }) => {
+          this.loading = false;
+          // if (!data.error) this.deviceSettings = data;
+          // else this.message = data.error;
+        });
+    },
+
+    async getConfigFromcache() {
+      let options = {
+        params: {
+          company_id: this.$auth.user.company.id,
+          serial_number: this.editedItem.serial_number,
+        },
+      };
+
+      await this.$axios
+        .get(`get_device_settings_from_cache`, options)
         .then(({ data }) => {
           if (!data.error) this.deviceSettings = data;
           else this.message = data.error;
+
+          this.loading = false;
         });
     },
     isValidNumber(value) {
