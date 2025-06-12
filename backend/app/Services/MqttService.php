@@ -21,9 +21,9 @@ class MqttService
 
     public function __construct()
     {
-        $host = env('MQTT_HOST', '165.22.222.17');
+        $host = env('MQTT_HOST');
         $port = env('MQTT_PORT', 1883);
-        $this->clientId = env('MQTT_CLIENT_ID', 'laravel-client-' . uniqid());
+        $this->clientId = 'laravel-client-' . uniqid(); //env('MQTT_CLIENT_ID', 'laravel-client-' . uniqid());
         $this->mqttDeviceClientId = env('MQTT_DEVICE_CLIENTID');
 
         Log::info("MQTT Initialied " . $this->clientId);
@@ -39,8 +39,8 @@ class MqttService
      */
     public function publish($topic, $message, $serial_number)
     {
-        $clientId = env('MQTT_CLIENT_ID', 'laravel-client-' . uniqid());
-        $host = env('MQTT_HOST', '165.22.222.17');
+        $clientId = 'laravel-client-' . uniqid(); //env('MQTT_CLIENT_ID', 'laravel-client-' . uniqid());
+        $host =  env('MQTT_HOST'); //env('MQTT_HOST', '165.22.222.17');
         $port = env('MQTT_PORT', 1883);
 
         $mqtt = new MqttClient($host, $port, $clientId);

@@ -12,7 +12,7 @@ class MqttSubscribe extends Command
 
     public function handle()
     {
-        $this->info("🚀 MQTT subscription started...");
+        $this->info("🚀 MQTT subscription started..." . env('MQTT_HOST'));
 
         try {
             $mqtt = new MqttService();
