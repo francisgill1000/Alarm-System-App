@@ -456,9 +456,9 @@ export default {
   methods: {
     connectMQTT() {
       console.log("connectMQTT");
-      // const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
-      const host = "ws://165.22.222.17:9001"; // For secure WebSocket
-      const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
+      const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
+      //const host = "ws://165.22.222.17:9001"; // For secure WebSocket
+      //const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
 
       this.mqttClient = mqtt.connect(host, {
         clientId: clientId,
