@@ -305,7 +305,7 @@ export default {
     //   return "";
     // }
 
-    this.intervalObj = setInterval(() => {
+    setInterval(() => {
       this.getDeviceSettings();
     }, 1000 * 10);
 
