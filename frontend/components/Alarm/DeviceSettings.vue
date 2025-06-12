@@ -1184,7 +1184,12 @@ export default {
     },
 
     sendConfigRequest() {
-      if (this.mqttClient) this.connectMQTT();
+      if (this.mqttClient && this.mqttClient.connected) {
+        console.log("✅ MQTT connection is active");
+      } else {
+        console.log("❌ MQTT connection is inactive or not established");
+        this.connectMQTT();
+      }
 
       const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
       const payload = "GET_CONFIG";
