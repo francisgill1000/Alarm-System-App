@@ -1184,7 +1184,8 @@ export default {
     },
 
     sendConfigRequest() {
-      this.connectMQTT();
+      if (this.mqttClient) this.connectMQTT();
+
       const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
       const payload = "GET_CONFIG";
 
