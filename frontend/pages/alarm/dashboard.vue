@@ -325,6 +325,7 @@ export default {
 
       intervalObj: null,
       viewportHeight: 0,
+      mqtt_alarm_timestamp: 0,
     };
   },
   beforeDestroy() {
@@ -340,6 +341,8 @@ export default {
     from_date(val) {},
   },
   mounted() {
+    this.connectMQTT();
+
     // if (window) {
     //   this.viewportHeight = window.innerHeight;
     //   window.addEventListener("resize", this.handleResize);
@@ -375,8 +378,6 @@ export default {
         //this.key++;
       }
     }, 1000 * 30);
-
-    this.connectMQTT();
   },
   beforeDestroy() {
     if (this.autoCycleInterval) {
@@ -455,9 +456,16 @@ export default {
 
   methods: {
     connectMQTT() {
-      console.log("connectMQTT");
-      const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
+      console.log("connecting to MQTT");
+      //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
       //const host = "ws://165.22.222.17:9001"; // For secure WebSocket
+      // const host = "wss://mqtt.xtremeguard.org:9002"; // For secure WebSocket
+      // const host = "tcp://mqtt.xtremeguard.org:1883"; // For secure WebSocket
+
+      // const host = "ws://mqtt.xtremeguard.org:8083"; // If TLS WebSocket is available
+
+      const host = process.env.MQTT_HOST; // "wss://mqtt.xtremeguard.org:8084"; // If TLS WebSocket is available
+
       const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
 
       this.mqttClient = mqtt.connect(host, {
@@ -487,12 +495,18 @@ export default {
       });
 
       this.mqttClient.on("message", (topic, payload) => {
-        //console.log("Message", payload.toString());
+        // console.log("Message", payload.toString());
         //console.log("topic", topic);
 
         let message = JSON.parse(payload.toString());
         //console.log(message.type);
         if (message.type == "alarm") {
+          console.log(this.mqtt_alarm_timestamp, message.timestamp);
+
+          if (this.mqtt_alarm_timestamp == message.timestamp) return false;
+
+          console.log("alarm_device_status");
+
           let options = {
             params: JSON.parse(payload.toString()),
           };
@@ -504,6 +518,8 @@ export default {
               // if (!data.error) this.deviceSettings = data;
               // else this.message = data.error;
             });
+
+          this.mqtt_alarm_timestamp = message.timestamp;
         }
 
         // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {

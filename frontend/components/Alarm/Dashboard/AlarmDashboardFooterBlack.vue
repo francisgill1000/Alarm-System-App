@@ -253,10 +253,15 @@
 </template>
 
 <script>
+import mqtt from "mqtt";
+
 export default {
   props: ["device"],
   data() {
     return {
+      mqqtt_response_status: "",
+      mqttClient: null,
+      configPayload: "",
       relayStatusRelay0: false,
       relayStatusRelay0: false,
       relayStatusRelay0: false,
@@ -303,9 +308,13 @@ export default {
     this.intervalObj = setInterval(() => {
       this.getDeviceSettings();
     }, 1000 * 10);
+
+    this.connectMQTT();
   },
   async created() {
-    this.getDeviceSettings();
+    // setTimeout(() => {
+    //   this.getDeviceSettings();
+    // }, 1000 * 15);
   },
   watch: {
     relayStatus: {
@@ -322,7 +331,104 @@ export default {
     // },
   },
   methods: {
+    connectMQTT() {
+      console.log("connecting to MQTT");
+      // this.loading = true;
+      this.mqqtt_response_status = "Connecting to MQTT....";
+      //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
+      // const host = "ws://165.22.222.17:9001"; // For secure WebSocket
+      // const host = "wss://mqtt.xtremeguard.org:9002"; // For secure WebSocket
+      // const host = "tcp://mqtt.xtremeguard.org:1883"; // For secure WebSocket
+
+      // const host = "wss://mqtt.xtremeguard.org:8084"; // If TLS WebSocket is available
+      const host = process.env.MQTT_HOST; //
+
+      const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
+
+      this.mqttClient = mqtt.connect(host, {
+        clientId: clientId,
+        clean: true,
+        connectTimeout: 4000,
+      });
+
+      this.mqttClient.on("connect", () => {
+        this.isConnected = true;
+        console.log("✅ MQTT Connected");
+        this.mqqtt_response_status = "Device Connected....";
+
+        // Subscribe to a topic
+        const topic = `xtremevision/${this.device.serial_number}/config`;
+        this.mqttClient.subscribe(topic, (err) => {
+          if (err) {
+            this.mqqtt_response_status = "Device Connection Failed....";
+
+            console.error("❌ Subscribe failed:", err);
+          } else {
+            this.mqqtt_response_status = "Loading.........";
+
+            console.log(`📡 Subscribed to ${topic}`);
+          }
+        });
+
+        // this.sendConfigRequest();
+      });
+
+      this.mqttClient.on("message", (topic, payload) => {
+        this.mqqtt_response_status = "Device Loading message";
+
+        if (topic === `xtremevision/${this.device.serial_number}/config`) {
+          let jsonconfig = JSON.parse(payload.toString());
+          if (jsonconfig.type == "config") {
+            // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
+            // //this.deviceSettings = jsonconfig;
+
+            let config = JSON.parse(jsonconfig.config);
+
+            if (config) {
+              this.$set(this.relayStatus, "relay0", config.relay0);
+              this.$set(this.relayStatus, "relay1", config.relay1);
+              this.$set(this.relayStatus, "relay2", config.relay2);
+              this.$set(this.relayStatus, "relay3", config.relay3);
+
+              // this.relayStatus.relay0 = data.config.relay0;
+              // this.relayStatus.relay1 = data.config.relay1;
+              // this.relayStatus.relay2 = data.config.relay2;
+              // this.relayStatus.relay3 = data.config.relay3;
+            }
+          }
+
+          // this.message = payload.toString();
+        }
+      });
+
+      this.mqttClient.on("error", (err) => {
+        console.error("MQTT Error:", err);
+      });
+
+      this.mqttClient.on("close", () => {
+        this.isConnected = false;
+        console.log("❌ MQTT Disconnected");
+        this.mqqtt_response_status = "Disconnected...";
+      });
+    },
+
+    sendConfigRequest() {
+      this.connectMQTT();
+      const topic = `xtremevision/${this.device.serial_number}/config/request`;
+      const payload = "GET_CONFIG";
+
+      this.mqttClient.publish(topic, payload, {}, (err) => {
+        if (err) {
+          console.error("❌ Publish failed:", err);
+        } else {
+          console.log(`📤 Published to ${topic}:`, payload);
+        }
+      });
+    },
     getDeviceSettings() {
+      this.sendConfigRequest();
+
+      return false;
       if (this.loading) return;
       this.message = "loading....";
 
@@ -354,7 +460,7 @@ export default {
         });
     },
     relayCommand(cmd, status) {
-      console.log(cmd, status);
+      // console.log(cmd, status);
 
       this.$set(this.relayStatus, cmd, !status);
 

@@ -19,7 +19,7 @@
       dark
       >mdi-sync</v-icon
     ><br />
-
+    <div>{{ mqqtt_response_status }}</div>
     <v-row v-if="deviceSettings.config == null">
       <v-col style="color: red">{{ message }}</v-col>
     </v-row>
@@ -995,6 +995,7 @@ export default {
   data: () => ({
     mqttClient: null,
     configPayload: "",
+    mqqtt_response_status: "",
     //datatable varables
     tab: 0,
     errorValidateMessage: "",
@@ -1108,10 +1109,16 @@ export default {
   },
   methods: {
     connectMQTT() {
-      console.log("connectMQTT");
-      const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
+      console.log("connecting to MQTT");
+      // this.loading = true;
+      this.mqqtt_response_status = "Connecting to MQTT....";
+      //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
       // const host = "ws://165.22.222.17:9001"; // For secure WebSocket
       // const host = "wss://mqtt.xtremeguard.org:9002"; // For secure WebSocket
+      // const host = "tcp://mqtt.xtremeguard.org:1883"; // For secure WebSocket
+
+      // const host = "wss://mqtt.xtremeguard.org:8084"; // If TLS WebSocket is available
+      const host = process.env.MQTT_HOST; //
 
       const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
 
@@ -1124,18 +1131,28 @@ export default {
       this.mqttClient.on("connect", () => {
         this.isConnected = true;
         console.log("✅ MQTT Connected");
+        this.mqqtt_response_status = "Device Connected....";
 
         // Subscribe to a topic
         const topic = `xtremevision/${this.editedItem.serial_number}/config`;
         this.mqttClient.subscribe(topic, (err) => {
-          if (err) console.error("❌ Subscribe failed:", err);
-          else console.log(`📡 Subscribed to ${topic}`);
+          if (err) {
+            this.mqqtt_response_status = "Device Connection Failed....";
+
+            console.error("❌ Subscribe failed:", err);
+          } else {
+            this.mqqtt_response_status = "Loading.........";
+
+            console.log(`📡 Subscribed to ${topic}`);
+          }
         });
 
         this.sendConfigRequest();
       });
 
       this.mqttClient.on("message", (topic, payload) => {
+        this.mqqtt_response_status = "Device Loading message";
+
         if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
           let jsonconfig = JSON.parse(payload.toString());
           if (jsonconfig.type == "config") {
@@ -1146,7 +1163,9 @@ export default {
 
             this.deviceSettings.config = config;
 
-            console.log(this.deviceSettings.config);
+            // console.log(this.deviceSettings.config);
+
+            this.mqqtt_response_status = "";
           }
 
           // this.message = payload.toString();
@@ -1160,6 +1179,7 @@ export default {
       this.mqttClient.on("close", () => {
         this.isConnected = false;
         console.log("❌ MQTT Disconnected");
+        this.mqqtt_response_status = "Disconnected...";
       });
     },
 
