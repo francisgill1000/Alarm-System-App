@@ -377,6 +377,8 @@ export default {
         this.mqqtt_response_status = "Device Loading message";
 
         if (topic === `xtremevision/${this.device.serial_number}/config`) {
+          // console.log(payload.toString());
+
           let jsonconfig = JSON.parse(payload.toString());
           if (jsonconfig.type == "config") {
             // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
