@@ -203,7 +203,7 @@
     </v-row>
     <v-row>
       <v-col cols="6">
-        <AlarmDashboardFooterBlack :device="device" />
+        <AlarmDashboardFooterBlack :device="device" :key="keyChart2" />
       </v-col>
       <v-col cols="6">
         <v-card
@@ -220,7 +220,6 @@
             :device_temperature_serial_address="
               device_temperature_serial_address
             "
-            :key="keyChart2"
             :device_serial_number="device_serial_number"
             :from_date="from_date"
           /> </v-card
@@ -377,7 +376,7 @@ export default {
         this.getDataFromApi(1);
         //this.key++;
       }
-    }, 1000 * 30);
+    }, 1000 * 10);
   },
   beforeDestroy() {
     if (this.autoCycleInterval) {
@@ -507,17 +506,17 @@ export default {
 
           console.log("alarm_device_status");
 
-          let options = {
-            params: JSON.parse(payload.toString()),
-          };
-          // console.log(options);
+          // let options = {
+          //   params: JSON.parse(payload.toString()),
+          // };
+          // // console.log(options);
 
-          this.$axios
-            .post(`alarm_device_status`, options.params)
-            .then(({ data }) => {
-              // if (!data.error) this.deviceSettings = data;
-              // else this.message = data.error;
-            });
+          // this.$axios
+          //   .post(`alarm_device_status`, options.params)
+          //   .then(({ data }) => {
+          //     // if (!data.error) this.deviceSettings = data;
+          //     // else this.message = data.error;
+          //   });
 
           this.mqtt_alarm_timestamp = message.timestamp;
         }
