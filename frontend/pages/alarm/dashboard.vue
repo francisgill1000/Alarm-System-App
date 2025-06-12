@@ -464,7 +464,7 @@ export default {
 
       // const host = "ws://mqtt.xtremeguard.org:8083"; // If TLS WebSocket is available
 
-      const host = process.env.MQTT_HOST; // "wss://mqtt.xtremeguard.org:8084"; // If TLS WebSocket is available
+      const host = process.env.MQTT_SOCKET_HOST; // "wss://mqtt.xtremeguard.org:8084"; // If TLS WebSocket is available
 
       const clientId = "vue-client-" + Math.random().toString(16).substr(2, 8);
 
