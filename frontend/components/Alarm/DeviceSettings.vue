@@ -1141,7 +1141,8 @@ export default {
 
             console.error("❌ Subscribe failed:", err);
           } else {
-            this.mqqtt_response_status = "Loading.........";
+            this.mqqtt_response_status =
+              "Loading Data from Device settings.........";
 
             console.log(`📡 Subscribed to ${topic}`);
           }
@@ -1190,9 +1191,12 @@ export default {
         console.log("❌ MQTT connection is inactive or not established");
         this.connectMQTT();
       }
-
+      let isConfigReceived = false;
       const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
       const payload = "GET_CONFIG";
+
+      this.mqqtt_response_status =
+        "loading from Configuration Data from Device....";
 
       this.mqttClient.publish(topic, payload, {}, (err) => {
         if (err) {
@@ -1201,6 +1205,11 @@ export default {
           console.log(`📤 Published to ${topic}:`, payload);
         }
       });
+
+      setTimeout(() => {
+        console.log("Testing");
+        if (!this.deviceSettings.config) this.getConfigDataFromAPI();
+      }, 1000 * 5);
     },
 
     can(per) {
@@ -1367,14 +1376,14 @@ export default {
 
       await this.getDataFromApi();
 
-      await this.getConfigFromcache();
+      // await this.getConfigFromcache();
 
       setTimeout(() => {
         this.loading = false;
       }, 1000 * 10);
     },
     async getDataFromApi() {
-      this.message = "loading....";
+      this.mqqtt_response_status = "loading from Cloud....";
 
       this.deviceSettings = { config: null };
 
@@ -1394,8 +1403,11 @@ export default {
         .get(`get_device_settings_from_socket_arduino`, options)
         .then(({ data }) => {
           this.loading = false;
-          // if (!data.error) this.deviceSettings = data;
-          // else this.message = data.error;
+
+          console.log(data.error);
+
+          if (!data.error) this.deviceSettings = data;
+          else this.mqqtt_response_status = data.error;
         });
     },
 
@@ -1411,7 +1423,7 @@ export default {
         .get(`get_device_settings_from_cache`, options)
         .then(({ data }) => {
           if (!data.error) this.deviceSettings = data;
-          else this.message = data.error;
+          else this.mqqtt_response_status = data.error;
 
           this.loading = false;
         });
