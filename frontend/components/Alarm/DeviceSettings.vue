@@ -321,7 +321,7 @@
             <v-tab-item>
               <v-row>
                 <v-col cols="12">
-                  <v-card elevation="2" outlined style="height: 350px">
+                  <v-card elevation="2" outlined style="height: 400px">
                     <v-card-text>
                       <v-row>
                         <v-col cols="6">
@@ -1320,9 +1320,9 @@ export default {
       const increments = [5, 10, 15, 30]; // Time increments in seconds and minutes
 
       // Generate options for seconds (5s to 55s)
-      for (let sec = 1; sec <= 10; sec += 1) {
+      for (let sec = 1; sec <= 20; sec += 1) {
         options.push({
-          value: sec + "",
+          value: sec,
           label: `${sec} seconds`,
         });
       }
@@ -1330,9 +1330,9 @@ export default {
       this.heartBeatData = options;
       options = [];
       // Generate options for seconds (5s to 55s)
-      for (let sec = 10; sec <= 30; sec += 1) {
+      for (let sec = 10; sec <= 60; sec += 1) {
         options.push({
-          value: sec + "",
+          value: sec,
           label: `${sec} seconds`,
         });
       }
@@ -1347,7 +1347,7 @@ export default {
       for (let sec = 5; sec < 60; sec += 5) {
         options.push({
           id: "heartbeat",
-          value: sec + "",
+          value: sec,
           label: `${sec} seconds`,
         });
       }
