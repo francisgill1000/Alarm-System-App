@@ -114,9 +114,9 @@
           <span>Filter</span>
         </v-tooltip> -->
         <v-spacer></v-spacer>
-        <v-btn dark class="blue" small @click="AddNewRoom()">
+        <!-- <v-btn dark class="blue" small @click="AddNewRoom()">
           <v-icon color="white" small>mdi-plus</v-icon> Sensor
-        </v-btn>
+        </v-btn> -->
       </v-toolbar>
       <v-row>
         <v-col cols="12">
