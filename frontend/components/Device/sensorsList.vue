@@ -173,7 +173,7 @@
                       View
                     </v-list-item-title>
                   </v-list-item>
-                  <v-list-item @click="editItem(item, false)">
+                  <!-- <v-list-item @click="editItem(item, false)">
                     <v-list-item-title style="cursor: pointer">
                       <v-icon small> mdi-pencil </v-icon>
                       Edit
@@ -184,7 +184,7 @@
                       <v-icon color="error" small> mdi-delete </v-icon>
                       Delete
                     </v-list-item-title>
-                  </v-list-item>
+                  </v-list-item>-->
                 </v-list>
               </v-menu>
             </template>

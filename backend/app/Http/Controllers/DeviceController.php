@@ -1496,6 +1496,28 @@ class DeviceController extends Controller
 
         $config["temperature_alerts_config"] = $request->temperature_alerts_config;
 
+        $temperature_alerts_config = $config["temperature_alerts_config"];
+
+        if ($request->device_id) {
+
+            //delete
+            DeviceTemperatureSensors::where("company_id", $request->company_id)->where("device_id", $request->device_id)->delete();
+
+            foreach ($temperature_alerts_config as   $sensor) {
+                $data = [
+                    "company_id" => $request->company_id,
+                    "device_id" => $request->device_id,
+                    "temperature_serial_address" => $sensor["sensor_address_id"],
+                    "name" => $sensor["sensor_name"]
+                ];
+
+                DeviceTemperatureSensors::create($data);
+            }
+        }
+
+        //creating DB
+
+
         return  $this->callDeviceCommand($request->serial_number, $config);
     }
     public function updateDeviceConfigSettingsFromArduinoSocket(Request $request)
