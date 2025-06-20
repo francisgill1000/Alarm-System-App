@@ -1422,9 +1422,20 @@ class DeviceController extends Controller
 
 
             if (isset($response["error"]))
-                $response['error'] = $response["error"];
+                return   $response;
             else if (isset($response['config'])) { {
                     $response['config'] = json_decode($response['config'], true);
+
+                    if ($response['config'])
+                        return response()->json([
+                            'serialNumber' => $serial_number,
+                            'config' => $response['config'],
+                            'service' => "scoket"
+                        ]);
+
+                    else
+
+                        return  $response['error'] = "Device Communication error";
 
                     $isAPIResponseCompleted = true;
 
@@ -1438,6 +1449,8 @@ class DeviceController extends Controller
             // if ($isAPIResponseCompleted)
             //     return  $response;
         }
+
+        /*
         //else  if ($serial_number && env("DEVICE_CONFIG_MQTT"))
         {
             //Cache::forget("device_config_$serial_number");
@@ -1487,6 +1500,8 @@ class DeviceController extends Controller
                 'service' => "mqtt"
             ]);
         }
+
+        */
     }
 
     public function updateTemperatureConfigSettingsFromArduinoSocket(Request $request)
