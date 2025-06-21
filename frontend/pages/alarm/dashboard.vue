@@ -372,12 +372,14 @@ export default {
     }, 1000 * 60 * 15);
     ///this.getDataFromApi(1);
 
+    console.log("this.currentDeviceIndex", this.devicesList.length);
+
     this.intervalObj = setInterval(() => {
-      if (!this.playSlider) {
+      if (!this.playSlider || this.devicesList?.length == 1) {
         this.getDataFromApi(1);
-        //this.key++;
+        this.key++;
       }
-    }, 1000 * 30);
+    }, 1000 * 15);
   },
   beforeDestroy() {
     if (this.autoCycleInterval) {
@@ -614,9 +616,11 @@ export default {
           this.device_serial_number == null
         )
           return false;
-        if (this.$store.state.alarm_temparature_latest && reset == 0) {
-          this.data = this.$store.state.alarm_temparature_latest;
-        } else {
+        // if (this.$store.state.alarm_temparature_latest && reset == 0) {
+        //   this.data = this.$store.state.alarm_temparature_latest;
+        // } else
+
+        {
           this.$axios
             .get("alarm_dashboard_get_temparature_latest", {
               params: {

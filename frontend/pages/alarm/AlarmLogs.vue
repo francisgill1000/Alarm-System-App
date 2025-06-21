@@ -8,7 +8,7 @@
 
     <v-row>
       <v-col>
-        <v-card elevation="0" class="mt-2">
+        <v-card elevation="0" class="mt-0">
           <v-toolbar class="mb-2 white--text" color="white" dense flat>
             <v-toolbar-title> <span> Alarm Reports</span></v-toolbar-title>
             <span>
@@ -398,9 +398,9 @@ export default {
   },
 
   mounted() {
-    this.tableHeight = window.innerHeight - 270;
+    this.tableHeight = window.innerHeight - 250;
     window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 270;
+      this.tableHeight = window.innerHeight - 250;
     });
 
     this.intervalObj = setInterval(() => {
