@@ -8,7 +8,7 @@
           v-for="(account, index) in accounts"
           :key="index"
           style="display: flex"
-          max-width="250"
+          max-width="280"
         >
           <v-card-text class="pa-2">
             <div style="width: 100%; display: flex; align-items: center">
