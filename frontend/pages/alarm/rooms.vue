@@ -335,7 +335,7 @@
       </v-row>
     </v-navigation-drawer>
 
-    <v-card class="mb-5 mt-2" elevation="0">
+    <v-card class="mb-0 mt-2" elevation="0">
       <v-toolbar class="rounded-md" dense flat>
         <v-toolbar-title><span> Server Rooms List</span></v-toolbar-title>
 
@@ -433,6 +433,7 @@
         class="elevation-1 pt-5"
         :options.sync="options"
         :server-items-length="totalRowsCount"
+        :height="tableHeight"
       >
         <template v-slot:item.sno="{ item, index }">
           {{ ++index }}
@@ -601,6 +602,7 @@ export default {
 
   data: () => ({
     DialogDeviceSensors: false,
+    tableHeight: 600,
     deviceSerialNumber: "",
 
     deviceCAMVIISettings: {},
@@ -872,6 +874,10 @@ export default {
         this.getDataFromApi();
       }
     }, 1000 * 60);
+    this.tableHeight = window.innerHeight - 230;
+    window.addEventListener("resize", () => {
+      this.tableHeight = window.innerHeight - 230;
+    });
   },
   async created() {
     this.loading = true;

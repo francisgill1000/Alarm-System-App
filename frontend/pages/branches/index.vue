@@ -323,6 +323,7 @@
             }"
             class="elevation-1"
             :server-items-length="totalRowsCount"
+            :height="tableHeight"
           >
             <template v-slot:header="{ props: { headers } }">
               <tr v-if="isFilter">
@@ -541,6 +542,7 @@ export default {
   },
 
   data: () => ({
+    tableHeight: 600,
     departments: [],
     shifts: [],
     timezones: [],
@@ -645,6 +647,10 @@ export default {
   }),
 
   async created() {
+    this.tableHeight = window.innerHeight - 220;
+    window.addEventListener("resize", () => {
+      this.tableHeight = window.innerHeight - 220;
+    });
     this.loading = false;
     this.boilerplate = true;
 

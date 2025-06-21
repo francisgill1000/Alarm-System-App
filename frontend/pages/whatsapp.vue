@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="2" class="pa-4">
+  <v-card elevation="4" class="pa-4 mt-2" :height="tableHeight">
     <v-card-text>
       <!-- Accounts Display -->
       <div style="display: flex; gap: 12px" v-if="can('whatsapp_view')">
@@ -181,11 +181,17 @@ export default {
     return {
       accounts: [],
       qrCodeScanned: false,
+      tableHeight: 600,
       whatsappSocketClosed: false,
     };
   },
   async mounted() {
     await this.getWhatsappAccount(this.$auth.user.company_id);
+
+    this.tableHeight = window.innerHeight - 100;
+    window.addEventListener("resize", () => {
+      this.tableHeight = window.innerHeight - 100;
+    });
   },
 
   methods: {

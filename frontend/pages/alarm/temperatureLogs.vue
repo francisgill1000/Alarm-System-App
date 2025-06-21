@@ -141,7 +141,7 @@
               {{ item.device.name }}
 
               <span v-if="item.device_temperature_sensor">
-                - {{ item.device_temperature_sensor.name }}
+                - {{ item.device_temperature_sensor?.name }}
               </span>
             </template>
             <template v-slot:item.log_time="{ item }">

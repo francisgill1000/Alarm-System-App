@@ -165,7 +165,6 @@
               :ripple="false"
               title="Add Notification"
               @click="openNewPage()"
-              color="violet"
             >
               Add+
             </v-btn>
@@ -180,6 +179,7 @@
           </template>
         </v-snackbar>
         <v-data-table
+          :height="tableHeight"
           flat
           dense
           :headers="headers_table"
@@ -422,6 +422,8 @@ export default {
   components: { Automation },
 
   data: () => ({
+    tableHeight: 750,
+
     dialogviewHisotry: false,
     totalRowsCount_history: 10,
     branchesList: [],
@@ -633,6 +635,10 @@ export default {
     // },
   },
   created() {
+    this.tableHeight = window.innerHeight - 220;
+    window.addEventListener("resize", () => {
+      this.tableHeight = window.innerHeight - 220;
+    });
     this.preloader = false;
     this.id = this.$auth?.user?.company?.id;
     this.getDataFromApi();

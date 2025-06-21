@@ -115,7 +115,7 @@
             <template v-slot:item.device_name="{ item }">
               {{ item.device.name }}
 
-              <span v-if="item.temperature_serial_address">
+              <span v-if="item.device_temperature_sensor">
                 - {{ item.device_temperature_sensor.name }}
               </span>
             </template>
