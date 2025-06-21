@@ -88,6 +88,9 @@ export default {
         row: {
           colors: ["transparent"], // 🔍 Transparent row colors
         },
+        dataLabels: {
+          enabled: false,
+        },
         chart: {
           foreColor: isDark ? "#FFF" : "#000",
           background: "transparent", //
@@ -95,11 +98,22 @@ export default {
             show: false,
           },
           height: this.height,
-          type: "line",
+          type: "area",
           animations: {
             enabled: false,
           },
           width: "98%",
+        },
+
+        fill: {
+          type: "gradient",
+          gradient: {
+            shadeIntensity: 1,
+            inverseColors: false,
+            opacityFrom: 0.45,
+            opacityTo: 0.05,
+            stops: [20, 100, 100, 100],
+          },
         },
         stacked: false,
         stroke: {
@@ -128,19 +142,7 @@ export default {
           },
         },
         colors: [isDark ? "#FFF" : "#000"],
-        // yaxis: [
-        //   {
-        //     title: {
-        //       text: "Temperature (°C)",
-        //     },
-        //   },
-        //   {
-        //     opposite: false,
-        //     title: {
-        //       text: "Humidity (%)",
-        //     },
-        //   },
-        // ],
+
         tooltip1: {
           theme: "dark",
           y: {
