@@ -355,8 +355,9 @@ export default {
     from_date(val) {},
   },
   mounted() {
-    this.connectMQTT();
-
+    setTimeout(() => {
+      this.connectMQTT();
+    }, 1000 * 5);
     // if (window) {
     //   this.viewportHeight = window.innerHeight;
     //   window.addEventListener("resize", this.handleResize);
