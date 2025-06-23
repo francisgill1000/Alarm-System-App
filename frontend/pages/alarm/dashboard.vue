@@ -509,7 +509,7 @@ export default {
         //console.log("topic", topic);
 
         let message = JSON.parse(payload.toString());
-        console.log(message.type);
+        // console.log(message.type);
         if (message.type == "alarm") {
           this.getDataFromApi();
           //   console.log(this.mqtt_alarm_timestamp, message.timestamp);
@@ -545,7 +545,7 @@ export default {
             this.relayStatus.relay2 = config.relay2;
             this.relayStatus.relay3 = config.relay3;
 
-            console.log(this.relayStatus);
+            //console.log(this.relayStatus);
 
             // this.relayStatus.relay0 = data.config.relay0;
             // this.relayStatus.relay1 = data.config.relay1;
