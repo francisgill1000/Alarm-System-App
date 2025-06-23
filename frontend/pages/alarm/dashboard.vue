@@ -553,6 +553,11 @@ export default {
               // this.relayStatus.relay2 = data.config.relay2;
               // this.relayStatus.relay3 = data.config.relay3;
             }
+          } else {
+            this.relayStatus.relay0 = false;
+            this.relayStatus.relay1 = false;
+            this.relayStatus.relay2 = false;
+            this.relayStatus.relay3 = false;
           }
         }
 
