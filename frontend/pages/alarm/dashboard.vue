@@ -509,7 +509,7 @@ export default {
         //console.log("topic", topic);
 
         let message = JSON.parse(payload.toString());
-        // console.log(message.type);
+        console.log(message);
         if (message.type == "alarm") {
           this.getDataFromApi();
           //   console.log(this.mqtt_alarm_timestamp, message.timestamp);
@@ -534,23 +534,25 @@ export default {
         }
 
         if (message.type == "config") {
-          // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
-          // //this.deviceSettings = jsonconfig;
+          if (this.device_serial_number == message.serialNumber) {
+            // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
+            // //this.deviceSettings = jsonconfig;
 
-          let config = JSON.parse(message.config);
+            let config = JSON.parse(message.config);
 
-          if (config) {
-            this.relayStatus.relay0 = config.relay0;
-            this.relayStatus.relay1 = config.relay1;
-            this.relayStatus.relay2 = config.relay2;
-            this.relayStatus.relay3 = config.relay3;
+            if (config) {
+              this.relayStatus.relay0 = config.relay0;
+              this.relayStatus.relay1 = config.relay1;
+              this.relayStatus.relay2 = config.relay2;
+              this.relayStatus.relay3 = config.relay3;
 
-            //console.log(this.relayStatus);
+              //console.log(this.relayStatus);
 
-            // this.relayStatus.relay0 = data.config.relay0;
-            // this.relayStatus.relay1 = data.config.relay1;
-            // this.relayStatus.relay2 = data.config.relay2;
-            // this.relayStatus.relay3 = data.config.relay3;
+              // this.relayStatus.relay0 = data.config.relay0;
+              // this.relayStatus.relay1 = data.config.relay1;
+              // this.relayStatus.relay2 = data.config.relay2;
+              // this.relayStatus.relay3 = data.config.relay3;
+            }
           }
         }
 
