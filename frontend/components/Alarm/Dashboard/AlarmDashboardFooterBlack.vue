@@ -256,18 +256,13 @@
 import mqtt from "mqtt";
 
 export default {
-  props: ["device"],
+  props: ["device", "relayStatus"],
   data() {
     return {
       mqqtt_response_status: "",
       mqttClient: null,
       configPayload: "",
-      relayStatusRelay0: false,
-      relayStatusRelay0: false,
-      relayStatusRelay0: false,
-      relayStatusRelay0: false,
-
-      relayStatus: {},
+      // relayStatus: {},
       deviceSettings: null,
       branchList: [],
       selectedBranchName: "All Branches",
@@ -304,16 +299,14 @@ export default {
     //   this.$router.push(`/login`);
     //   return "";
     // }
-
-    setInterval(() => {
-      this.getDeviceSettings();
-    }, 1000 * 10);
-
-    this.connectMQTT();
+    // setInterval(() => {
+    //   if (this.$route.name == "alarm-dashboard") this.getDeviceSettings();
+    // }, 1000 * 15);
+    //////////this.connectMQTT();
   },
   async created() {
     // setTimeout(() => {
-    //   this.getDeviceSettings();
+    /////////this.getDeviceSettings();
     // }, 1000 * 15);
   },
   watch: {
@@ -331,7 +324,7 @@ export default {
     // },
   },
   methods: {
-    connectMQTT() {
+    /* connectMQTT() {
       console.log("connecting to MQTT");
       // this.loading = true;
       this.mqqtt_response_status = "Connecting to MQTT....";
@@ -415,6 +408,7 @@ export default {
     },
 
     sendConfigRequest() {
+      if (!this.device.serial_number) return false;
       if (this.mqttClient && this.mqttClient.connected) {
         console.log("✅ MQTT connection is active");
       } else {
@@ -432,6 +426,8 @@ export default {
         }
       });
     },
+
+
     getDeviceSettings() {
       this.sendConfigRequest();
 
@@ -466,6 +462,7 @@ export default {
           this.loading = false;
         });
     },
+    */
     relayCommand(cmd, status) {
       // console.log(cmd, status);
 

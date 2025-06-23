@@ -140,13 +140,17 @@
 
             <template v-slot:item.temperature="{ item }">
               <span
-                v-if="item.temparature"
+                v-if="item.temparature && item.temparature != '0.00'"
                 v-html="item.temparature + '&deg;C'"
               ></span>
               <div v-else>---</div>
             </template>
             <template v-slot:item.humidity="{ item }">
-              {{ item.humidity ? item.humidity + "%" : "---" }}
+              {{
+                item.humidity && item.humidity != "0.00"
+                  ? item.humidity + "%"
+                  : "---"
+              }}
             </template>
             <template v-slot:item.temperature_alarm="{ item }">
               <v-icon :style="getPriorityColor(item.temperature_alarm)"

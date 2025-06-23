@@ -203,7 +203,11 @@
     </v-row>
     <v-row>
       <v-col cols="6">
-        <AlarmDashboardFooterBlack :device="device" :key="key" />
+        <AlarmDashboardFooterBlack
+          :device="device"
+          :key="key"
+          :relayStatus="relayStatus"
+        />
       </v-col>
       <v-col cols="6">
         <v-card
@@ -322,6 +326,7 @@ export default {
         smoke_alarm_start_datetime: 0,
       },
       devicesList: [],
+      relayStatus: {},
 
       intervalObj: null,
       viewportHeight: 0,
@@ -330,6 +335,10 @@ export default {
   },
   beforeDestroy() {
     console.log("Cleaning up resources...");
+
+    if (this.autoCycleInterval) {
+      clearInterval(this.autoCycleInterval);
+    }
 
     // 1. Clear interval (with null check)
     if (this.intervalObj) {
@@ -375,17 +384,16 @@ export default {
     console.log("this.currentDeviceIndex", this.devicesList.length);
 
     this.intervalObj = setInterval(() => {
-      if (!this.playSlider || this.devicesList?.length == 1) {
-        this.getDataFromApi(1);
-        this.key++;
+      if (this.$route.name == "alarm-dashboard") {
+        // if (!this.playSlider || this.devicesList?.length == 1)
+        {
+          this.getDataFromApi();
+          this.key++;
+        }
       }
-    }, 1000 * 15);
+    }, 1000 * 10);
   },
-  beforeDestroy() {
-    if (this.autoCycleInterval) {
-      clearInterval(this.autoCycleInterval);
-    }
-  },
+
   async created() {
     if (window) {
       const viewportHeight = window.innerHeight;
@@ -453,7 +461,7 @@ export default {
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-    this.getDataFromApi(1);
+    this.getDataFromApi();
   },
 
   methods: {
@@ -501,27 +509,49 @@ export default {
         //console.log("topic", topic);
 
         let message = JSON.parse(payload.toString());
-        //console.log(message.type);
+        console.log(message.type);
         if (message.type == "alarm") {
-          console.log(this.mqtt_alarm_timestamp, message.timestamp);
+          this.getDataFromApi();
+          //   console.log(this.mqtt_alarm_timestamp, message.timestamp);
 
-          if (this.mqtt_alarm_timestamp == message.timestamp) return false;
+          //   if (this.mqtt_alarm_timestamp == message.timestamp) return false;
 
-          console.log("alarm_device_status");
+          //   console.log("alarm_device_status");
 
-          let options = {
-            params: JSON.parse(payload.toString()),
-          };
-          // console.log(options);
+          //   let options = {
+          //     params: JSON.parse(payload.toString()),
+          //   };
+          //   // console.log(options);
 
-          this.$axios
-            .post(`alarm_device_status`, options.params)
-            .then(({ data }) => {
-              // if (!data.error) this.deviceSettings = data;
-              // else this.message = data.error;
-            });
+          //   this.$axios
+          //     .post(`alarm_device_status`, options.params)
+          //     .then(({ data }) => {
+          //       // if (!data.error) this.deviceSettings = data;
+          //       // else this.message = data.error;
+          //     });
 
-          this.mqtt_alarm_timestamp = message.timestamp;
+          //   this.mqtt_alarm_timestamp = message.timestamp;
+        }
+
+        if (message.type == "config") {
+          // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
+          // //this.deviceSettings = jsonconfig;
+
+          let config = JSON.parse(message.config);
+
+          if (config) {
+            this.relayStatus.relay0 = config.relay0;
+            this.relayStatus.relay1 = config.relay1;
+            this.relayStatus.relay2 = config.relay2;
+            this.relayStatus.relay3 = config.relay3;
+
+            console.log(this.relayStatus);
+
+            // this.relayStatus.relay0 = data.config.relay0;
+            // this.relayStatus.relay1 = data.config.relay1;
+            // this.relayStatus.relay2 = data.config.relay2;
+            // this.relayStatus.relay3 = data.config.relay3;
+          }
         }
 
         // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
@@ -603,10 +633,10 @@ export default {
       this.key++;
       this.keyChart2++;
 
-      this.getDataFromApi(1);
+      this.getDataFromApi();
       //console.log(this.device_serial_number, " this.device_serial_number");
     },
-    getDataFromApi(reset = 0) {
+    getDataFromApi() {
       // if (reset == 1) {
       //   this.keyChart2++;
       // }
