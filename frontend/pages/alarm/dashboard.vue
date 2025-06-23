@@ -206,7 +206,7 @@
         <AlarmDashboardFooterBlack
           :device="device"
           :key="key"
-          :relayStatus="relayStatus"
+          :relayStatus="relayStatus[device.serial_number]"
         />
       </v-col>
       <v-col cols="6">
@@ -326,7 +326,7 @@ export default {
         smoke_alarm_start_datetime: 0,
       },
       devicesList: [],
-      relayStatus: {},
+      relayStatus: [],
 
       intervalObj: null,
       viewportHeight: 0,
@@ -384,14 +384,25 @@ export default {
     console.log("this.currentDeviceIndex", this.devicesList.length);
 
     this.intervalObj = setInterval(() => {
-      if (this.$route.name == "alarm-dashboard") {
+      if (
+        this.$route.name == "alarm-dashboard" &&
+        this.devicesList.length == 1
+      ) {
         // if (!this.playSlider || this.devicesList?.length == 1)
         {
           this.getDataFromApi();
           this.key++;
+          this.sendMQTTConfigRequest();
         }
       }
     }, 1000 * 10);
+
+    // setTimeout(() => {
+    //   setInterval(() => {
+    //     if (this.$route.name == "alarm-dashboard")
+    //       if (!this.isConnected) this.connectMQTT();
+    //   }, 1000 * 5);
+    // }, 1000 * 30);
   },
 
   async created() {
@@ -497,7 +508,10 @@ export default {
 
         // this.sendConfigRequest();
 
-        const topic = "xtremevision/+/config";
+        let topic = "xtremevision/+/config";
+        if (this.devicesList.length == 1)
+          topic = "xtremevision/" + this.device_serial_number + "/config";
+
         this.mqttClient.subscribe(topic, (err) => {
           if (err) console.error("❌ Subscribe failed:", err);
           else console.log(`📡 Subscribed to ${topic}`);
@@ -511,6 +525,7 @@ export default {
         let message = JSON.parse(payload.toString());
         console.log(message);
         if (message.type == "alarm") {
+          this.sendMQTTConfigRequest();
           this.getDataFromApi();
           //   console.log(this.mqtt_alarm_timestamp, message.timestamp);
 
@@ -539,12 +554,16 @@ export default {
             // //this.deviceSettings = jsonconfig;
 
             let config = JSON.parse(message.config);
-
+            this.relayStatus[this.device_serial_number] = {};
             if (config) {
-              this.relayStatus.relay0 = config.relay0;
-              this.relayStatus.relay1 = config.relay1;
-              this.relayStatus.relay2 = config.relay2;
-              this.relayStatus.relay3 = config.relay3;
+              this.relayStatus[this.device_serial_number].relay0 =
+                config.relay0;
+              this.relayStatus[this.device_serial_number].relay1 =
+                config.relay1;
+              this.relayStatus[this.device_serial_number].relay2 =
+                config.relay2;
+              this.relayStatus[this.device_serial_number].relay3 =
+                config.relay3;
 
               //console.log(this.relayStatus);
 
@@ -554,10 +573,10 @@ export default {
               // this.relayStatus.relay3 = data.config.relay3;
             }
           } else {
-            this.relayStatus.relay0 = false;
-            this.relayStatus.relay1 = false;
-            this.relayStatus.relay2 = false;
-            this.relayStatus.relay3 = false;
+            this.relayStatus[this.device_serial_number].relay0 = false;
+            this.relayStatus[this.device_serial_number].relay1 = false;
+            this.relayStatus[this.device_serial_number].relay2 = false;
+            this.relayStatus[this.device_serial_number].relay3 = false;
           }
         }
 
@@ -576,11 +595,41 @@ export default {
 
       this.mqttClient.on("error", (err) => {
         console.error("MQTT Error:", err);
+        setTimeout(() => {
+          connectMQTT();
+        }, 1000 * 5);
       });
 
       this.mqttClient.on("close", () => {
         this.isConnected = false;
         console.log("❌ MQTT Disconnected");
+
+        setTimeout(() => {
+          connectMQTT();
+        }, 1000 * 5);
+      });
+    },
+
+    sendMQTTConfigRequest() {
+      if (!this.device_serial_number) return false;
+
+      if (this.mqttClient && this.mqttClient.connected) {
+        console.log("✅ MQTT connection is active");
+      } else {
+        console.log("❌ MQTT connection is inactive or not established");
+        this.connectMQTT();
+
+        this.sendMQTTConfigRequest();
+      }
+      const topic = `xtremevision/${this.device_serial_number}/config/request`;
+      const payload = "GET_CONFIG";
+
+      this.mqttClient.publish(topic, payload, {}, (err) => {
+        if (err) {
+          console.error("❌ Publish failed:", err);
+        } else {
+          console.log(`📤 Published to ${topic}:`, payload);
+        }
       });
     },
     can(per) {
@@ -594,7 +643,7 @@ export default {
     },
 
     handleResize() {
-      this.viewportHeight = window.innerHeight;
+      if (window) this.viewportHeight = window.innerHeight;
     },
     startAutoDeviceCycle() {
       console.log("this.devicesList.lengt", this.devicesList.length);
@@ -641,6 +690,8 @@ export default {
       this.keyChart2++;
 
       this.getDataFromApi();
+
+      this.sendMQTTConfigRequest();
       //console.log(this.device_serial_number, " this.device_serial_number");
     },
     getDataFromApi() {
