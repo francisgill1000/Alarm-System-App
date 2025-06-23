@@ -345,6 +345,11 @@ export default {
       clearInterval(this.intervalObj);
       this.intervalObj = null; // Prevent memory leaks
     }
+
+    this.mqttClient.end(false, () => {
+      console.log("🔌 MQTT Disconnected");
+      this.isConnected = false;
+    });
   },
   watch: {
     from_date(val) {},
@@ -523,7 +528,7 @@ export default {
         //console.log("topic", topic);
 
         let message = JSON.parse(payload.toString());
-        console.log(message);
+        //console.log(message);
         if (message.type == "alarm") {
           this.sendMQTTConfigRequest();
           this.getDataFromApi();
