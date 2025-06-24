@@ -716,13 +716,13 @@ export default {
         value: "location",
         filterable: false,
       },
-      {
-        text: "Threshold",
-        align: "center",
-        sortable: false,
-        value: "temperature_threshold",
-        filterable: false,
-      },
+      // {
+      //   text: "Threshold",
+      //   align: "center",
+      //   sortable: false,
+      //   value: "temperature_threshold",
+      //   filterable: false,
+      // },
       // {
       //   text: "Time zone",
       //   align: "left",
