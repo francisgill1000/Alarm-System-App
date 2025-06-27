@@ -126,7 +126,7 @@ class MqttService
                         //     $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                         //     File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
                         // }
-                        if (isset($json['type']) && $json['type'] == "alarm" || $json['type'] == "sensor") {
+                        if ($json && isset($json['type']) && ($json['type'] == "alarm" || $json['type'] == "sensor")) {
 
                             echo "alarm or sensor info \n";
 
@@ -144,13 +144,14 @@ class MqttService
 
                             $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                             File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " " . $message . " \n");
+                            File::prepend($logPath, $json . "\n");
                         }
                     } catch (\Throwable $e) {
 
                         echo "ERROR\n";
                         $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                         File::prepend($logPath, "[" . now() . "] ❌ MQTT config Exception: " . $e->getMessage() . "\n");
-                        File::prepend($logPath, "[" . now() . "] Data : " .  $message . "\n");
+                        File::prepend($logPath, $json . "\n");
 
 
 
