@@ -195,7 +195,7 @@
               >{{ errors.serial_number[0] }}
             </span>
           </v-col>
-          <v-col md="12">
+          <!-- <v-col md="12">
             <v-autocomplete
               class="pb-0"
               :hide-details="!payload.temperature_threshold"
@@ -288,7 +288,7 @@
             <span v-if="errors && errors.door_enabled" class="error--text"
               >{{ errors.door_enabled[0] }}
             </span>
-          </v-col>
+          </v-col>  -->
 
           <!-- <v-col md="12">
             <v-autocomplete

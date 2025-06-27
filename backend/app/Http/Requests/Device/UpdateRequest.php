@@ -46,11 +46,11 @@ class UpdateRequest extends FormRequest
             'branch_id' => 'required',
             'serial_number' => 'required',
             'camera_save_images' => 'required',
-            'smoke_enabled' => 'required',
-            'water_enabled' => 'required',
-            'acpower_enabled' => 'required',
-            'door_enabled' => 'required',
-            'temperature_threshold' => 'required',
+            // 'smoke_enabled' => 'required',
+            // 'water_enabled' => 'required',
+            // 'acpower_enabled' => 'required',
+            // 'door_enabled' => 'required',
+            // 'temperature_threshold' => 'required',
         ];
     }
 }

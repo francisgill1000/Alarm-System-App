@@ -58,11 +58,11 @@ class StoreRequest extends FormRequest
             'branch_id' => 'nullable',
             //'camera_save_images' => 'required'
             'serial_number' => 'required',
-            'smoke_enabled' => 'nullable',
-            'water_enabled' => 'nullable',
-            'acpower_enabled' => 'nullable',
-            'door_enabled' => 'nullable',
-            'temperature_threshold' => 'required',
+            // 'smoke_enabled' => 'nullable',
+            // 'water_enabled' => 'nullable',
+            // 'acpower_enabled' => 'nullable',
+            // 'door_enabled' => 'nullable',
+            // 'temperature_threshold' => 'required',
 
         ];
     }
