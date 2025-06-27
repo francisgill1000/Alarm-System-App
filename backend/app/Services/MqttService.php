@@ -108,7 +108,7 @@ class MqttService
 
                         echo "All\n";
 
-                        Log::info($message);
+                        // Log::info($message);
                         echo "\n";
                         $serialNumber = $this->extractSerial($topic);
 
