@@ -103,7 +103,7 @@ class MqttService
                 });
 
                 $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/config', function ($topic, $message) {
-
+                    $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                     try {
 
                         echo "All\n";
@@ -111,6 +111,8 @@ class MqttService
                         // Log::info($message);
                         echo "\n";
                         $serialNumber = $this->extractSerial($topic);
+
+                        File::prepend($logPath, "[" . now() . "] Data :" . $message . "\n");
 
                         //echo $message;
                         $json = json_decode($message, true);
@@ -126,32 +128,34 @@ class MqttService
                         //     $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                         //     File::prepend($logPath, "[" . now() . "] Config received from $serialNumber\n");
                         // }
-                        if ($json && isset($json['type']) && ($json['type'] == "alarm" || $json['type'] == "sensor")) {
 
-                            echo "alarm or sensor info \n";
+                        if ($json) {
+                            if ($json && isset($json['type']) && ($json['type'] == "alarm" || $json['type'] == "sensor")) {
 
-                            // Log::info($message);
-                            echo "\n";
+                                echo "alarm or sensor info \n";
+
+                                // Log::info($message);
+                                echo "\n";
 
 
-                            $data = $json;
+                                $data = $json;
 
-                            // Create request object with data
-                            $request = new Request($data);
-                            // Call the method with your custom request
-                            $controller = new ApiAlarmControlController();
-                            $controller->LogDeviceStatus($request);
+                                // Create request object with data
+                                $request = new Request($data);
+                                // Call the method with your custom request
+                                $controller = new ApiAlarmControlController();
+                                $controller->LogDeviceStatus($request);
 
-                            $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                            File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " " . $message . " \n");
-                            File::prepend($logPath, $json . "\n");
+
+                                File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " " . $message . " \n");
+                            }
                         }
                     } catch (\Throwable $e) {
 
                         echo "ERROR\n";
                         $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                         File::prepend($logPath, "[" . now() . "] ❌ MQTT config Exception: " . $e->getMessage() . "\n");
-                        File::prepend($logPath, $json . "\n");
+
 
 
 
