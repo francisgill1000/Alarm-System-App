@@ -610,7 +610,7 @@ export default {
       this.mqttClient.on("error", (err) => {
         console.error("MQTT Error:", err);
         setTimeout(() => {
-          connectMQTT();
+          this.connectMQTT();
         }, 1000 * 5);
       });
 
@@ -619,7 +619,7 @@ export default {
         console.log("❌ MQTT Disconnected");
 
         setTimeout(() => {
-          connectMQTT();
+          this.connectMQTT();
         }, 1000 * 5);
       });
     },
