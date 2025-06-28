@@ -1154,6 +1154,8 @@ export default {
       });
 
       this.mqttClient.on("message", (topic, payload) => {
+        console.log(payload);
+
         this.mqqtt_response_status = "Device Loading message";
 
         if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
@@ -1191,7 +1193,7 @@ export default {
         console.log("✅ MQTT connection is active");
       } else {
         console.log("❌ MQTT connection is inactive or not established");
-        this.connectMQTT();
+        // this.connectMQTT();
       }
       let isConfigReceived = false;
       const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
@@ -1211,7 +1213,7 @@ export default {
       setTimeout(() => {
         console.log("Testing");
         if (!this.deviceSettings.config) this.getConfigDataFromAPI();
-      }, 1000 * 5);
+      }, 1000 * 10);
     },
 
     can(per) {

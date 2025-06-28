@@ -631,9 +631,9 @@ export default {
         console.log("✅ MQTT connection is active");
       } else {
         console.log("❌ MQTT connection is inactive or not established");
-        this.connectMQTT();
+        // this.connectMQTT();
 
-        this.sendMQTTConfigRequest();
+        // this.sendMQTTConfigRequest();
       }
       const topic = `xtremevision/${this.device_serial_number}/config/request`;
       const payload = "GET_CONFIG";
