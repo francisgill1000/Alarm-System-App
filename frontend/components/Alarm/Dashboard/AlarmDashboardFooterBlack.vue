@@ -88,7 +88,6 @@
           "
           height="180px"
           elevation="24"
-          loading="false"
           outlined
           style="border-radius: 20px; text-align: center"
         >
@@ -160,7 +159,7 @@
           "
           height="180px"
           elevation="24"
-          loading="false"
+          :loading="loading"
           outlined
           style="border-radius: 20px; text-align: center"
           @click="relayCommand('relay0', relayStatus.relay0)"
@@ -184,7 +183,7 @@
           "
           height="180px"
           elevation="24"
-          loading="false"
+          :loading="loading"
           outlined
           @click="relayCommand('relay1', relayStatus.relay1)"
           style="border-radius: 20px; text-align: center"
@@ -208,7 +207,7 @@
           "
           height="180px"
           elevation="24"
-          loading="false"
+          :loading="loading"
           outlined
           @click="relayCommand('relay2', relayStatus.relay2)"
           style="border-radius: 20px; text-align: center"
@@ -232,7 +231,7 @@
           "
           height="180px"
           elevation="24"
-          loading="false"
+          :loading="loading"
           outlined
           @click="relayCommand('relay3', relayStatus.relay3)"
           style="border-radius: 20px; text-align: center"
@@ -467,7 +466,7 @@ export default {
       // console.log(cmd, status);
 
       this.$set(this.relayStatus, cmd, !status);
-
+      this.loading = true;
       this.message = "loading....";
 
       let options = {
@@ -491,10 +490,9 @@ export default {
           // if (!data.error) this.deviceSettings = data;
           // else this.message = data.error;
 
-          this.loading = true;
           setTimeout(() => {
             this.loading = false;
-          }, 1000 * 10);
+          }, 1000 * 5);
         });
     },
     getPriorityColor(status) {

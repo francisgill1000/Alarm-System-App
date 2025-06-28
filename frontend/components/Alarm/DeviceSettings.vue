@@ -796,7 +796,7 @@
                                 small
                                 :hide-details="true"
                                 label="Max Waiting Door Alarm"
-                                :items="heartBeatData"
+                                :items="doorContactMinutesData"
                                 item-value="value"
                                 item-text="label"
                               ></v-select>
@@ -1090,6 +1090,8 @@ export default {
 
     timeOptionsData: [],
 
+    doorContactMinutesData: [],
+
     Document: {
       items: [{ title: "", file: "" }],
     },
@@ -1322,7 +1324,7 @@ export default {
       // Generate options for seconds (5s to 55s)
       for (let sec = 1; sec <= 20; sec += 1) {
         options.push({
-          value: sec,
+          value: sec + "",
           label: `${sec} seconds`,
         });
       }
@@ -1332,12 +1334,21 @@ export default {
       // Generate options for seconds (5s to 55s)
       for (let sec = 10; sec <= 60; sec += 1) {
         options.push({
-          value: sec,
+          value: sec + "",
           label: `${sec} seconds`,
         });
       }
-
       this.secondsCountFrom10to60 = options;
+
+      options = [];
+      // Generate options for seconds (5s to 55s)
+      for (let sec = 1; sec <= 60; sec += 1) {
+        options.push({
+          value: sec + "",
+          label: `${sec} Minute(s)`,
+        });
+      }
+      this.doorContactMinutesData = options;
     },
     generateTimeOptions() {
       const options = [];

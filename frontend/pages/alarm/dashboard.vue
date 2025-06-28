@@ -465,6 +465,14 @@ export default {
         if (this.devicesList.length > 1) this.startAutoDeviceCycle();
       }
 
+      this.devicesList.forEach((element) => {
+        this.relayStatus[element.serial_number] = {};
+
+        for (let i = 0; i < 4; i++) {
+          this.relayStatus[element.serial_number][`relay${i}`] = false;
+        }
+      });
+
       // await this.$store.dispatch("fetchDropDowns", {
       //   key: "employeeList",
       //   endpoint: "employee-list",
