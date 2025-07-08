@@ -814,7 +814,7 @@ class DeviceSensorLogsController extends Controller
     {
 
         $date =  date("Y-m-d", strtotime('-60 days'));
-        $logs = AlarmDeviceSensorLogs::where("log_time", "<=", $date);
+        $logs = AlarmDeviceSensorLogs::where("log_time", "<=", $date)->delete();;
     }
     public function deleteOneMonthOldLogs()
     {

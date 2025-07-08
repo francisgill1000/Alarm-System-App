@@ -136,8 +136,7 @@ class MqttService
 
                                 // Log::info($message);
                                 echo "\n";
-
-
+                                File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " " . $message . " \n");
                                 $data = $json;
 
                                 // Create request object with data
@@ -145,9 +144,6 @@ class MqttService
                                 // Call the method with your custom request
                                 $controller = new ApiAlarmControlController();
                                 $controller->LogDeviceStatus($request);
-
-
-                                File::prepend($logPath, "[" . now() . "]  " . $json['type'] . " " . $message . " \n");
                             }
                         }
                     } catch (\Throwable $e) {
