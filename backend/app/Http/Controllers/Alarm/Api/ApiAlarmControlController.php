@@ -61,6 +61,7 @@ class ApiAlarmControlController extends Controller
 
 
             ];
+
             if ($request->wifiipaddress) {
                 Device::where("serial_number", $serial)
                     ->update([
@@ -96,76 +97,81 @@ class ApiAlarmControlController extends Controller
 
                 DeviceTemperatureLogs::create($log);
             }
-            //ONLY FOR ALARAM -------------------------------------------
-            // Reusable alarm handler
 
-            //device_sensor_logs table columns
-            foreach (
-                [
-                    'temperature_alarm' => 'Temperature Alarm',
-                    'humidity_alarm' => 'Humidity Alarm',
+            $logType = $request->type ?? $request->type;
+            if ($logType == "alarm") {
 
-                    'fire_alarm'        => 'Fire Alarm',
-                    'smoke_alarm'       => 'Smoke Alarm',
-                    'water_leakage'     => 'Water Leakage Alarm',
-                    'power_failure'     => 'Power Failure Alarm',
-                    'door_status'       => 'Door Open Alarm',
-                ] as $key => $label
-            ) {
+                //ONLY FOR ALARAM -------------------------------------------
+                // Reusable alarm handler
 
+                //device_sensor_logs table columns
+                foreach (
+                    [
+                        'temperature_alarm' => 'Temperature Alarm',
+                        'humidity_alarm' => 'Humidity Alarm',
 
-                $value = $alarmData[$key] ?? null;
-                if (!is_null($value)) {
-
-                    $logId = $this->logAlarmEvent(
-                        $device,
-                        $serial,
-                        $key,
-                        $value,
-                        $log_time,
-                        ['temparature' => $temperature, 'humidity' => $humidity, 'temperature_serial_address' => $request->sensor_serial_address],
-                        $request
-                    );
+                        'fire_alarm'        => 'Fire Alarm',
+                        'smoke_alarm'       => 'Smoke Alarm',
+                        'water_leakage'     => 'Water Leakage Alarm',
+                        'power_failure'     => 'Power Failure Alarm',
+                        'door_status'       => 'Door Open Alarm',
+                    ] as $key => $label
+                ) {
 
 
-                    $messages[] = $logId;
+                    $value = $alarmData[$key] ?? null;
+                    if (!is_null($value)) {
+
+                        $logId = $this->logAlarmEvent(
+                            $device,
+                            $serial,
+                            $key,
+                            $value,
+                            $log_time,
+                            ['temparature' => $temperature, 'humidity' => $humidity, 'temperature_serial_address' => $request->sensor_serial_address],
+                            $request
+                        );
 
 
-                    // $deviceTakeColumn = $key === 'temperature_alarm' ? 'temparature_alarm_status' : "{$key}_status";
+                        $messages[] = $logId;
 
-                    if ($key === 'temperature_alarm') {
-                        $deviceTakeColumn = "temparature_alarm_status";
+
+                        // $deviceTakeColumn = $key === 'temperature_alarm' ? 'temparature_alarm_status' : "{$key}_status";
+
+                        if ($key === 'temperature_alarm') {
+                            $deviceTakeColumn = "temparature_alarm_status";
+                        }
+                        if ($key === 'water_leakage') {
+                            $deviceTakeColumn = "water_alarm_status";
+                        }
+                        if ($key === 'fire_alarm') {
+                            $deviceTakeColumn = "fire_alarm_status";
+                        }
+                        if ($key === 'power_failure') {
+                            $deviceTakeColumn = "power_alarm_status";
+                        }
+                        if ($key === 'door_status') {
+                            $deviceTakeColumn = "door_open_status";
+                        }
+                        if ($key === 'smoke_alarm') {
+                            $deviceTakeColumn = "smoke_alarm_status";
+                        }
+
+
+                        $messages[] = $this->deviceAlarmTable(
+                            $deviceModel,
+                            $device,
+                            $deviceTakeColumn,
+                            $value,
+                            $log_time,
+                            $label,
+                            $logId,
+                            $temperature,
+                            $device->temperature_threshold
+                        );
                     }
-                    if ($key === 'water_leakage') {
-                        $deviceTakeColumn = "water_alarm_status";
-                    }
-                    if ($key === 'fire_alarm') {
-                        $deviceTakeColumn = "fire_alarm_status";
-                    }
-                    if ($key === 'power_failure') {
-                        $deviceTakeColumn = "power_alarm_status";
-                    }
-                    if ($key === 'door_status') {
-                        $deviceTakeColumn = "door_open_status";
-                    }
-                    if ($key === 'smoke_alarm') {
-                        $deviceTakeColumn = "smoke_alarm_status";
-                    }
-
-
-                    $messages[] = $this->deviceAlarmTable(
-                        $deviceModel,
-                        $device,
-                        $deviceTakeColumn,
-                        $value,
-                        $log_time,
-                        $label,
-                        $logId,
-                        $temperature,
-                        $device->temperature_threshold
-                    );
                 }
-            }
+            } //type alarm
 
             return $this->response('Successfully Updated', $messages, true);
         } catch (\Exception $e) {
