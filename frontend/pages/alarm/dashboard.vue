@@ -337,6 +337,8 @@ export default {
       loading: false,
       waitMQTTRelayUpdate: false,
       isMQTTConnected: false,
+      MQTTRetryCount: 0,
+      lastMQTTSendTime: 0,
     };
   },
   beforeDestroy() {
@@ -401,12 +403,15 @@ export default {
         this.devicesList.length == 1 &&
         !this.waitMQTTRelayUpdate
       ) {
+        const now = Date.now();
         // if (!this.playSlider || this.devicesList?.length == 1)
-        {
+        if (now - this.lastMQTTSendTime > 1000 * 10) {
+          // 10 seconds)
           await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
           // this.loading = true;
           await this.getDataFromApi();
           this.key++;
+          this.lastMQTTSendTime = now;
         }
       }
     }, 1000 * 10);
@@ -508,6 +513,9 @@ export default {
     //     this.isMQTTConnected = false;
     //   });
     // }, 1000 * 60);
+
+    // if (this.MQTTRetryCount > 10) {
+    // }
   },
 
   methods: {
@@ -523,6 +531,7 @@ export default {
       }
     },
     connectMQTT() {
+      if (this.MQTTRetryCount > 10) return false;
       this.loading = true;
       console.log("connecting to MQTT");
       //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
@@ -660,6 +669,8 @@ export default {
       this.mqttClient.on("close", () => {
         this.isMQTTConnected = false;
         console.log("❌ MQTT Disconnected");
+
+        this.MQTTRetryCount++;
 
         setTimeout(() => {
           this.connectMQTT();
