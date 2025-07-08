@@ -58,13 +58,9 @@
           outlined
           style="border-radius: 10px"
         >
-          <v-row
-            justify="end"
-            style="display: none1; margin-top: -30px"
-            v-if="devicesList.length > 1"
-          >
+          <v-row justify="end" style="display: none1; margin-top: -30px">
             <v-col></v-col>
-            <v-col style="max-width: 40px">
+            <v-col style="max-width: 40px" v-if="devicesList.length > 1">
               <v-icon
                 size="30"
                 color="white"
@@ -90,7 +86,7 @@
                 small
                 outlined
                 hide-details
-                label="Room"
+                label="Device"
                 class="ma-2"
                 :item-value="
                   (item) =>
@@ -105,6 +101,11 @@
                       : item.name
                 "
               ></v-select>
+            </v-col>
+            <v-col style="max-width: 50px">
+              <v-icon :color="isMQTTConnected ? 'green' : 'red'"
+                >mdi-web-box</v-icon
+              >
             </v-col>
           </v-row>
           <v-row style="display: none1">
@@ -335,6 +336,7 @@ export default {
       mqtt_alarm_timestamp: 0,
       loading: false,
       waitMQTTRelayUpdate: false,
+      isMQTTConnected: false,
     };
   },
   beforeDestroy() {
@@ -352,7 +354,7 @@ export default {
 
     this.mqttClient.end(false, () => {
       console.log("🔌 MQTT Disconnected");
-      this.isConnected = false;
+      this.isMQTTConnected = false;
     });
   },
   watch: {
@@ -396,7 +398,8 @@ export default {
     setInterval(async () => {
       if (
         this.$route.name == "alarm-dashboard" &&
-        this.devicesList.length == 1
+        this.devicesList.length == 1 &&
+        !this.waitMQTTRelayUpdate
       ) {
         // if (!this.playSlider || this.devicesList?.length == 1)
         {
@@ -411,19 +414,25 @@ export default {
     // setTimeout(() => {
     //   setInterval(() => {
     //     if (this.$route.name == "alarm-dashboard")
-    //       if (!this.isConnected) this.connectMQTT();
+    //       if (!this.isMQTTConnected) this.connectMQTT();
     //   }, 1000 * 5);
     // }, 1000 * 30);
   },
 
   async created() {
-    if (window) {
-      const viewportHeight = window.innerHeight;
-      console.log("Visible content height:", viewportHeight, "px");
+    try {
+      if (window) {
+        const viewportHeight = window.innerHeight;
+        // console.log("Visible content height:", viewportHeight, "px");
 
-      const contentHeight = document.documentElement.clientHeight;
-      console.log("Content height (excludes scrollbar):", contentHeight, "px");
-    }
+        const contentHeight = document.documentElement.clientHeight;
+        //  // console.log(
+        //     "Content height (excludes scrollbar):",
+        //     contentHeight,
+        //     "px"
+        //   );
+      }
+    } catch (e) {}
     const today = new Date();
 
     this.from_date = today.toISOString().slice(0, 10);
@@ -492,16 +501,26 @@ export default {
       console.error("Error fetching data:", error);
     }
     this.getDataFromApi();
+
+    // setTimeout(() => {
+    //   this.mqttClient.end(true, () => {
+    //     console.log("🔌 MQTT Disconnected");
+    //     this.isMQTTConnected = false;
+    //   });
+    // }, 1000 * 60);
   },
 
   methods: {
     manualButtonTriggered() {
       //console.log("manualButtonTriggered");
-      this.waitMQTTRelayUpdate = true;
 
-      setTimeout(() => {
-        this.waitMQTTRelayUpdate = false;
-      }, 1000 * 10);
+      if (!this.waitMQTTRelayUpdate) {
+        this.waitMQTTRelayUpdate = true;
+
+        setTimeout(() => {
+          this.waitMQTTRelayUpdate = false;
+        }, 1000 * 8);
+      }
     },
     connectMQTT() {
       console.log("connecting to MQTT");
@@ -523,7 +542,7 @@ export default {
       });
 
       this.mqttClient.on("connect", () => {
-        this.isConnected = true;
+        this.isMQTTConnected = true;
         console.log("✅ MQTT Connected");
 
         // // Subscribe to a topic
@@ -636,7 +655,7 @@ export default {
       });
 
       this.mqttClient.on("close", () => {
-        this.isConnected = false;
+        this.isMQTTConnected = false;
         console.log("❌ MQTT Disconnected");
 
         setTimeout(() => {

@@ -1191,12 +1191,12 @@ export default {
         (item) => item.to === "/" + menu_name && item.submenu == null
       );
 
-      console.log("menu_name", loadSelectedMenu);
+      // console.log("menu_name", loadSelectedMenu);
 
       if (loadSelectedMenu[0]) {
         menu_name = loadSelectedMenu[0].module;
 
-        console.log("menu_name", menu_name);
+        // console.log("menu_name", menu_name);
 
         if (this.menuProperties.hasOwnProperty(menu_name)) {
           for (const key in this.menuProperties) {
@@ -1672,10 +1672,10 @@ export default {
     },
     setSubLeftMenuItems(menu_name, page, redirect = true) {
       this.topMenu_Selected = menu_name;
-      console.log(
-        "this.menuProperties.hasOwnProperty(menu_name)",
-        this.menuProperties.hasOwnProperty(menu_name)
-      );
+      // console.log(
+      //   "this.menuProperties.hasOwnProperty(menu_name)",
+      //   this.menuProperties.hasOwnProperty(menu_name)
+      // );
       let bgColor = "violet";
       this.setMenus();
 
