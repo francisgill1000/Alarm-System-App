@@ -135,7 +135,7 @@
                   <TemperatureChart3
                     :name="'ArrowArcChartTemperature1'"
                     :temperature="temperature_latest"
-                    :key="key"
+                    :key="Sensorkey"
                     :temperature_date_time="temperature_date_time"
                   />
                   <!-- <ArrowArcChartTemperature
@@ -178,7 +178,7 @@
                   <HumidityChart3
                     :name="'ArrowArcChart2Humidity'"
                     :humidity="humidity_latest"
-                    :key="'ArrowArcChart2Humidity' + key"
+                    :key="Sensorkey"
                     :humidity_date_time="humidity_date_time"
                   />
                   <!-- <ArrowArcChart2Humidity
@@ -268,6 +268,7 @@ export default {
   },
   data() {
     return {
+      Sensorkey: 1,
       mqttClient: null,
       configPayload: "",
       playSlider: true,
@@ -760,6 +761,9 @@ export default {
                 data
               );
 
+              let previousTemperature = this.temperature_latest;
+              let previousHumidity = this.humidity_latest;
+
               this.temperature_latest = data.temperature_latest;
               this.temperature_date_time = this.$dateFormat.format4(
                 data.temperature_date_time
@@ -795,6 +799,13 @@ export default {
               );
 
               this.key = this.key + 1;
+
+              if (
+                this.temperature_latest != previousTemperature ||
+                this.humidity_latest != previousHumidity
+              ) {
+                this.Sensorkey++;
+              }
             });
         }
       } catch (e) {}
