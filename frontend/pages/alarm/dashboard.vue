@@ -531,15 +531,10 @@ export default {
       }
     },
     connectMQTT() {
-      if (this.MQTTRetryCount > 10) return false;
+      if (this.MQTTRetryCount > 10 || this.$route.name != "alarm-dashboard")
+        return false;
       this.loading = true;
       console.log("connecting to MQTT");
-      //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
-      //const host = "ws://165.22.222.17:9001"; // For secure WebSocket
-      // const host = "wss://mqtt.xtremeguard.org:9002"; // For secure WebSocket
-      // const host = "tcp://mqtt.xtremeguard.org:1883"; // For secure WebSocket
-
-      // const host = "ws://mqtt.xtremeguard.org:8083"; // If TLS WebSocket is available
 
       const host = process.env.MQTT_SOCKET_HOST; // "wss://mqtt.xtremeguard.org:8084"; // If TLS WebSocket is available
 
@@ -583,25 +578,6 @@ export default {
         if (message.type == "alarm") {
           this.sendMQTTConfigRequest(); //get immediate relay data
           this.getDataFromApi();
-          //   console.log(this.mqtt_alarm_timestamp, message.timestamp);
-
-          //   if (this.mqtt_alarm_timestamp == message.timestamp) return false;
-
-          //   console.log("alarm_device_status");
-
-          //   let options = {
-          //     params: JSON.parse(payload.toString()),
-          //   };
-          //   // console.log(options);
-
-          //   this.$axios
-          //     .post(`alarm_device_status`, options.params)
-          //     .then(({ data }) => {
-          //       // if (!data.error) this.deviceSettings = data;
-          //       // else this.message = data.error;
-          //     });
-
-          //   this.mqtt_alarm_timestamp = message.timestamp;
         }
 
         // console.log("this.waitMQTTRelayUpdate", this.waitMQTTRelayUpdate);
@@ -643,20 +619,6 @@ export default {
           //   this.loading = false;
           // }, 1000 * 5);
         }
-
-        // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
-        //   let jsonconfig = JSON.parse(payload.toString());
-        //   if (jsonconfig.type == "config") {
-        //     this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
-        //     //this.deviceSettings = jsonconfig;
-        //     let config = JSON.parse(jsonconfig.config);
-        //     this.deviceSettings.config = config;
-        //     console.log(this.deviceSettings.config);
-        //   }
-        //   // this.message = payload.toString();
-        // }
-
-        //
       });
 
       this.mqttClient.on("error", (err) => {
@@ -671,10 +633,11 @@ export default {
         console.log("❌ MQTT Disconnected");
 
         this.MQTTRetryCount++;
-
-        setTimeout(() => {
-          this.connectMQTT();
-        }, 1000 * 5);
+        {
+          setTimeout(() => {
+            this.connectMQTT();
+          }, 1000 * 5);
+        }
       });
     },
 
