@@ -204,9 +204,11 @@
     <v-row>
       <v-col cols="6">
         <AlarmDashboardFooterBlack
+          :loading="false"
           :device="device"
           :key="key"
           :relayStatus="relayStatus[device.serial_number]"
+          @manualButtonTriggered="manualButtonTriggered()"
         />
       </v-col>
       <v-col cols="6">
@@ -331,6 +333,8 @@ export default {
       intervalObj: null,
       viewportHeight: 0,
       mqtt_alarm_timestamp: 0,
+      loading: false,
+      waitMQTTRelayUpdate: false,
     };
   },
   beforeDestroy() {
@@ -389,16 +393,17 @@ export default {
 
     console.log("this.currentDeviceIndex", this.devicesList.length);
 
-    this.intervalObj = setInterval(() => {
+    setInterval(async () => {
       if (
         this.$route.name == "alarm-dashboard" &&
         this.devicesList.length == 1
       ) {
         // if (!this.playSlider || this.devicesList?.length == 1)
         {
-          this.getDataFromApi();
+          await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
+          this.loading = true;
+          await this.getDataFromApi();
           this.key++;
-          this.sendMQTTConfigRequest();
         }
       }
     }, 1000 * 10);
@@ -490,6 +495,14 @@ export default {
   },
 
   methods: {
+    manualButtonTriggered() {
+      //console.log("manualButtonTriggered");
+      this.waitMQTTRelayUpdate = true;
+
+      setTimeout(() => {
+        this.waitMQTTRelayUpdate = false;
+      }, 1000 * 10);
+    },
     connectMQTT() {
       console.log("connecting to MQTT");
       //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
@@ -539,7 +552,7 @@ export default {
         let message = JSON.parse(payload.toString());
         //console.log(message);
         if (message.type == "alarm") {
-          this.sendMQTTConfigRequest();
+          this.sendMQTTConfigRequest(); //get immediate relay data
           this.getDataFromApi();
           //   console.log(this.mqtt_alarm_timestamp, message.timestamp);
 
@@ -562,7 +575,9 @@ export default {
           //   this.mqtt_alarm_timestamp = message.timestamp;
         }
 
-        if (message.type == "config") {
+        console.log("this.waitMQTTRelayUpdate", this.waitMQTTRelayUpdate);
+
+        if (message.type == "config" && !this.waitMQTTRelayUpdate) {
           if (this.device_serial_number == message.serialNumber) {
             // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
             // //this.deviceSettings = jsonconfig;
@@ -592,6 +607,10 @@ export default {
             this.relayStatus[this.device_serial_number].relay2 = false;
             this.relayStatus[this.device_serial_number].relay3 = false;
           }
+          this.key++;
+          setTimeout(() => {
+            this.loading = false;
+          }, 1000 * 5);
         }
 
         // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
@@ -605,6 +624,8 @@ export default {
         //   }
         //   // this.message = payload.toString();
         // }
+
+        //
       });
 
       this.mqttClient.on("error", (err) => {
@@ -624,7 +645,7 @@ export default {
       });
     },
 
-    sendMQTTConfigRequest() {
+    async sendMQTTConfigRequest() {
       if (!this.device_serial_number) return false;
 
       if (this.mqttClient && this.mqttClient.connected) {
@@ -691,6 +712,7 @@ export default {
     },
 
     ChangeDevice() {
+      this.loading = true;
       const [serial_number, device_temperature_serial_address] =
         this.device_serial_number_with_sensor.split("|");
 
@@ -708,7 +730,7 @@ export default {
       this.sendMQTTConfigRequest();
       //console.log(this.device_serial_number, " this.device_serial_number");
     },
-    getDataFromApi() {
+    async getDataFromApi() {
       // if (reset == 1) {
       //   this.keyChart2++;
       // }
@@ -736,7 +758,7 @@ export default {
             .then(({ data }) => {
               this.data = data;
               this.device = data.device;
-              this.loading = false;
+              // this.loading = false;
               this.$store.commit(
                 "AlarmDashboard/alarm_temparature_latest",
                 data

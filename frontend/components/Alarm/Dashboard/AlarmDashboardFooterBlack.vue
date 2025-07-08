@@ -3,7 +3,7 @@
     style="width: 100%"
     v-if="can('dashboard_access') && can('dashboard_view')"
   >
-    <v-row>
+    <v-row :key="key">
       <v-col cols="3">
         <v-card
           :class="
@@ -161,7 +161,10 @@
           elevation="24"
           :loading="loading"
           outlined
-          style="border-radius: 20px; text-align: center"
+          :style="
+            'border-radius: 20px; text-align: center;cursor:' +
+            (loading ? 'progress' : 'pointer')
+          "
           @click="relayCommand('relay0', relayStatus.relay0)"
         >
           <div style="margin: auto">
@@ -186,7 +189,10 @@
           :loading="loading"
           outlined
           @click="relayCommand('relay1', relayStatus.relay1)"
-          style="border-radius: 20px; text-align: center"
+          :style="
+            'border-radius: 20px; text-align: center;cursor:' +
+            (loading ? 'progress' : 'pointer')
+          "
         >
           <div style="margin: auto">
             <img
@@ -199,6 +205,7 @@
       </v-col>
 
       <v-col cols="3">
+        <!-- {{ relayStatus.relay2 }} -->
         <v-card
           :class="
             relayStatus && relayStatus.relay2
@@ -210,7 +217,10 @@
           :loading="loading"
           outlined
           @click="relayCommand('relay2', relayStatus.relay2)"
-          style="border-radius: 20px; text-align: center"
+          :style="
+            'border-radius: 20px; text-align: center;cursor:' +
+            (loading ? 'progress' : 'pointer')
+          "
         >
           <div style="margin: auto">
             <img
@@ -234,7 +244,10 @@
           :loading="loading"
           outlined
           @click="relayCommand('relay3', relayStatus.relay3)"
-          style="border-radius: 20px; text-align: center"
+          :style="
+            'border-radius: 20px; text-align: center;cursor:' +
+            (loading ? 'progress' : 'pointer')
+          "
         >
           <div style="margin: auto">
             <img
@@ -255,7 +268,7 @@
 import mqtt from "mqtt";
 
 export default {
-  props: ["device", "relayStatus"],
+  props: ["device", "relayStatus", "loading"],
   data() {
     return {
       mqqtt_response_status: "",
@@ -269,7 +282,8 @@ export default {
       branch_id: "",
       overlay: false,
       intervalObj: null,
-      loading: false,
+      // loading: true,
+      key: 1,
     };
   },
   beforeDestroy() {
@@ -307,6 +321,10 @@ export default {
     // setTimeout(() => {
     /////////this.getDeviceSettings();
     // }, 1000 * 15);
+    // setTimeout(() => {
+    //   this.loading = false;
+    //   console.log("loading", this.loading);
+    // }, 1000 * 5);
   },
   watch: {
     relayStatus: {
@@ -463,10 +481,18 @@ export default {
     },
     */
     relayCommand(cmd, status) {
-      // console.log(cmd, status);
+      // console.log(this.relayStatus, cmd, status);
+      if (status == true) this.$set(this.relayStatus, cmd, false);
 
-      this.$set(this.relayStatus, cmd, !status);
-      this.loading = true;
+      if (status == false) this.$set(this.relayStatus, cmd, true);
+
+      this.key++;
+      // console.log(this.relayStatus, cmd, status);
+
+      // return false;
+
+      // if (this.loading) return false;
+      // this.loading = true;
       this.message = "loading....";
 
       let options = {
@@ -489,10 +515,11 @@ export default {
           // if (cmd == "relay3") this.relayStatus.relay3 = status;
           // if (!data.error) this.deviceSettings = data;
           // else this.message = data.error;
-
-          setTimeout(() => {
-            this.loading = false;
-          }, 1000 * 5);
+          // setTimeout(() => {
+          //   this.loading = false;
+          // }, 1000 * 15);
+          //this.$emit("getConfigFromDevice");
+          this.$emit("manualButtonTriggered");
         });
     },
     getPriorityColor(status) {
