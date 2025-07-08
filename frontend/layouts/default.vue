@@ -1332,76 +1332,7 @@ export default {
     stopsound() {
       if (this.audio) this.audio.pause();
     },
-    // switchTheme(theme) {
-    //   this.currentTheme = theme;
-    //   console.log("Switching to theme:", theme);
 
-    //   const blueTheme = {
-    //     primary: "#000000",
-    //     secondary: "#000000",
-    //     accent: "#000000",
-    //     error: "#000000",
-    //     info: "#000000",
-    //     success: "#000000",
-    //     warning: "#000000",
-    //     background: "#000000",
-    //   };
-
-    //   const lightThemeD = {
-    //     //primary: "#5fafa3", //green
-    //     primary: "#6946dd", //violoet
-    //     accent: "#d8363a",
-    //     secondary: "#242424",
-    //     background: "#34444c",
-    //     info: colors.teal.lighten1,
-    //     warning: colors.amber.base,
-    //     error: colors.deepOrange.accent4,
-    //     success: colors.green.accent3,
-    //     main_bg: "#ecf0f4",
-    //     violet: "#6946dd",
-    //     popup_background: "#ecf0f4",
-    //     "on-surface": "#000",
-    //     "default-font-color": "#000",
-    //     "default-font-color-reverse": "#FFF",
-    //   };
-
-    //   if (theme === "blue") {
-    //     const lightTheme = this.$vuetify.theme.themes.light;
-
-    //     Object.keys(blueTheme).forEach((key) => {
-    //       lightTheme[key] = blueTheme[key];
-    //     });
-
-    //     this.$vuetify.theme.dark = false;
-    //   } else if (theme === "dark") {
-    //     this.$vuetify.theme.dark = true;
-    //   } else if (theme === "light") {
-    //     this.$vuetify.theme.themes.light = lightThemeD;
-
-    //     this.$vuetify.theme.dark = false;
-    //   } else {
-    //     console.warn("Unknown theme:", theme);
-    //   }
-
-    //   // const $vuetify = this.$vuetify;
-
-    //   // // Enable dark mode only if theme is dark
-    //   // $vuetify.theme.dark = theme === "dark";
-
-    //   // console.log($vuetify.theme.themes);
-
-    //   // // Get the selected theme from Vuetify config
-    //   // const selectedTheme = $vuetify.theme.themes[theme];
-
-    //   // // Replace current theme colors
-    //   // if ($vuetify.theme.dark) {
-    //   //   $vuetify.theme.themes.dark = { ...selectedTheme };
-    //   // } else {
-    //   //   $vuetify.theme.themes.light = { ...selectedTheme };
-    //   // }
-
-    //   // this.currentTheme = theme;
-    // },
     toggleTheme222222222() {
       this.currentTheme = this.currentTheme === "light" ? "dark" : "light";
       this.$vuetify.theme.themes.light = this.themes[this.currentTheme];

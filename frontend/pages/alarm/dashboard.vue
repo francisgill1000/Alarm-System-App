@@ -205,7 +205,7 @@
     <v-row>
       <v-col cols="6">
         <AlarmDashboardFooterBlack
-          :loading="false"
+          :loading="loading"
           :device="device"
           :key="key"
           :relayStatus="relayStatus[device.serial_number]"
@@ -361,9 +361,9 @@ export default {
     from_date(val) {},
   },
   mounted() {
-    setTimeout(() => {
-      this.connectMQTT();
-    }, 1000 * 5);
+    this.loading = true;
+    this.connectMQTT();
+    // setTimeout(() => {}, 1000 * 3);
     // if (window) {
     //   this.viewportHeight = window.innerHeight;
     //   window.addEventListener("resize", this.handleResize);
@@ -404,7 +404,7 @@ export default {
         // if (!this.playSlider || this.devicesList?.length == 1)
         {
           await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
-          this.loading = true;
+          // this.loading = true;
           await this.getDataFromApi();
           this.key++;
         }
@@ -523,6 +523,7 @@ export default {
       }
     },
     connectMQTT() {
+      this.loading = true;
       console.log("connecting to MQTT");
       //const host = "wss://broker.hivemq.com:8884/mqtt"; // For secure WebSocket
       //const host = "ws://165.22.222.17:9001"; // For secure WebSocket
@@ -594,7 +595,7 @@ export default {
           //   this.mqtt_alarm_timestamp = message.timestamp;
         }
 
-        console.log("this.waitMQTTRelayUpdate", this.waitMQTTRelayUpdate);
+        // console.log("this.waitMQTTRelayUpdate", this.waitMQTTRelayUpdate);
 
         if (message.type == "config" && !this.waitMQTTRelayUpdate) {
           if (this.device_serial_number == message.serialNumber) {
@@ -627,9 +628,11 @@ export default {
             this.relayStatus[this.device_serial_number].relay3 = false;
           }
           this.key++;
-          setTimeout(() => {
-            this.loading = false;
-          }, 1000 * 5);
+
+          this.loading = false;
+          // setTimeout(() => {
+          //   this.loading = false;
+          // }, 1000 * 5);
         }
 
         // if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
