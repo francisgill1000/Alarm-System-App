@@ -363,7 +363,7 @@ export default {
   watch: {
     from_date(val) {},
   },
-  mounted() {
+  async mounted() {
     this.loading = true;
     this.connectMQTT();
     // setTimeout(() => {}, 1000 * 3);
@@ -396,8 +396,6 @@ export default {
     }, 1000 * 60 * 15);
     ///this.getDataFromApi(1);
 
-    console.log("this.currentDeviceIndex", this.devicesList.length);
-
     setInterval(async () => {
       if (
         this.$route.name == "alarm-dashboard" &&
@@ -408,7 +406,7 @@ export default {
         // if (!this.playSlider || this.devicesList?.length == 1)
         if (now - this.lastMQTTSendTime > 1000 * 10) {
           // 10 seconds)
-          await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
+          //////await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
           // this.loading = true;
           await this.getDataFromApi();
           this.key++;
@@ -508,6 +506,11 @@ export default {
     }
     this.getDataFromApi();
 
+    if (this.devicesList.length) {
+      console.log("this.currentDeviceIndex", this.devicesList.length);
+      await this.sendMQTTConfigRequest();
+    }
+
     // setTimeout(() => {
     //   this.mqttClient.end(true, () => {
     //     console.log("🔌 MQTT Disconnected");
@@ -532,7 +535,11 @@ export default {
       }
     },
     connectMQTT() {
-      if (this.MQTTRetryCount > 10 || this.$route.name != "alarm-dashboard")
+      if (
+        this.MQTTRetryCount > 10 ||
+        this.$route.name != "alarm-dashboard" ||
+        this.isMQTTConnected
+      )
         return false;
       this.loading = true;
       console.log("connecting to MQTT");
@@ -548,7 +555,6 @@ export default {
       });
 
       this.mqttClient.on("connect", () => {
-        this.isMQTTConnected = true;
         console.log("✅ MQTT Connected");
 
         // // Subscribe to a topic
@@ -571,20 +577,21 @@ export default {
       });
 
       this.mqttClient.on("message", (topic, payload) => {
-        // console.log("Message", payload.toString());
+        console.log("Message", payload.toString());
         //console.log("topic", topic);
 
         let message = JSON.parse(payload.toString());
         //console.log(message);
-        if (message.type == "alarm") {
-          this.sendMQTTConfigRequest(); //get immediate relay data
-          this.getDataFromApi();
-        }
 
-        // console.log("this.waitMQTTRelayUpdate", this.waitMQTTRelayUpdate);
+        if (this.device_serial_number == message.serialNumber) {
+          this.isMQTTConnected = true;
+          if (message.type == "alarm") {
+            this.sendMQTTConfigRequest(); //get immediate relay data
+            this.getDataFromApi();
+          }
 
-        if (message.type == "config" && !this.waitMQTTRelayUpdate) {
-          if (this.device_serial_number == message.serialNumber) {
+          // console.log("this.waitMQTTRelayUpdate", this.waitMQTTRelayUpdate);
+          else if (message.type == "config" && !this.waitMQTTRelayUpdate) {
             // this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
             // //this.deviceSettings = jsonconfig;
 
@@ -606,16 +613,16 @@ export default {
               // this.relayStatus.relay1 = data.config.relay1;
               // this.relayStatus.relay2 = data.config.relay2;
               // this.relayStatus.relay3 = data.config.relay3;
+            } else {
+              this.relayStatus[this.device_serial_number].relay0 = false;
+              this.relayStatus[this.device_serial_number].relay1 = false;
+              this.relayStatus[this.device_serial_number].relay2 = false;
+              this.relayStatus[this.device_serial_number].relay3 = false;
             }
-          } else {
-            this.relayStatus[this.device_serial_number].relay0 = false;
-            this.relayStatus[this.device_serial_number].relay1 = false;
-            this.relayStatus[this.device_serial_number].relay2 = false;
-            this.relayStatus[this.device_serial_number].relay3 = false;
-          }
-          this.key++;
+            this.key++;
 
-          this.loading = false;
+            this.loading = false;
+          }
           // setTimeout(() => {
           //   this.loading = false;
           // }, 1000 * 5);

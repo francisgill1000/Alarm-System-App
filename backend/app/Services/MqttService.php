@@ -132,7 +132,7 @@ class MqttService
                         if ($json) {
                             if ($json && isset($json['type']) && ($json['type'] == "alarm" || $json['type'] == "sensor")) {
 
-                                echo "alarm or sensor info \n";
+                                echo $json['type'] . " \n";
 
                                 // Log::info($message);
                                 echo "\n";

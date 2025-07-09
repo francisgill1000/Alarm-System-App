@@ -540,10 +540,15 @@ class DeviceController extends Controller
 
         try {
             $data = $request->all();
+            $data = $request->validated();
             if ($request->isNotFilled("device_type")) {
                 $data["device_type"] = "---";
             }
-            $record = $Device->update($request->validated());
+
+            $data["device_id"] = $data["serial_number"];
+
+
+            $record = $Device->update($data);
 
 
 

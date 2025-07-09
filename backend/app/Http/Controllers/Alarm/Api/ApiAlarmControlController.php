@@ -41,8 +41,18 @@ class ApiAlarmControlController extends Controller
 
             Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . json_encode($request->all()));
 
-            $serial = $request->serialNumber ?? $request->deviceID ?? '';
-            if (!$serial) return $this->response('Serial Number Missing', null, false);
+            $serial = null; //$request->serialNumber ?? $request->deviceID ?? '';
+
+            if ($request->filled("serialNumber")) {
+                $serial = $request->serialNumber;
+            } else if ($request->filled("deviceID")) {
+                $serial =  $request->deviceID;
+            }
+            if (!$serial) {
+                Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . 'Serial Number Missing');
+
+                return $this->response('Serial Number Missing', null, false);
+            }
 
             $log_time = now()->format('Y-m-d H:i:s');
             $temperature = $this->sanitizeSensorValue($request->temperature);
@@ -62,6 +72,10 @@ class ApiAlarmControlController extends Controller
 
             ];
 
+
+            // Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . json_encode($alarmData));
+
+
             if ($request->wifiipaddress) {
                 Device::where("serial_number", $serial)
                     ->update([
@@ -72,8 +86,12 @@ class ApiAlarmControlController extends Controller
 
             $deviceModel = Device::where("serial_number", $serial);
             $device = $deviceModel->first();
-            if (!$device) return $this->response('Device not found', null, false);
+            if (!$device) {
+                Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . 'Device not registered');
 
+
+                return $this->response('Device not found', null, false);
+            }
 
 
             $deviceModel->update(["status_id" => 1, "last_live_datetime" => now()]);
@@ -120,6 +138,9 @@ class ApiAlarmControlController extends Controller
 
 
                     $value = $alarmData[$key] ?? null;
+
+
+
                     if (!is_null($value)) {
 
                         $logId = $this->logAlarmEvent(
@@ -131,7 +152,9 @@ class ApiAlarmControlController extends Controller
                             ['temparature' => $temperature, 'humidity' => $humidity, 'temperature_serial_address' => $request->sensor_serial_address],
                             $request
                         );
-
+                        if ($value)
+                            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . " -   Alarm Created #" . $logId);
+                        else Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . " -  Alarm Closed " . $logId);
 
                         $messages[] = $logId;
 
@@ -169,6 +192,8 @@ class ApiAlarmControlController extends Controller
                             $temperature,
                             $device->temperature_threshold
                         );
+                    } else {
+                        // Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . $key . " : Value is null");
                     }
                 }
             } //type alarm
@@ -309,27 +334,30 @@ class ApiAlarmControlController extends Controller
             if (!$lastOpen) { //create new only if alarm is closed
 
 
+
+
                 // Alarm ON — Create new log
                 $log['alarm_start_datetime'] = $logTime;
 
                 // Add sensor readings or extra alarm data (temperature, humidity, etc.)
                 $log += array_filter($extraData, fn($v) => !is_null($v));
 
-                //try {
-                $record = DeviceSensorLogs::create($log);
+                try {
+                    $record = DeviceSensorLogs::create($log);
 
-                return $record->id;
-                // } catch (\Exception $e) {
+                    return $record->id;
+                } catch (\Exception $e) {
 
-                //     return $e->getMessage();
-                //     // \Log::error("Alarm ON log creation failed", [
-                //     //     'device' => $device->id,
-                //     //     'type' => $alarmType,
-                //     //     'error' => $e->getMessage(),
-                //     //     'data' => $log
-                //     // ]);
-                // }
-
+                    return $e->getMessage();
+                    // \Log::error("Alarm ON log creation failed", [
+                    //     'device' => $device->id,
+                    //     'type' => $alarmType,
+                    //     'error' => $e->getMessage(),
+                    //     'data' => $log
+                    // ]);
+                }
+            } else {
+                return "Already Alarm Is open ";
             }
         } elseif ($status == 0) {
 
@@ -376,7 +404,7 @@ class ApiAlarmControlController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => "Closed $closedCount '$alarmType' alarms where status = 0 and end time was missing.",
+                'message' => "Closed $closedCount '$alarmType' alarms where status = 0 and end time is.",
             ]);
 
 
