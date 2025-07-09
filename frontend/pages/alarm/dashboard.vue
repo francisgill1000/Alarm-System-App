@@ -406,7 +406,7 @@ export default {
         // if (!this.playSlider || this.devicesList?.length == 1)
         if (now - this.lastMQTTSendTime > 1000 * 10) {
           // 10 seconds)
-          await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
+          //////await this.sendMQTTConfigRequest(); //publish/send request Config Request to Device
           // this.loading = true;
           await this.getDataFromApi();
           this.key++;
