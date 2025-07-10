@@ -62,11 +62,11 @@ class MqttService
 
 
 
-                    echo "heartbeat\n";
+
                     try {
 
                         $serialNumber = $this->extractSerial($topic);
-
+                        echo $serialNumber . "-heartbeat\n";
                         // Log::info($message);
 
                         echo "\n";
@@ -104,14 +104,14 @@ class MqttService
 
                 $this->mqtt->subscribe($this->mqttDeviceClientId . '/+/config', function ($topic, $message) {
                     $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
-                    try {
+                    try {;
 
-                        echo "All\n";
+
 
                         // Log::info($message);
                         echo "\n";
                         $serialNumber = $this->extractSerial($topic);
-
+                        echo $serialNumber . "-config\n";
                         File::prepend($logPath, "[" . now() . "] Data :" . $message . "\n");
 
                         //echo $message;
@@ -132,7 +132,10 @@ class MqttService
                         if ($json) {
                             if ($json && isset($json['type']) && ($json['type'] == "alarm" || $json['type'] == "sensor")) {
 
-                                echo $json['type'] . " \n";
+                                //echo $json['type'] . " \n";
+
+                                echo $serialNumber . "-" . $json['type'] . "\n";
+
 
                                 // Log::info($message);
                                 echo "\n";
@@ -148,7 +151,10 @@ class MqttService
                         }
                     } catch (\Throwable $e) {
 
-                        echo "ERROR\n";
+                        //echo "ERROR\n";
+                        echo $serialNumber . "-Error\n";
+
+
                         $logPath = base_path('../../mytime2cloud/mqtt-logs/' . date("Y-m-d") . '.log');
                         File::prepend($logPath, "[" . now() . "] ❌ MQTT config Exception: " . $e->getMessage() . "\n");
 

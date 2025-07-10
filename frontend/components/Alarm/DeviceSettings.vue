@@ -1136,7 +1136,7 @@ export default {
         this.mqqtt_response_status = "Device Connected....";
 
         // Subscribe to a topic
-        const topic = `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config`;
+        const topic = `xtremevision/${this.editedItem.serial_number}/config`;
         this.mqttClient.subscribe(topic, (err) => {
           if (err) {
             this.mqqtt_response_status = "Device Connection Failed....";
@@ -1158,10 +1158,7 @@ export default {
 
         this.mqqtt_response_status = "Device Loading message";
 
-        if (
-          topic ===
-          `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config`
-        ) {
+        if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
           let jsonconfig = JSON.parse(payload.toString());
           if (jsonconfig.type == "config") {
             this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
@@ -1239,7 +1236,7 @@ export default {
         // this.connectMQTT();
       }
       let isConfigReceived = false;
-      const topic = `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config/request`;
+      const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
       const payload = "GET_CONFIG";
 
       this.mqqtt_response_status =

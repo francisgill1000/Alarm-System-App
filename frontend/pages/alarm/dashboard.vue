@@ -571,9 +571,12 @@ export default {
 
         // this.sendConfigRequest();
 
-        let topic = `xtremevision-${this.editedItem.serial_number}/+/config`;
+        let topic = `xtremevision/+/config`;
+
+        console.log("this.devicesList.length", this.devicesList.length);
+
         if (this.devicesList.length == 1)
-          topic = `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config`;
+          topic = `xtremevision/${this.device_serial_number}/config`;
 
         this.mqttClient.subscribe(topic, (err) => {
           if (err) console.error("❌ Subscribe failed:", err);
@@ -668,7 +671,7 @@ export default {
 
         // this.sendMQTTConfigRequest();
       }
-      const topic = `xtremevision-${this.device_serial_number}/${this.device_serial_number}/config/request`;
+      const topic = `xtremevision/${this.device_serial_number}/config/request`;
       const payload = "GET_CONFIG";
 
       this.mqttClient.publish(topic, payload, {}, (err) => {
