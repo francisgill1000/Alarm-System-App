@@ -424,6 +424,11 @@ export default {
   },
 
   async created() {
+    // this.$root.layoutMethod(); // if layoutMethod is defined globally (rare)
+    // // OR
+    // if (this.$nuxt && this.$nuxt.layoutMethod) {
+    //   this.$nuxt.layoutMethod(); // ✅ This works in Nuxt 2
+    // }
     try {
       if (window) {
         const viewportHeight = window.innerHeight;
@@ -566,9 +571,9 @@ export default {
 
         // this.sendConfigRequest();
 
-        let topic = "xtremevision/+/config";
+        let topic = `xtremevision-${this.editedItem.serial_number}/+/config`;
         if (this.devicesList.length == 1)
-          topic = "xtremevision/" + this.device_serial_number + "/config";
+          topic = `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config`;
 
         this.mqttClient.subscribe(topic, (err) => {
           if (err) console.error("❌ Subscribe failed:", err);
@@ -585,7 +590,10 @@ export default {
 
         if (this.device_serial_number == message.serialNumber) {
           this.isMQTTConnected = true;
+
           if (message.type == "alarm") {
+            localStorage.setItem("alarm", true);
+
             this.sendMQTTConfigRequest(); //get immediate relay data
             this.getDataFromApi();
           }
@@ -660,7 +668,7 @@ export default {
 
         // this.sendMQTTConfigRequest();
       }
-      const topic = `xtremevision/${this.device_serial_number}/config/request`;
+      const topic = `xtremevision-${this.device_serial_number}/${this.device_serial_number}/config/request`;
       const payload = "GET_CONFIG";
 
       this.mqttClient.publish(topic, payload, {}, (err) => {
@@ -762,7 +770,7 @@ export default {
             .then(({ data }) => {
               this.data = data;
               this.device = data.device;
-              // this.loading = false;
+              this.loading = false;
               this.$store.commit(
                 "AlarmDashboard/alarm_temparature_latest",
                 data

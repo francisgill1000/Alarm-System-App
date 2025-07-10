@@ -117,7 +117,8 @@ class ApiAlarmControlController extends Controller
             }
 
             $logType = $request->type ?? $request->type;
-            if ($logType == "alarm") {
+            //  if ($logType == "alarm")
+            {
 
                 //ONLY FOR ALARAM -------------------------------------------
                 // Reusable alarm handler

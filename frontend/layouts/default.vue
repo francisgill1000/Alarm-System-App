@@ -195,7 +195,7 @@
           "
         >
           <v-row align="center" justify="space-around" class="">
-            <v-col v-for="(items, index) in company_top_menu" :key="index">
+            <v-col v-for="(items, index) in company_top_menu">
               <v-btn
                 small
                 text
@@ -484,6 +484,7 @@
         v-model="snackNotification"
         location="right"
         :color="snackNotificationColor"
+        timeout="2000"
       >
         {{ snackNotificationText }}
 
@@ -542,16 +543,13 @@
             </v-toolbar>
 
             <v-card-text class="pt-5">
-              <v-row
-                v-for="(device, index) in notificationAlarmDevices"
-                key="index"
-              >
+              <v-row v-for="(device, index) in notificationAlarmDevices">
                 <v-col cols="12">
                   <v-row
                     v-if="device.temperature_alarm"
                     :style="
-                      pendingNotificationsCount > 0
-                        ? 'border-bottom: 1px solid #ddd'
+                      pendingNotificationsCount > 1
+                        ? 'border-bottom: 1px solid #474141'
                         : ''
                     "
                   >
@@ -597,8 +595,8 @@
                   <v-row
                     v-if="device.fire_alarm"
                     :style="
-                      pendingNotificationsCount.length > 1
-                        ? 'border-bottom: 1px solid #ddd'
+                      pendingNotificationsCount > 1
+                        ? 'border-bottom: 1px solid #474141'
                         : ''
                     "
                   >
@@ -630,8 +628,8 @@
                   <v-row
                     v-if="device.smoke_alarm"
                     :style="
-                      pendingNotificationsCount.length > 1
-                        ? 'border-bottom: 1px solid #ddd'
+                      pendingNotificationsCount > 1
+                        ? 'border-bottom: 1px solid #474141'
                         : ''
                     "
                   >
@@ -663,8 +661,8 @@
                   <v-row
                     v-if="device.door_status"
                     :style="
-                      pendingNotificationsCount.length > 1
-                        ? 'border-bottom: 1px solid #ddd'
+                      pendingNotificationsCount > 1
+                        ? 'border-bottom: 1px solid #474141'
                         : ''
                     "
                   >
@@ -696,8 +694,8 @@
                   <v-row
                     v-if="device.power_failure"
                     :style="
-                      pendingNotificationsCount.length > 1
-                        ? 'border-bottom: 1px solid #ddd'
+                      pendingNotificationsCount > 1
+                        ? 'border-bottom: 1px solid #474141'
                         : ''
                     "
                   >
@@ -729,13 +727,13 @@
                   <v-row
                     v-if="device.water_leakage"
                     :style="
-                      pendingNotificationsCount.length > 1
-                        ? 'border-bottom: 1px solid #ddd'
+                      pendingNotificationsCount > 1
+                        ? 'border-bottom: 1px solid #474141'
                         : ''
                     "
                   >
-                    <v-col cols="2" class="pt-10 text-center"
-                      ><img
+                    <v-col cols="2" class="pt-10 text-center">
+                      <img
                         src="../static/alarm-icons/water-leakage.png"
                         width="100px"
                     /></v-col>
@@ -1137,6 +1135,22 @@ export default {
       this.currentTime = now.toLocaleTimeString([], { hour12: false });
       this.todayDate =
         this.$dateFormat.format_date_with_dayname(formattedDateTime);
+
+      try {
+        console.log(localStorage.getItem("alarm"));
+
+        if (localStorage.getItem("alarm") == "true") {
+          // if (
+          //   this.timmerStatus == true &&
+          //   !this.popupNotificationHide5MinutesActive
+          // )
+          // if (this.timmerStatus == true)
+          {
+            this.verifyAlarmStatus();
+            localStorage.setItem("alarm", false);
+          }
+        }
+      } catch (e) {}
     }, 1000);
   },
   beforeDestroy() {
@@ -1161,11 +1175,7 @@ export default {
     this.intervalObj = setInterval(() => {
       console.log(this.popupNotificationHide5MinutesActive);
 
-      if (
-        this.timmerStatus == true &&
-        !this.popupNotificationHide5MinutesActive
-      )
-        this.verifyAlarmStatus();
+      this.verifyAlarmStatus();
     }, 1000 * 10);
     // setInterval(() => {
     //   this.loadNotificationMenu();
@@ -1294,7 +1304,11 @@ export default {
       return this.$auth.user && this.$auth.user.assignedDepartments.length > 0;
     },
   },
+
   methods: {
+    // layoutMethod() {
+    //   alert("");
+    // },
     // isDark() {
     //   return this.currentTheme === "dark";
     // },
@@ -1574,8 +1588,11 @@ export default {
           this.pendingNotificationsCount = data.length;
           if (data.length > 0) {
             this.notificationAlarmDevices = data;
-            if (this.$route.name == "alarm-dashboard")
-              this.alarmNotificationStatus = true;
+            if (this.$route.name == "alarm-dashboard") {
+              if (!this.popupNotificationHide5MinutesActive)
+                this.alarmNotificationStatus = true;
+            }
+
             this.palysound();
           } else {
             this.alarmNotificationStatus = false;
@@ -1867,7 +1884,7 @@ header i {
   width: 100%;
 }
 .view-profile-table-lineheight tr {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #474141;
 }
 .view-profile-table-lineheight td {
   padding-right: 5px;
@@ -1977,7 +1994,7 @@ header i {
 .basic-table-design {
   tr {
     width: 100%;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #474141;
   }
 }
 /* .v-application .primary--text {

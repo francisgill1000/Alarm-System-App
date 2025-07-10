@@ -1136,7 +1136,7 @@ export default {
         this.mqqtt_response_status = "Device Connected....";
 
         // Subscribe to a topic
-        const topic = `xtremevision/${this.editedItem.serial_number}/config`;
+        const topic = `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config`;
         this.mqttClient.subscribe(topic, (err) => {
           if (err) {
             this.mqqtt_response_status = "Device Connection Failed....";
@@ -1154,11 +1154,14 @@ export default {
       });
 
       this.mqttClient.on("message", (topic, payload) => {
-        console.log(payload);
+        // console.log(payload);
 
         this.mqqtt_response_status = "Device Loading message";
 
-        if (topic === `xtremevision/${this.editedItem.serial_number}/config`) {
+        if (
+          topic ===
+          `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config`
+        ) {
           let jsonconfig = JSON.parse(payload.toString());
           if (jsonconfig.type == "config") {
             this.$set(this, "deviceSettings", jsonconfig); // ensures reactivity
@@ -1167,6 +1170,46 @@ export default {
             let config = JSON.parse(jsonconfig.config);
 
             this.deviceSettings.config = config;
+
+            this.deviceSettings.config.heartbeat = parseInt(
+              this.deviceSettings.config.heartbeat
+            );
+            this.deviceSettings.config.reset_settings_duration = parseInt(
+              this.deviceSettings.config.reset_settings_duration
+            );
+            this.deviceSettings.config.min_temperature = parseFloat(
+              this.deviceSettings.config.min_temperature
+            );
+            this.deviceSettings.config.max_temperature = parseFloat(
+              this.deviceSettings.config.max_temperature
+            );
+            this.deviceSettings.config.max_humidity = parseFloat(
+              this.deviceSettings.config.max_humidity
+            );
+            this.deviceSettings.config.max_doorcontact = parseInt(
+              this.deviceSettings.config.max_doorcontact
+            );
+            this.deviceSettings.config.max_temperature_sensor_count = parseInt(
+              this.deviceSettings.config.max_temperature_sensor_count
+            );
+            this.deviceSettings.config.max_siren_pause = parseInt(
+              this.deviceSettings.config.max_siren_pause
+            );
+            this.deviceSettings.config.temperature_read_interval = parseInt(
+              this.deviceSettings.config.temperature_read_interval
+            );
+            this.deviceSettings.config.temperature_difference = parseFloat(
+              this.deviceSettings.config.temperature_difference
+            );
+            this.deviceSettings.config.max_siren_pause = parseInt(
+              this.deviceSettings.config.max_siren_pause
+            );
+            this.deviceSettings.config.max_siren_pause = parseInt(
+              this.deviceSettings.config.max_siren_pause
+            );
+            this.deviceSettings.config.max_siren_pause = parseInt(
+              this.deviceSettings.config.max_siren_pause
+            );
 
             // console.log(this.deviceSettings.config);
 
@@ -1196,7 +1239,7 @@ export default {
         // this.connectMQTT();
       }
       let isConfigReceived = false;
-      const topic = `xtremevision/${this.editedItem.serial_number}/config/request`;
+      const topic = `xtremevision-${this.editedItem.serial_number}/${this.editedItem.serial_number}/config/request`;
       const payload = "GET_CONFIG";
 
       this.mqqtt_response_status =
@@ -1326,7 +1369,7 @@ export default {
       // Generate options for seconds (5s to 55s)
       for (let sec = 1; sec <= 20; sec += 1) {
         options.push({
-          value: sec + "",
+          value: sec,
           label: `${sec} seconds`,
         });
       }
@@ -1336,7 +1379,7 @@ export default {
       // Generate options for seconds (5s to 55s)
       for (let sec = 10; sec <= 60; sec += 1) {
         options.push({
-          value: sec + "",
+          value: sec,
           label: `${sec} seconds`,
         });
       }
@@ -1346,7 +1389,7 @@ export default {
       // Generate options for seconds (5s to 55s)
       for (let sec = 1; sec <= 60; sec += 1) {
         options.push({
-          value: sec + "",
+          value: sec,
           label: `${sec} Minute(s)`,
         });
       }
@@ -1370,13 +1413,13 @@ export default {
         if (min == 0)
           options.push({
             id: "heartbeat",
-            value: (min + 1) * 60 + "",
+            value: (min + 1) * 60,
             label: `${min + 1} minute${min + 1 > 1 ? "s" : ""}`,
           });
         else
           options.push({
             id: "heartbeat",
-            value: min * 60 + "",
+            value: min * 60,
             label: `${min} minute${min > 1 ? "s" : ""}`,
           });
       }
@@ -1417,7 +1460,7 @@ export default {
         .then(({ data }) => {
           this.loading = false;
 
-          console.log(data.error);
+          // console.log(data.error);
 
           if (!data.error) this.deviceSettings = data;
           else this.mqqtt_response_status = data.error;
