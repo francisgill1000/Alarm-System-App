@@ -1173,7 +1173,7 @@ export default {
     // }, 1000 * 10);
 
     this.intervalObj = setInterval(() => {
-      console.log(this.popupNotificationHide5MinutesActive);
+      // console.log(this.popupNotificationHide5MinutesActive);
 
       this.verifyAlarmStatus();
     }, 1000 * 10);
@@ -1193,7 +1193,7 @@ export default {
 
     menu_name = menu_name.replaceAll("-", "/");
 
-    console.log(this.getLoginType);
+    // console.log(this.getLoginType);
 
     if (this.getLoginType === "company" || this.getLoginType === "branch") {
       //-------------------
