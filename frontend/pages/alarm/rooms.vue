@@ -534,13 +534,7 @@
         <template v-slot:item.status_id="{ item }">
           <img
             title="Online"
-            v-if="
-              item.status_id == 1 &&
-              $dateFormat.devicetimedifferenceInMin(
-                item.last_live_datetime,
-                item.utc_time_zone
-              ) < 1
-            "
+            v-if="item.status_id == 1"
             src="/icons/device_status_open.png"
             style="width: 30px"
           />
