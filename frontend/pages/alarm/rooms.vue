@@ -556,12 +556,12 @@
               </div>
             </template>
             <v-list width="120" dense>
-              <v-list-item v-if="can(`device_edit`)" @click="SensorsList(item)">
+              <!-- <v-list-item v-if="can(`device_edit`)" @click="SensorsList(item)">
                 <v-list-item-title style="cursor: pointer">
                   <v-icon small> mdi-leak </v-icon>
                   Sensors
                 </v-list-item-title>
-              </v-list-item>
+              </v-list-item> -->
               <v-list-item v-if="can(`device_edit`)" @click="editItem(item)">
                 <v-list-item-title style="cursor: pointer">
                   <v-icon small> mdi-pencil </v-icon>

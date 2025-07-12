@@ -562,7 +562,7 @@ export default {
             },
           }
         );
-        console.log("device", device.data.last_live_datetime);
+        // console.log("device", device.data.last_live_datetime);
 
         this.deviceOnline = this.$dateFormat.devicetimedifferenceInMin(
           device.data.last_live_datetime,
