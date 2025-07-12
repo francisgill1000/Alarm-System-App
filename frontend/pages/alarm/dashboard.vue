@@ -426,9 +426,10 @@ export default {
           await this.getDataFromApi();
           this.key++;
           this.lastMQTTSendTime = now;
-
-          this.checkDeviceOnlineStatus();
         }
+
+        if (now - this.lastMQTTSendTime > 1000 * 30)
+          this.checkDeviceOnlineStatus();
       }
     }, 1000 * 10);
 
