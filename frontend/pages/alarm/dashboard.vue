@@ -359,6 +359,7 @@ export default {
 
     this.mqttClient.end(false, () => {
       console.log("🔌 MQTT Disconnected");
+
       this.isMQTTConnected = false;
     });
   },
@@ -428,7 +429,7 @@ export default {
           this.lastMQTTSendTime = now;
         }
 
-        if (now - this.lastMQTTSendTime > 1000 * 30)
+        if (now - this.lastMQTTSendTime > 1000 * 15)
           this.checkDeviceOnlineStatus();
       }
     }, 1000 * 10);
@@ -652,7 +653,7 @@ export default {
 
         if (this.device_serial_number == message.serialNumber) {
           this.isMQTTConnected = true;
-
+          this.checkDeviceOnlineStatus();
           if (message.type == "alarm") {
             localStorage.setItem("alarm", true);
 
@@ -707,7 +708,7 @@ export default {
       });
 
       this.mqttClient.on("close", () => {
-        this.isMQTTConnected = false;
+        this.checkDeviceOnlineStatus();
         console.log("❌ MQTT Disconnected");
 
         this.MQTTRetryCount++;
