@@ -265,7 +265,7 @@
 </template>
 
 <script>
-import mqtt from "mqtt";
+// import mqtt from "mqtt";
 
 export default {
   props: ["device", "relayStatus", "loading"],

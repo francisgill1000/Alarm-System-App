@@ -104,7 +104,7 @@
             </v-col>
             <v-col style="max-width: 50px">
               <v-icon
-                :color="deviceOnline <= 30 && isMQTTConnected ? 'green' : 'red'"
+                :color="deviceOnline <= 60 && isMQTTConnected ? 'green' : 'red'"
                 >mdi-web-box</v-icon
               >
             </v-col>
@@ -414,7 +414,7 @@ export default {
     setInterval(async () => {
       if (
         this.$route.name == "alarm-dashboard" &&
-        this.devicesList.length == 1 &&
+        // this.devicesList.length == 1 &&
         !this.waitMQTTRelayUpdate
       ) {
         const now = Date.now();
@@ -562,11 +562,16 @@ export default {
             },
           }
         );
-        // console.log("device", device.data.last_live_datetime);
 
         this.deviceOnline = this.$dateFormat.devicetimedifferenceInMin(
           device.data.last_live_datetime,
           device.data.utc_time_zone
+        );
+
+        console.log(
+          "device",
+          device.data.last_live_datetime,
+          this.deviceOnline
         );
       }
 
