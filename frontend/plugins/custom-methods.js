@@ -145,6 +145,39 @@ export default ({ app }, inject) => {
 
       return { first: formattedFirstDay, last: formattedLastDay };
     },
+    devicetimedifferenceInMin: (time1, timezone = null) => {
+      // date1: current time (with timezone)
+      const date1 = new Date(); // implicitly uses local timezone
+
+      const date = new Date();
+      if (timezone) {
+        const options = {
+          timeZone: timezone, // your custom timezone
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        };
+
+        const formatter = new Intl.DateTimeFormat("en-US", options);
+        // console.log(formatter.format(date));
+      }
+
+      // date2: example past datetime
+      const date2 = new Date(time1); // with explicit timezone offset
+
+      // Calculate difference in minutes
+      const diffMs = date1 - date2; // in milliseconds
+      const diffSs = diffMs / 1000; // in seconds
+
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+
+      // console.log(`Difference: ${diffMins} minutes`);
+      return diffSs;
+    },
     time2Hm: (inputdate) => {
       // Split the time string by ':'
       const timeParts = inputdate.split(":");

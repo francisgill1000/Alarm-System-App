@@ -22,6 +22,8 @@ Route::apiResource('device_temperature_sensors',  DeviceTemperatureSensorsContro
 
 Route::get('device/search/{key}', [DeviceController::class, 'search']);
 Route::get('device-by-user/{id}', [DeviceController::class, 'getDeviceByUserId']);
+Route::get('device-by-serial-number/{serialnumber}', [DeviceController::class, 'getDeviceByUserId']);
+
 Route::post('device/details', [DeviceController::class, 'getDeviceCompany']);
 Route::get('device/getLastRecordsByCount/{company_id}/{count}', [DeviceController::class, 'getLastRecordsByCount']);
 Route::get('device/getLastRecordsHistory/{company_id}/{count}', [DeviceController::class, 'getLastRecordsHistory']);

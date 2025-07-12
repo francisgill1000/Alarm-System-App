@@ -534,7 +534,13 @@
         <template v-slot:item.status_id="{ item }">
           <img
             title="Online"
-            v-if="item.status_id == 1"
+            v-if="
+              item.status_id == 1 &&
+              $dateFormat.devicetimedifferenceInMin(
+                item.last_live_datetime,
+                item.utc_time_zone
+              ) < 1
+            "
             src="/icons/device_status_open.png"
             style="width: 30px"
           />
@@ -785,34 +791,34 @@ export default {
         filterable: false,
       },
 
-      {
-        text: "Smoke  ",
-        align: "center",
-        sortable: false,
-        value: "smoke_enabled",
-        filterable: false,
-      },
-      {
-        text: "Water leakage",
-        align: "center",
-        sortable: false,
-        value: "water_enabled",
-        filterable: false,
-      },
-      {
-        text: "AC Power",
-        align: "center",
-        sortable: false,
-        value: "acpower_enabled",
-        filterable: false,
-      },
-      {
-        text: "Door",
-        align: "center",
-        sortable: false,
-        value: "door_enabled",
-        filterable: false,
-      },
+      // {
+      //   text: "Smoke  ",
+      //   align: "center",
+      //   sortable: false,
+      //   value: "smoke_enabled",
+      //   filterable: false,
+      // },
+      // {
+      //   text: "Water leakage",
+      //   align: "center",
+      //   sortable: false,
+      //   value: "water_enabled",
+      //   filterable: false,
+      // },
+      // {
+      //   text: "AC Power",
+      //   align: "center",
+      //   sortable: false,
+      //   value: "acpower_enabled",
+      //   filterable: false,
+      // },
+      // {
+      //   text: "Door",
+      //   align: "center",
+      //   sortable: false,
+      //   value: "door_enabled",
+      //   filterable: false,
+      // },
 
       {
         text: "Device Status",

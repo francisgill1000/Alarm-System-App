@@ -45,7 +45,7 @@ class DeviceController extends Controller
         $model->Where("device_id",  'not like', "%Mobile%");
         $model->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')));
         $model->orderBy(request('order_by') ?? "name", request('sort_by_desc') ? "desc" : "asc");
-        return $model->get(["id", "name", "location", "device_id", "device_type", "serial_number"]);
+        return $model->get(["id", "name", "location", "device_id", "device_type", "serial_number", "last_live_datetime", "utc_time_zone"]);
     }
 
     // public function devicesDropdownListSensors()
@@ -74,7 +74,7 @@ class DeviceController extends Controller
 
             ->when(request()->filled('branch_id'), fn($q) => $q->where('branch_id', request('branch_id')))
             ->orderBy(request('order_by', 'name'), request('sort_by_desc') ? 'desc' : 'asc')
-            ->get(['id', 'name', 'location', 'device_id', 'device_type', 'serial_number']);
+            ->get(['id', 'name', 'location', 'device_id', 'device_type', 'serial_number', 'last_live_datetime', 'utc_time_zone']);
 
         $result = [];
 
@@ -86,6 +86,8 @@ class DeviceController extends Controller
                         'name'       => $device->name,
                         'location'          => $device->location,
                         'device_identifier' => $device->device_id,
+                        'last_live_datetime' => $device->last_live_datetime,
+                        'utc_time_zone' => $device->utc_time_zone,
                         'device_type'       => $device->device_type,
                         'serial_number'     => $device->serial_number,
                         'temperature_sensor_id'         => $sensor->id,
@@ -99,6 +101,8 @@ class DeviceController extends Controller
                     'name'       => $device->name,
                     'location'          => $device->location,
                     'device_identifier' => $device->device_id,
+                    'last_live_datetime' => $device->last_live_datetime,
+                    'utc_time_zone' => $device->utc_time_zone,
                     'device_type'       => $device->device_type,
                     'serial_number'     => $device->serial_number,
                     'temperature_sensor_id'         => null,
@@ -258,7 +262,10 @@ class DeviceController extends Controller
     {
         return $model->with(['status', 'company'])->find($id);
     }
-
+    public function getDeviceBySerialNumber(Device $model, $serialNumber)
+    {
+        return $model->where("serial_number", $serialNumber)->first();
+    }
     public function getDeviceByUserId(Device $model, $id)
     {
         return $model->where("device_id", $id)->first();

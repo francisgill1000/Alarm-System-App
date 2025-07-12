@@ -1137,7 +1137,7 @@ export default {
         this.$dateFormat.format_date_with_dayname(formattedDateTime);
 
       try {
-        console.log(localStorage.getItem("alarm"));
+        // console.log(localStorage.getItem("alarm"));
 
         if (localStorage.getItem("alarm") == "true") {
           // if (

@@ -103,7 +103,8 @@
               ></v-select>
             </v-col>
             <v-col style="max-width: 50px">
-              <v-icon :color="isMQTTConnected ? 'green' : 'red'"
+              <v-icon
+                :color="deviceOnline <= 30 && isMQTTConnected ? 'green' : 'red'"
                 >mdi-web-box</v-icon
               >
             </v-col>
@@ -340,6 +341,7 @@ export default {
       isMQTTConnected: false,
       MQTTRetryCount: 0,
       lastMQTTSendTime: 0,
+      deviceOnline: 0, // will store the evaluated result
     };
   },
   beforeDestroy() {
@@ -362,6 +364,19 @@ export default {
   },
   watch: {
     from_date(val) {},
+  },
+  computed: {
+    // deviceOnlineStatus() {
+    //   if (this.device_serial_number) {
+    //     return this.$dateFormat.devicetimedifferenceInMin(
+    //       this.getDeviceBySerialNumber(this.device_serial_number)
+    //         .last_live_datetime,
+    //       this.getDeviceBySerialNumber(this.device_serial_number).utc_time_zone
+    //     ) < 1
+    //       ? true
+    //       : false;
+    //   } else return 10;
+    // },
   },
   async mounted() {
     this.loading = true;
@@ -411,6 +426,8 @@ export default {
           await this.getDataFromApi();
           this.key++;
           this.lastMQTTSendTime = now;
+
+          this.checkDeviceOnlineStatus();
         }
       }
     }, 1000 * 10);
@@ -458,6 +475,34 @@ export default {
     }
 
     try {
+      await this.getDevicesListwithSensor();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+    this.getDataFromApi();
+
+    if (this.devicesList.length) {
+      console.log("this.currentDeviceIndex", this.devicesList.length);
+      await this.sendMQTTConfigRequest();
+    }
+
+    // setTimeout(() => {
+    //   this.mqttClient.end(true, () => {
+    //     console.log("🔌 MQTT Disconnected");
+    //     this.isMQTTConnected = false;
+    //   });
+    // }, 1000 * 60);
+
+    // if (this.MQTTRetryCount > 10) {
+    // }
+
+    setTimeout(() => {
+      this.checkDeviceOnlineStatus();
+    }, 1000 * 10);
+  },
+
+  methods: {
+    async getDevicesListwithSensor() {
       // await this.$store.dispatch("fetchDropDowns", {
       //   key: "deviceList",
       //   endpoint: "device-list",
@@ -506,28 +551,36 @@ export default {
         endpoint: "branch-list",
         refresh: true,
       });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-    this.getDataFromApi();
+    },
+    async checkDeviceOnlineStatus() {
+      if (this.device_serial_number) {
+        let device = await this.$axios.get(
+          "device-by-serial-number/" + this.device_serial_number,
+          {
+            params: {
+              company_id: this.$auth.user.company_id,
+            },
+          }
+        );
+        console.log("device", device.data.last_live_datetime);
 
-    if (this.devicesList.length) {
-      console.log("this.currentDeviceIndex", this.devicesList.length);
-      await this.sendMQTTConfigRequest();
-    }
+        this.deviceOnline = this.$dateFormat.devicetimedifferenceInMin(
+          device.data.last_live_datetime,
+          device.data.utc_time_zone
+        );
+      }
 
-    // setTimeout(() => {
-    //   this.mqttClient.end(true, () => {
-    //     console.log("🔌 MQTT Disconnected");
-    //     this.isMQTTConnected = false;
-    //   });
-    // }, 1000 * 60);
+      //this.deviceOnline = this.deviceOnline;
+      // console.log("Device online:", this.deviceOnline);
+    },
+    // async getDeviceBySerialNumber(serialNumber) {
+    //   // console.log("data", device.data);
+    //   return device.data;
 
-    // if (this.MQTTRetryCount > 10) {
-    // }
-  },
-
-  methods: {
+    //   // return this.devicesList.find(
+    //   //   (item) => item.serial_number == serialNumber
+    //   // );
+    // },
     manualButtonTriggered() {
       //console.log("manualButtonTriggered");
 
