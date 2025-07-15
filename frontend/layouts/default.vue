@@ -258,6 +258,7 @@
       </span>
       <v-spacer></v-spacer>
       <span
+        v-if="!$vuetify.breakpoint.smAndDown"
         style="
           font-size: 30px;
           color: #fff;
