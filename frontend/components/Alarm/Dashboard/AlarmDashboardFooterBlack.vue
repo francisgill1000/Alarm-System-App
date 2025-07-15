@@ -4,7 +4,7 @@
     v-if="can('dashboard_access') && can('dashboard_view')"
   >
     <v-row :key="key">
-      <v-col cols="3">
+      <v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             device.fire_alarm_status == 0
@@ -40,7 +40,7 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="3">
+      ><v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             device.water_alarm_status == 0
@@ -79,7 +79,7 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="3">
+      ><v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             device.power_alarm_status == 0
@@ -113,7 +113,7 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="3">
+      ><v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             device.door_open_status == 0
@@ -150,7 +150,7 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3">
+      <v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay0
@@ -177,7 +177,7 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3">
+      <v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay1
@@ -204,7 +204,7 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3">
+      <v-col cols="6" sm="6" md="3">
         <!-- {{ relayStatus.relay2 }} -->
         <v-card
           :class="
@@ -232,7 +232,7 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3">
+      <v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay3

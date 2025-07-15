@@ -184,7 +184,12 @@
 
       <v-spacer></v-spacer>
 
-      <span>
+      <span
+        :style="
+          $vuetify.breakpoint.smAndDown ? 'display:none' : 'display:block'
+        "
+      >
+        <!-- TOP MENU -->
         <template
           v-if="
             getLoginType == 'company' ||
@@ -260,10 +265,28 @@
           min-width: 300px;
         "
       >
-        <div class="livedateTime">
+        <div
+          class="livedateTime"
+          :style="$vuetify.breakpoint.smAndDown ? 'float:right' : ' '"
+        >
           <v-icon size="35" style="">mdi-clock-outline</v-icon>
-          <span style="font-size: 30px"> {{ currentTime }}</span>
-          <span style="font-size: 16px; font-weight: 200">{{ todayDate }}</span>
+          <span
+            :style="
+              $vuetify.breakpoint.smAndDown
+                ? 'font-size: 21px;'
+                : 'font-size: 30px;'
+            "
+          >
+            {{ currentTime }}</span
+          >
+          <span
+            :style="
+              $vuetify.breakpoint.smAndDown
+                ? 'font-size: 10px;'
+                : 'font-size: 16px;' + 'font-weight: 200;display:block'
+            "
+            >{{ todayDate }}</span
+          >
         </div>
       </span>
       <v-menu

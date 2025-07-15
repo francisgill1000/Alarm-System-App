@@ -162,6 +162,7 @@
             <v-btn
               v-if="can('automation_create')"
               x-small
+              class="primary"
               :ripple="false"
               title="Add Notification"
               @click="openNewPage()"
@@ -634,8 +635,15 @@ export default {
     //   deep: true,
     // },
   },
+  mounted() {
+    // try {
+    //   if (window) this.tableHeight = window.innerHeight - 220;
+    // } catch (e) {}
+  },
   created() {
-    this.tableHeight = window.innerHeight - 220;
+    // try {
+    //   if (window) this.tableHeight = window.innerHeight - 220;
+    // } catch (e) {}
     window.addEventListener("resize", () => {
       this.tableHeight = window.innerHeight - 220;
     });

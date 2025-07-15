@@ -16,7 +16,7 @@
     ></div>
 
     <v-row style="margin-top: 0px">
-      <v-col cols="6">
+      <v-col cols="12" sm="6" md="6">
         <v-card
           v-if="!displayLiveData"
           height="400px"
@@ -49,10 +49,14 @@
             @switchBacktoHistoryData="switchBacktoHistoryData()"
         /></v-card>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="12" sm="6" md="6">
         <v-card
           class="dashboard-card"
-          height="400px"
+          :style="
+            $vuetify.breakpoint.smAndDown
+              ? 'height: auto;'
+              : 'height: 400px; border-radius: 10px;'
+          "
           elevation="24"
           loading="false"
           outlined
@@ -110,7 +114,7 @@
             </v-col>
           </v-row>
           <v-row style="display: none1">
-            <v-col cols="5">
+            <v-col cols="12" sm="6" md="6">
               <v-row>
                 <v-col cols="12" class="text-center"
                   ><span class="pl-5"> Temperature</span></v-col
@@ -149,11 +153,14 @@
                 </v-col>
               </v-row>
             </v-col>
-            <v-col cols="2" class="d-flex justify-center align-center">
+            <v-col
+              cols="2"
+              class="d-flex justify-center align-center d-none d-md-block"
+            >
               <v-divider inset vertical style="color: #cfcece"></v-divider>
             </v-col>
 
-            <v-col cols="5">
+            <v-col cols="12" sm="6" md="6">
               <v-row>
                 <v-col cols="12" class="text-center"
                   ><span class="pl-5"> Humidity</span></v-col
@@ -204,7 +211,7 @@
       >
     </v-row>
     <v-row>
-      <v-col cols="6">
+      <v-col cols="12" sm="6" md="6">
         <AlarmDashboardFooterBlack
           :loading="loading"
           :device="device"
@@ -213,7 +220,7 @@
           @manualButtonTriggered="manualButtonTriggered()"
         />
       </v-col>
-      <v-col cols="6">
+      <v-col cols="12" sm="6" md="6">
         <v-card
           class="dashboard-card"
           height="380px"
