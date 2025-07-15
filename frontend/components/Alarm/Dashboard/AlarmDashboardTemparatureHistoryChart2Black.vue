@@ -252,7 +252,12 @@ export default {
 
     // Subtract 7 days from today
     let sevenDaysAgo = new Date(today);
-    sevenDaysAgo.setDate(today.getDate() - 30);
+
+    if (this.$vuetify.breakpoint.smAndDown) {
+      sevenDaysAgo.setDate(today.getDate() - 7);
+    } else {
+      sevenDaysAgo.setDate(today.getDate() - 30);
+    }
 
     // Format the dates (optional)
     this.filter_to_date = today.toISOString().split("T")[0];
