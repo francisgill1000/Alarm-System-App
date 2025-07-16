@@ -50,6 +50,9 @@ class DeleteOldLogFiles extends Command
 
         $path = "../arduino-sdk"; // var/www/mytime2cloud/arduino-sdk
         $this->deleteAttendanceLogFiles($path);
+
+        $path = "../mqtt-logs"; // var/www/mytime2cloud/mqtt-logs
+        $this->deleteAttendanceLogFiles($path);
     }
 
     public function deleteAttendanceLogFiles($path)

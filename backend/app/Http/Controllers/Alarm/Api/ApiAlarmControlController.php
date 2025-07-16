@@ -37,9 +37,9 @@ class ApiAlarmControlController extends Controller
 
             //     Cache::put("device_alarm_timestamp_$serial", $request->timestamp, now()->addMinutes(1));
             // }
-
-
-            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . json_encode($request->all()));
+            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", "---------------------------------------------------------------------");
+            //if ($request->type == 'alarm')
+            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " Request Data : " . json_encode($request->all()));
 
             $serial = null; //$request->serialNumber ?? $request->deviceID ?? '';
 
@@ -61,10 +61,12 @@ class ApiAlarmControlController extends Controller
             $alarmData = [
                 'fire_alarm'       => $request->fire_alarm ?? $request->fire,
                 'smoke_alarm'      => $request->smoke_alarm ?? $request->smokeStatus,
-                'water_leakage'    => ($serial == '24000001') ? 0 : $request->waterLeakage,
-                'power_failure'    => $request->acPowerFailure,
-                'door_status'      => $request->doorOpen,
-                'temperature_alarm'      => $request->temperature_alarm,
+                'water_leakage'    => ($serial === '24000001') ? 0 :   $request->waterLeakage ?? $request->waterLeakage,
+                'power_failure'    =>
+                $request->acPowerFailure ?? $request->acPowerFailure,
+                'door_status'      =>
+                $request->doorOpen ?? $request->doorOpen,
+                'temperature_alarm'      => $request->temperature_alarm ?? $request->temperature_alarm,
                 'humidity_alarm'      => $request->humidity_alarm,
 
 
@@ -73,7 +75,7 @@ class ApiAlarmControlController extends Controller
             ];
 
 
-            // Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . json_encode($alarmData));
+            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " Alarm Data :  " . json_encode($alarmData));
 
 
             if ($request->wifiipaddress) {
@@ -137,14 +139,14 @@ class ApiAlarmControlController extends Controller
                     ] as $key => $label
                 ) {
 
-
+                    $deviceTakeColumn = "";
                     $value = $alarmData[$key] ?? null;
 
 
 
                     if (!is_null($value)) {
 
-                        $logId = $this->logAlarmEvent(
+                        $logIdModel = $this->logAlarmEvent(
                             $device,
                             $serial,
                             $key,
@@ -153,14 +155,6 @@ class ApiAlarmControlController extends Controller
                             ['temparature' => $temperature, 'humidity' => $humidity, 'temperature_serial_address' => $request->sensor_serial_address],
                             $request
                         );
-                        if ($value)
-                            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . " -   Alarm Created #" . $logId);
-                        else Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . " -  Alarm Closed " . $logId);
-
-                        $messages[] = $logId;
-
-
-                        // $deviceTakeColumn = $key === 'temperature_alarm' ? 'temparature_alarm_status' : "{$key}_status";
 
                         if ($key === 'temperature_alarm') {
                             $deviceTakeColumn = "temparature_alarm_status";
@@ -182,6 +176,19 @@ class ApiAlarmControlController extends Controller
                         }
 
 
+                        $logId = $logIdModel["id"];
+                        if ($value)
+                            Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . "-" . $deviceTakeColumn . " -   Alarm Created #" . $logId);
+                        else Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . "-" . $deviceTakeColumn . " -  Alarm Closed " . $logId);
+
+                        $messages[] = $logId;
+
+
+                        // $deviceTakeColumn = $key === 'temperature_alarm' ? 'temparature_alarm_status' : "{$key}_status";
+
+
+
+
                         $messages[] = $this->deviceAlarmTable(
                             $deviceModel,
                             $device,
@@ -193,6 +200,11 @@ class ApiAlarmControlController extends Controller
                             $temperature,
                             $device->temperature_threshold
                         );
+
+
+                        // Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . " : " . $key . "-" . $deviceTakeColumn . " -   Alarm Created #" . json_encode($messages));
+
+                        return  $messages;
                     } else {
                         // Storage::append("logs/alarm/api-requests-device-" . date('Y-m-d') . ".txt", date("Y-m-d H:i:s") . $key . " : Value is null");
                     }
@@ -222,12 +234,16 @@ class ApiAlarmControlController extends Controller
 
         $row = [];
         $ignore = false;
+        //return $value . "-" . $status;
+
+
 
         if ($value == 1 && $status == 0) {
             $row[$field] = 1;
             $row[$startKey] = $log_time;
             $row[$endKey] = null;
-            $row["device_sensor_logs_id"] = $logId;
+            if ($logId)
+                $row["device_sensor_logs_id"] = $logId;
             $deviceModel->update($row);
             $ignore = true;
             return $this->SendWhatsappNotification("{$label} is ON", $device->name, $device, $log_time, $ignore, [
@@ -245,15 +261,19 @@ class ApiAlarmControlController extends Controller
             ]);
         }
 
-        return null;
+        return [$value . "-" . $status . '-' . $field, "Notificaiton is not sent"];
     }
 
     private function SendWhatsappNotification($issue, $room_name, $device, $date, $ignore, $tempArray = [])
     {
         $reports = ReportNotification::with(['managers.branch', 'company.company_mail_content', 'company.company_whatsapp_content'])
             ->where('company_id', $device->company_id)
-            ->where('branch_id', $device->branch_id)
+            // ->where('branch_id', $device->branch_id)
             ->get();
+
+        $message = [];
+
+        $message[] = $reports;
 
         foreach ($reports as $model) {
             foreach ($model->managers as $manager) {
@@ -272,15 +292,23 @@ class ApiAlarmControlController extends Controller
                 if ($minutes >= 5 || $ignore) {
                     $body = $this->buildMessage($issue, $manager->name, $model->company->name, $room_name, $manager->branch->branch_name, $date, $tempArray);
 
+                    $whatsappMessage = $body["whatsapp"];
+                    $mailMessage = $body["mail"];
+
+
                     if (in_array('Email', $model->mediums) && $manager->email) {
                         MailJob::dispatch(["email" => $manager->email, "body_content" => new EmailContentDefault([
-                            'subject' => "{$issue} Notification",
-                            'body' => $body
+                            'subject' => "{$issue} Notification" . " at " . $date,
+                            'body' => $mailMessage
                         ])]);
+
+                        $message[] = "Email Notification sent to " . $manager->email;
                     }
 
                     if (in_array('Whatsapp', $model->mediums) && $manager->whatsapp_number) {
-                        (new WhatsappController)->sendWhatsappNotification($model->company, $body, $manager->whatsapp_number, []);
+                        (new WhatsappController)->sendWhatsappNotification($model->company, $whatsappMessage, $manager->whatsapp_number, []);
+
+                        $message[] = "Email Notification sent to " . $manager->whatsapp_number;
                     }
 
                     ReportNotificationLogs::create([
@@ -295,6 +323,8 @@ class ApiAlarmControlController extends Controller
                 }
             }
         }
+
+        return $message;
     }
     private function logAlarmEvent($device, $serialNumber, $alarmType, $status,   $logTime = null, $extraData = [], $request)
     {
@@ -346,8 +376,11 @@ class ApiAlarmControlController extends Controller
                 try {
                     $record = DeviceSensorLogs::create($log);
 
-                    return $record->id;
+                    return ["id" => $record->id, "message" => ""];
                 } catch (\Exception $e) {
+
+
+                    return ["id" => null, "message" => $e->getMessage()];
 
                     return $e->getMessage();
                     // \Log::error("Alarm ON log creation failed", [
@@ -358,6 +391,8 @@ class ApiAlarmControlController extends Controller
                     // ]);
                 }
             } else {
+                return ["id" => null, "message" => "Already Alarm Is open "];
+
                 return "Already Alarm Is open ";
             }
         } elseif ($status == 0) {
@@ -403,10 +438,11 @@ class ApiAlarmControlController extends Controller
                 }
             }
 
-            return response()->json([
+            return [
+                "id" => null,
                 'status' => true,
                 'message' => "Closed $closedCount '$alarmType' alarms where status = 0 and end time is.",
-            ]);
+            ];
 
 
 
@@ -458,6 +494,21 @@ class ApiAlarmControlController extends Controller
             $msg .= "Threshold: {$tempArray["max_temparature"]}°C\n";
         }
         $msg .= "*Xtreme Guard*\n";
-        return $msg;
+
+
+        $Mailmsg = "<strong>{$issue} Notification  </strong><br/>";
+        $Mailmsg .= "Hello, *{$managerName}<br/>";
+        $Mailmsg .= "Company: {$companyName}<br/>";
+        $Mailmsg .= "Room: {$roomName}<br/>";
+        $Mailmsg .= "Branch: {$branchName}<br/>";
+        $Mailmsg .= "Date: {$date}<br/>";
+        if (!empty($tempArray["temparature"])) {
+            $Mailmsg .= "Temperature: {$tempArray["temparature"]}°C<br/>";
+        }
+        if (!empty($tempArray["max_temparature"])) {
+            $Mailmsg .= "Threshold: {$tempArray["max_temparature"]}°C<br/>";
+        }
+        $Mailmsg .= "*Xtreme Guard*<br/>";
+        return ["whatsapp" => $msg, "mail" => $Mailmsg];
     }
 }
