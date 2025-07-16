@@ -153,14 +153,28 @@
                 </v-col>
               </v-row>
             </v-col>
-            <v-col
+            <!-- <v-col
               cols="2"
               class="d-flex justify-center align-center d-none d-md-block"
             >
               <v-divider inset vertical style="color: #cfcece"></v-divider>
-            </v-col>
+            </v-col> -->
 
             <v-col cols="12" sm="6" md="6">
+              <v-divider
+                v-if="$vuetify.breakpoint.smAndDown"
+                inset
+                horizontal
+                style="color: #cfcece"
+              ></v-divider>
+              <v-divider
+                v-else
+                inset
+                vertical
+                style="color: #cfcece"
+              ></v-divider>
+
+              <!-- <v-divider inset vertical style="color: #cfcece"></v-divider> -->
               <v-row>
                 <v-col cols="12" class="text-center"
                   ><span class="pl-5"> Humidity</span></v-col

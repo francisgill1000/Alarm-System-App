@@ -39,8 +39,10 @@
               </div>
             </div>
           </div>
-        </v-card> </v-col
-      ><v-col cols="6" sm="6" md="3">
+        </v-card>
+      </v-col>
+
+      <v-col cols="6" sm="6" md="3">
         <v-card
           :class="
             device.water_alarm_status == 0
@@ -149,7 +151,17 @@
           </div>
         </v-card>
       </v-col>
-
+    </v-row>
+    <div
+      v-if="$vuetify.breakpoint.smAndDown"
+      style="
+        color: #cfcece;
+        border-bottom: 1px solid #ddd;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      "
+    ></div>
+    <v-row>
       <v-col cols="6" sm="6" md="3">
         <v-card
           :class="

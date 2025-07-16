@@ -1,7 +1,11 @@
 <template>
   <div style="width: 100%; height: 400px; padding: 10px">
     <v-row style="">
-      <v-col cols="6">Temperature and Humidity History</v-col>
+      <v-col
+        cols="6"
+        :style="$vuetify.breakpoint.smAndDown ? 'font-size:12px' : ''"
+        >Temperature and Humidity History</v-col
+      >
       <v-col cols="6">
         <v-row>
           <v-col style="float: right; text-align: right"

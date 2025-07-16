@@ -1,6 +1,57 @@
 <template>
   <v-app>
-    <v-navigation-drawer
+    <!-- <v-card class="mx-auto overflow-hidden" height="400" width="344">
+      <v-system-bar color="deep-purple darken-3"></v-system-bar>
+
+      <v-app-bar color="deep-purple accent-4" dark prominent>
+        <v-toolbar-title>My files</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-btn icon>
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-filter</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-app-bar>
+
+      <v-navigation-drawer v-model="drawer" absolute bottom temporary>
+        <v-list nav dense>
+          <v-list-item-group
+            v-model="group"
+            active-class="deep-purple--text text--accent-4"
+          >
+            <v-list-item>
+              <v-list-item-title>Foo</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-title>Bar</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-title>Fizz</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-title>Buzz</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-navigation-drawer>
+
+      <v-card-text>
+        The navigation drawer will appear from the bottom on smaller size
+        screens.
+      </v-card-text>
+    </v-card> -->
+    <!--<v-navigation-drawer
       expand-on-hover
       rail
       v-model="drawer"
@@ -102,7 +153,7 @@
           </div>
         </div>
       </v-list>
-      <!--<v-list style="padding: 5px 0 0 0px">
+      <v-list style="padding: 5px 0 0 0px">
       <v-list-item
           @click="goToPage('/alarm/dashboard')"
           router
@@ -163,7 +214,121 @@
             Server Rooms
           </v-list-item-title>
         </v-list-item>
-      </v-list>-->
+      </v-list>
+    </v-navigation-drawer>-->
+    <!-- <v-navigation-drawer v-model="drawer" absolute bottom temporary>
+      <v-list nav dense>
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-list-item>
+            <v-list-item-title>Foo</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Bar</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Fizz</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Buzz</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer> -->
+
+    <v-navigation-drawer
+      :temporary="$vuetify.breakpoint.smAndDown"
+      rail
+      v-model="drawer"
+      dark
+      :clipped="clipped"
+      fixed
+      app
+      :color="sideBarcolor"
+      :width="150"
+    >
+      <br />
+
+      <v-list style="padding: 5px 0 0 0px">
+        <v-list-item
+          @click="drawer = !drawer"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-menu</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2"> Menu </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          @click="goToPage('/alarm/dashboard')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-view-dashboard</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Dashboard
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          @click="goToPage('/alarm/temperatureLogs')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-fire</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Temperature Reports
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          @click="goToPage('/alarm/AlarmLogs')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi-alarm-light</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Alarm Reports</v-list-item-title
+          >
+        </v-list-item>
+        <v-list-item
+          @click="goToPage('/alarm/rooms')"
+          router
+          :class="!miniVariant || 'pl-2'"
+          vertical
+          style="display: inline-block"
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon>mdi mdi-server</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            Server Rooms
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
     <v-app-bar
       :color="appBarColor"
@@ -173,13 +338,22 @@
       class="app-header-main"
       :style="$nuxt.$route.name == 'index' ? 'z-index: 100000' : ''"
     >
-      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" style="color: #fff" /> -->
+      <v-app-bar-nav-icon
+        v-if="$vuetify.breakpoint.smAndDown"
+        @click.stop="drawer = !drawer"
+      />
       <span
         class="text-overflow"
         style="cursor: pointer"
         @click="gotoHomePage()"
       >
-        <img title="Xtream Guard" :src="logo_src" style="width: 150px" />
+        <img
+          title="Xtream Guard"
+          :src="logo_src"
+          :style="
+            $vuetify.breakpoint.smAndDown ? 'width:100px' : 'width: 150px'
+          "
+        />
       </span>
 
       <v-spacer></v-spacer>
@@ -577,12 +751,14 @@
                         : ''
                     "
                   >
-                    <v-col cols="2" class="pt-10 text-center"
+                    <v-col cols="12" md="3" class="pt-10 text-center"
                       ><img
                         src="../static/alarm-icons/temperature.png"
-                        width="50px"
+                        :width="
+                          $vuetify.breakpoint.smAndDown ? '60px' : '70px'
+                        "
                     /></v-col>
-                    <v-col cols="10" class="pl-4">
+                    <v-col cols="12" md="9" class="pl-4">
                       <div
                         class="pa-3 pt-0"
                         style="font-size: 16px; font-weight: bold"
@@ -627,12 +803,14 @@
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
                         src="../static/alarm-icons/smoke_alarm.png"
-                        width="100px"
+                        :width="
+                          $vuetify.breakpoint.smAndDown ? '60px' : '70px'
+                        "
                     /></v-col>
                     <v-col cols="10" class="pl-4">
                       <div
                         class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="font-size: 18px; font-weight: bold"
                       >
                         Fire Alarm Triggered at :
                         {{ $dateFormat.format5(device.alarm_start_datetime) }}
@@ -660,12 +838,14 @@
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
                         src="../static/alarm-icons/smoke_alarm.png"
-                        width="100px"
+                        :width="
+                          $vuetify.breakpoint.smAndDown ? '60px' : '70px'
+                        "
                     /></v-col>
                     <v-col cols="10" class="pl-4">
                       <div
                         class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="font-size: 18px; font-weight: bold"
                       >
                         Smoke Alarm Triggered at :
                         {{ $dateFormat.format5(device.alarm_start_datetime) }}
@@ -693,12 +873,14 @@
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
                         src="../static/alarm-icons/dooropen.png"
-                        width="100px"
+                        :width="
+                          $vuetify.breakpoint.smAndDown ? '60px' : '70px'
+                        "
                     /></v-col>
                     <v-col cols="10" class="pl-4">
                       <div
                         class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="font-size: 18px; font-weight: bold"
                       >
                         Door Keep Open Alarm Triggered at :
                         {{ $dateFormat.format5(device.alarm_start_datetime) }}
@@ -726,12 +908,14 @@
                     <v-col cols="2" class="pt-10 text-center"
                       ><img
                         src="../static/alarm-icons/acpower.png"
-                        width="100px"
+                        :width="
+                          $vuetify.breakpoint.smAndDown ? '60px' : '70px'
+                        "
                     /></v-col>
                     <v-col cols="10" class="pl-4">
                       <div
                         class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="font-size: 18px; font-weight: bold"
                       >
                         AC Power Off Alarm Triggered at :
                         {{ $dateFormat.format5(device.alarm_start_datetime) }}
@@ -759,12 +943,14 @@
                     <v-col cols="2" class="pt-10 text-center">
                       <img
                         src="../static/alarm-icons/water-leakage.png"
-                        width="100px"
+                        :width="
+                          $vuetify.breakpoint.smAndDown ? '60px' : '70px'
+                        "
                     /></v-col>
                     <v-col cols="10" class="pl-4">
                       <div
                         class="pa-3 pt-0"
-                        style="font-size: 20px; font-weight: bold"
+                        style="font-size: 18px; font-weight: bold"
                       >
                         Water Leakage Alarm Triggered at :
                         {{ $dateFormat.format5(device.alarm_start_datetime) }}
@@ -965,8 +1151,8 @@
 </template>
 
 <script>
-import colors from "vuetify/lib/util/colors";
-import vuetify from "@/plugins/vuetify";
+// import colors from "vuetify/lib/util/colors";
+// import vuetify from "@/plugins/vuetify";
 
 import company_menus from "../menus/company.json";
 import employee_menus from "../menus/employee.json";
@@ -980,6 +1166,8 @@ import employee_top_menu from "../menus/employee_modules_top.json";
 export default {
   data() {
     return {
+      group: null,
+
       popupNotificationHide5MinutesActive: false,
       displayLeftMenu: false,
       currentTime: "00:00:00",
@@ -1033,7 +1221,7 @@ export default {
 
       clipped: false,
       open_menu: [],
-      drawer: false, //hide leftmenu
+      drawer: false, //true - hide leftmenu
       fixed: false,
       order_count: "",
       // logo_src: "",
@@ -1045,7 +1233,7 @@ export default {
       },
       clipped: true,
 
-      miniVariant: true, //hide leftmenu
+      miniVariant: false, //hide leftmenu
       title: "Xtreme Guard",
       socket: null,
       logout_btn: {
@@ -1254,7 +1442,11 @@ export default {
     //   this.$router.push(`/dashboard2`);
     // }, 1000 * 60 * 15); //15 minutes
   },
-  watch: {},
+  watch: {
+    // group() {
+    //   this.drawer = false;
+    // },
+  },
   computed: {
     logo_src() {
       return require("@/static/logo.png");

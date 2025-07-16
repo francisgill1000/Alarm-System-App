@@ -2,7 +2,6 @@
   <div style="width: 100%; height: 380px">
     <v-row>
       <v-col>Today - Temperature and Humidity Chart</v-col>
-      <v-col> </v-col>
     </v-row>
     <div :id="name" style="width: 100%; margin-top: 0px" class="pt-2"></div>
   </div>
