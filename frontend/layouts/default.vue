@@ -338,10 +338,10 @@
       class="app-header-main"
       :style="$nuxt.$route.name == 'index' ? 'z-index: 100000' : ''"
     >
-      <v-app-bar-nav-icon
+      <!-- <v-app-bar-nav-icon
         v-if="$vuetify.breakpoint.smAndDown"
         @click.stop="drawer = !drawer"
-      />
+      /> -->
       <span
         class="text-overflow"
         style="cursor: pointer"

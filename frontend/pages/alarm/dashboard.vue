@@ -16,7 +16,7 @@
     ></div>
 
     <v-row style="margin-top: 0px">
-      <v-col cols="12" sm="6" md="6">
+      <v-col cols="12" sm="6" md="6" v-if="!$vuetify.breakpoint.smAndDown">
         <v-card
           v-if="!displayLiveData"
           height="400px"
@@ -114,7 +114,7 @@
             </v-col>
           </v-row>
           <v-row style="display: none1">
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="5">
               <v-row>
                 <v-col cols="12" class="text-center"
                   ><span class="pl-5"> Temperature</span></v-col
@@ -128,6 +128,7 @@
 
               <v-row>
                 <v-col
+                  v-if="!$vuetify.breakpoint.smAndDown"
                   cols="2"
                   class="align-items-center justify-content-center pt-0"
                 >
@@ -137,10 +138,21 @@
                 /> -->
                 </v-col>
                 <v-col cols="10" class="pa-0" style="margin-top: -30px">
-                  <TemperatureChart3
+                  <TemperatureChartMobile
+                    v-if="$vuetify.breakpoint.smAndDown"
+                    id="1"
+                    style="width: 100px"
                     :name="'ArrowArcChartTemperature1'"
                     :temperature="temperature_latest"
                     :key="Sensorkey"
+                    :temperature_date_time="temperature_date_time"
+                    :width="$vuetify.breakpoint.smAndDown ? 100 : 300"
+                  />
+                  <TemperatureChart3
+                    v-else
+                    :name="'ArrowArcChartTemperature1'"
+                    :temperature="temperature_latest"
+                    :key="Sensorkey + '1'"
                     :temperature_date_time="temperature_date_time"
                   />
                   <!-- <ArrowArcChartTemperature
@@ -153,14 +165,14 @@
                 </v-col>
               </v-row>
             </v-col>
-            <!-- <v-col
+            <v-col
               cols="2"
               class="d-flex justify-center align-center d-none d-md-block"
             >
               <v-divider inset vertical style="color: #cfcece"></v-divider>
-            </v-col> -->
+            </v-col>
 
-            <v-col cols="12" sm="6" md="6">
+            <v-col cols="5">
               <v-divider
                 v-if="$vuetify.breakpoint.smAndDown"
                 inset
@@ -188,6 +200,7 @@
 
               <v-row>
                 <v-col
+                  v-if="!$vuetify.breakpoint.smAndDown"
                   cols="2"
                   class="align-items-center justify-content-center pt-0"
                 >
@@ -197,7 +210,15 @@
                 /> -->
                 </v-col>
                 <v-col cols="10" class="pa-0" style="margin-top: -30px">
+                  <HumidityChart3Mobile
+                    v-if="$vuetify.breakpoint.smAndDown"
+                    :name="'ArrowArcChart2Humidity'"
+                    :humidity="humidity_latest"
+                    :key="Sensorkey + '2'"
+                    :humidity_date_time="humidity_date_time"
+                  />
                   <HumidityChart3
+                    v-else
                     :name="'ArrowArcChart2Humidity'"
                     :humidity="humidity_latest"
                     :key="Sensorkey"
@@ -274,6 +295,8 @@ import TemperatureChart3 from "../../components/Alarm/Dashboard/TemperatureChart
 
 import HumidityChart3 from "../../components/Alarm/Dashboard/HumidityChart3.vue";
 import mqtt from "mqtt";
+import TemperatureChartMobile from "../../components/Alarm/Dashboard/TemperatureChartMobile.vue";
+import HumidityChart3Mobile from "../../components/Alarm/Dashboard/HumidityChart3Mobile.vue";
 
 export default {
   // layout: "black",
@@ -287,6 +310,8 @@ export default {
     ArrowArcChart2Humidity,
     TemperatureChart3,
     HumidityChart3,
+    TemperatureChartMobile,
+    HumidityChart3Mobile,
   },
   data() {
     return {
