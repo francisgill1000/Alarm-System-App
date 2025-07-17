@@ -493,7 +493,7 @@ class ApiAlarmControlController extends Controller
         if (!empty($tempArray["max_temparature"])) {
             $msg .= "Threshold: {$tempArray["max_temparature"]}°C\n";
         }
-        $msg .= "*Xtreme Guard*\n";
+        $msg .= "*XtremeGuard*\n";
 
 
         $Mailmsg = "<strong>{$issue} Notification  </strong><br/>";
@@ -508,7 +508,7 @@ class ApiAlarmControlController extends Controller
         if (!empty($tempArray["max_temparature"])) {
             $Mailmsg .= "Threshold: {$tempArray["max_temparature"]}°C<br/>";
         }
-        $Mailmsg .= "From<br/>Xtreme Guard<br/>";
+        $Mailmsg .= "From<br/>XtremeGuard<br/>";
         return ["whatsapp" => $msg, "mail" => $Mailmsg];
     }
 }
