@@ -80,7 +80,7 @@
                 >mdi-pause-box</v-icon
               >
             </v-col>
-            <v-col style="max-width: 220px; padding: 0px">
+            <v-col style="max-width: 300px; padding: 0px">
               <v-select
                 style="z-index: 9999"
                 @change="ChangeDevice()"
