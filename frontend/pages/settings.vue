@@ -24,7 +24,7 @@
                 <v-card flat>
                   <v-card-text>
                     <v-row>
-                      <v-col cols="2" style="margin: auto">
+                      <v-col cols="12" sm="6" md="2" style="margin: auto">
                         <v-card
                           elevation="0"
                           class="ml-1 mr-1"
@@ -62,17 +62,7 @@
                             rounded
                             >Upload Logo</v-btn
                           >
-                          <!-- <v-icon
-                            v-if="!upload.name"
-                            @click="onpick_attachment"
-                            right
-                            dark
-                            fill
-                            color="primary"
-                            size="40"
-                            title="Change Profile Picture"
-                            >mdi mdi-folder-open-outline
-                          </v-icon> -->
+
                           <v-btn
                             text
                             color="primary"
@@ -120,7 +110,7 @@
 
                           <v-card-text>
                             <v-row>
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   readonly
                                   label="Company Code"
@@ -131,7 +121,7 @@
                                 ></v-text-field>
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   label="Company Name"
                                   readonly
@@ -147,7 +137,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Company Email</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -165,7 +155,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   readonly
                                   label="Contact Person Name"
@@ -184,7 +174,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">
                               Contact Person Number
                             </label>
@@ -207,7 +197,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">
                               Contact Person Position
                             </label>
@@ -230,7 +220,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">
                               Whatsapp (with Country Code ex: 9199XXX)
                             </label>
@@ -252,7 +242,7 @@
                                   >{{ errors.whatsapp[0] }}</span
                                 >
                               </v-col>
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Mol ID</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -274,7 +264,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">P.O Box</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -295,7 +285,7 @@
                                   >{{ errors.p_o_box_no[0] }}</span
                                 >
                               </v-col>
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label"> Lat </label>
                             <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -315,7 +305,7 @@
                                   >{{ errors.lat[0] }}</span
                                 >
                               </v-col>
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label"> Lon </label>
                             <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -335,7 +325,7 @@
                                   >{{ errors.lon[0] }}</span
                                 >
                               </v-col>
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label"> Location </label>
                             <span class="text-danger">*</span> -->
                                 <v-textarea
@@ -372,7 +362,7 @@
                                 ></v-autocomplete>
                               </v-col> -->
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Member From</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -390,7 +380,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Expiry Date</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -408,7 +398,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Max Branches</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -426,7 +416,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Max Employees</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -444,7 +434,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="4">
+                              <v-col cols="12" sm="6" md="4">
                                 <!-- <label class="col-form-label">Max Devices</label>
                         <span class="text-danger">*</span> -->
                                 <v-text-field
@@ -489,7 +479,7 @@
                                 >
                               </v-col>
 
-                              <v-col cols="6">
+                              <v-col cols="12" sm="6" md="6">
                                 <!-- <label class="col-form-label">
                               Contact Person Number
                             </label>
@@ -698,7 +688,7 @@
                 <v-card>
                   <v-card-text>
                     <v-row>
-                      <v-col cols="3">
+                      <v-col cols="12" sm="6" md="3">
                         <div class="form-group">
                           <label class="col-form-label">Theme</label>
 

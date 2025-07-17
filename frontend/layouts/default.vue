@@ -242,6 +242,7 @@
     </v-navigation-drawer> -->
 
     <v-navigation-drawer
+      v-if="$vuetify.breakpoint.smAndDown"
       :temporary="$vuetify.breakpoint.smAndDown"
       rail
       v-model="drawer"
