@@ -1198,14 +1198,8 @@ export default {
             this.deviceSettings.config.temperature_difference = parseFloat(
               this.deviceSettings.config.temperature_difference
             );
-            this.deviceSettings.config.max_siren_pause = parseInt(
-              this.deviceSettings.config.max_siren_pause
-            );
-            this.deviceSettings.config.max_siren_pause = parseInt(
-              this.deviceSettings.config.max_siren_pause
-            );
-            this.deviceSettings.config.max_siren_pause = parseInt(
-              this.deviceSettings.config.max_siren_pause
+            this.deviceSettings.config.max_siren_play = parseInt(
+              this.deviceSettings.config.max_siren_play
             );
 
             // console.log(this.deviceSettings.config);
