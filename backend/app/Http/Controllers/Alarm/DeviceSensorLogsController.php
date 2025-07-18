@@ -112,6 +112,7 @@ class DeviceSensorLogsController extends Controller
                     $query->orWhere("power_failure",  1);
                     $query->orWhere("door_status",  1);
                     $query->orWhere("smoke_alarm",  1);
+                    $query->orWhere("fire_alarm",  1);
                 });
             } else if ($request->filter_alarm_status == 0) {
                 $model->where(function ($query) use ($request) {
@@ -120,6 +121,7 @@ class DeviceSensorLogsController extends Controller
                     $query->Where("power_failure",  0);
                     $query->Where("door_status",  0);
                     $query->Where("smoke_alarm",  0);
+                    $query->Where("fire_alarm",  0);
                 });
             } else  if ($request->filter_alarm_status == 2) {
                 $model->where("fire_alarm", 1);
@@ -152,6 +154,10 @@ class DeviceSensorLogsController extends Controller
             $model->orderBy('log_time', 'DESC');
         }
 
+        $model->orderBy('log_time', 'DESC');
+
+
+        // return $model->toSql();
 
 
         return    $model->paginate($request->per_page);
