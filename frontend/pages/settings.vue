@@ -34,7 +34,6 @@
                           <div style="width: 100%; text-align: center">
                             <div class="pb-2">
                               <v-img
-                                @click="onpick_attachment"
                                 class="company-profile-picture"
                                 style="
                                   width: 200px;
@@ -54,7 +53,9 @@
                           <v-btn
                             @click="onpick_attachment"
                             text
-                            v-if="!upload.name"
+                            v-if="
+                              !upload.name && !$vuetify.breakpoint.smAndDown
+                            "
                             color="primary"
                             elevation="0"
                             outlined

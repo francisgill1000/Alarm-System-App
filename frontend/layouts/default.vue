@@ -458,8 +458,8 @@
           <span
             :style="
               $vuetify.breakpoint.smAndDown
-                ? 'font-size: 10px;'
-                : 'font-size: 16px;' + 'font-weight: 200;display:block'
+                ? 'font-size: 10px;display:block'
+                : 'font-size: 16px;' + 'font-weight: 200;'
             "
             >{{ todayDate }}</span
           >
@@ -2534,6 +2534,9 @@ body {
 </style> -->
 
 <style>
+body {
+  min-width: 400px !important;
+}
 .apexcharts-canvas {
   width: 100%;
 }

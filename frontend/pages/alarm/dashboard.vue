@@ -250,7 +250,6 @@
         <AlarmDashboardFooterBlack
           :loading="loading"
           :device="device"
-          :key="key"
           :relayStatus="relayStatus[device.serial_number]"
           @manualButtonTriggered="manualButtonTriggered()"
         />

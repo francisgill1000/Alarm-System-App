@@ -4,32 +4,46 @@
     v-if="can('dashboard_access') && can('dashboard_view')"
   >
     <v-row :key="key">
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="3" sm="6" md="3">
         <v-card
+          :style="
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
+          "
           :class="
             device.fire_alarm_status == 0
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px; text-align: center"
         >
-          <div style="margin: auto">
+          <div
+            class="d-flex flex-column align-center justify-center fill-height"
+          >
             <img
               v-if="device.fire_alarm_status || device.smoke_alarm_status"
               src="../../../static/blue-dashboard-icons/fire_alarm.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             /><img
               v-else
               src="../../../static/blue-dashboard-icons/fire.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
+
             <div>Smoke/Fire</div>
 
-            <div :style="getPriorityColor(device.fire_alarm_status)">
+            <div
+              v-if="!$vuetify.breakpoint.smAndDown"
+              :style="getPriorityColor(device.fire_alarm_status)"
+            >
               <div style="font-size: 12px">
                 {{
                   device.fire_alarm_start_datetime == null
@@ -42,35 +56,45 @@
         </v-card>
       </v-col>
 
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="3" sm="6" md="3">
         <v-card
+          :style="
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
+          "
           :class="
             device.water_alarm_status == 0
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px; text-align: center"
         >
           <div style="margin: auto">
             <!-- <img
               src="../../../static/alarm-icons/water-leakage.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             /> -->
             <img
               v-if="device.water_alarm_status"
               src="../../../static/blue-dashboard-icons/water_alarm.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             /><img
               v-else
               src="../../../static/blue-dashboard-icons/water.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
-            <div>Water Leakage</div>
-            <div style="font-size: 12px">
+            <div>Water</div>
+            <div style="font-size: 12px" v-if="!$vuetify.breakpoint.smAndDown">
               <div :style="getPriorityColor(device.water_alarm_status)">
                 {{
                   device.water_alarm_start_datetime == null
@@ -81,30 +105,38 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="6" sm="6" md="3">
+      ><v-col cols="3" sm="6" md="3">
         <v-card
+          :style="
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
+          "
           :class="
             device.power_alarm_status == 0
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           outlined
-          style="border-radius: 20px; text-align: center"
         >
           <div style="margin: auto">
             <img
               v-if="device.power_alarm_status"
               src="../../../static/blue-dashboard-icons/power_alarm.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             /><img
               v-else
               src="../../../static/blue-dashboard-icons/power.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
-            <div>A/C Power</div>
-            <div style="font-size: 12px">
+            <div>Power</div>
+            <div style="font-size: 12px" v-if="!$vuetify.breakpoint.smAndDown">
               <div :style="getPriorityColor(device.power_alarm_status)">
                 {{
                   device.power_alarm_start_datetime == null
@@ -115,31 +147,39 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="6" sm="6" md="3">
+      ><v-col cols="3" sm="6" md="3">
         <v-card
           :class="
             device.door_open_status == 0
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           loading="false"
           outlined
-          style="border-radius: 20px; text-align: center"
+          :style="
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
+          "
         >
           <div style="margin: auto">
             <img
               v-if="device.door_open_status"
               src="../../../static/blue-dashboard-icons/door_alarm.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             /><img
               v-else
               src="../../../static/blue-dashboard-icons/door.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
-            <div>Door Open</div>
-            <div style="font-size: 12px">
+            <div>Door</div>
+            <div style="font-size: 12px" v-if="!$vuetify.breakpoint.smAndDown">
               <div :style="getPriorityColor(device.door_open_status)">
                 {{
                   device.door_open_start_datetime == null
@@ -162,61 +202,71 @@
       "
     ></div>
     <v-row>
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="3" sm="6" md="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay0
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
           :style="
-            'border-radius: 20px; text-align: center;cursor:' +
-            (loading ? 'progress' : 'pointer')
+            'cursor:' +
+            (loading ? 'progress' : 'pointer') +
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
           "
           @click="relayCommand('relay0', relayStatus.relay0)"
         >
           <div style="margin: auto">
             <img
               src="../../../static/blue-dashboard-icons/ac.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
             <div>A/C {{ relayStatus?.relay0 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
 
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="3" sm="6" md="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay1
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
           @click="relayCommand('relay1', relayStatus.relay1)"
           :style="
-            'border-radius: 20px; text-align: center;cursor:' +
-            (loading ? 'progress' : 'pointer')
+            'cursor:' +
+            (loading ? 'progress' : 'pointer') +
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
           "
         >
           <div style="margin: auto">
             <img
               src="../../../static/blue-dashboard-icons/fan.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
             <div>Fan {{ relayStatus?.relay1 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
 
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="3" sm="6" md="3">
         <!-- {{ relayStatus.relay2 }} -->
         <v-card
           :class="
@@ -224,47 +274,57 @@
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
           @click="relayCommand('relay2', relayStatus.relay2)"
           :style="
-            'border-radius: 20px; text-align: center;cursor:' +
-            (loading ? 'progress' : 'pointer')
+            'cursor:' +
+            (loading ? 'progress' : 'pointer') +
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
           "
         >
           <div style="margin: auto">
             <img
               src="../../../static/blue-dashboard-icons/lamp.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
             <div>Lamp {{ relayStatus?.relay2 ? "On" : "Off" }}</div>
           </div>
         </v-card>
       </v-col>
 
-      <v-col cols="6" sm="6" md="3">
+      <v-col cols="3" sm="6" md="3">
         <v-card
           :class="
             relayStatus && relayStatus.relay3
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          height="180px"
+          :height="$vuetify.breakpoint.smAndDown ? '130px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
           @click="relayCommand('relay3', relayStatus.relay3)"
           :style="
-            'border-radius: 20px; text-align: center;cursor:' +
-            (loading ? 'progress' : 'pointer')
+            'cursor:' +
+            (loading ? 'progress' : 'pointer') +
+            $vuetify.breakpoint.smAndDown
+              ? 'padding:5px!important; border-radius: 20px!important; text-align: center;font-size:14px'
+              : 'border-radius: 20px; text-align: center'
           "
         >
           <div style="margin: auto">
             <img
               src="../../../static/blue-dashboard-icons/siren.png"
-              style="width: 80px"
+              :style="
+                $vuetify.breakpoint.smAndDown ? 'width:60px' : 'width:80px'
+              "
             />
             <div>Siren {{ relayStatus?.relay3 ? "On" : "Off" }}</div>
           </div>
