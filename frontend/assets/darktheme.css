@@ -1,3 +1,15 @@
+body {
+  background-color: var(--v-theme-background);
+}
+
+.theme-dark-bg {
+  background-color: #10154d; /* Dark theme background */
+
+}
+.theme-light-bg {
+  background-color: #ffffff; /* Light theme background */
+
+}
 .theme--dark.v-card {
   background-color: #10154d!important;
 }

@@ -1449,6 +1449,13 @@ export default {
     // },
   },
   computed: {
+    isDarkTheme() {
+      return this.$vuetify.theme.dark;
+    },
+    themeClass() {
+      return this.isDarkTheme ? "theme-dark-bg" : "theme-light-bg";
+    },
+
     logo_src() {
       return require("@/static/logo.png");
       if (this.$vuetify.theme.dark) return require("@/static/logo.png");
@@ -2534,6 +2541,10 @@ body {
 </style> -->
 
 <style>
+#app {
+  width: 100%;
+  height: 100%;
+}
 body {
   min-width: 400px !important;
 }

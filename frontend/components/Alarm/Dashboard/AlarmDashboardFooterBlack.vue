@@ -16,7 +16,7 @@
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           loading="false"
           outlined
@@ -68,7 +68,7 @@
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           loading="false"
           outlined
@@ -117,7 +117,7 @@
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           outlined
         >
@@ -154,7 +154,7 @@
               ? 'dashboard-card-small'
               : 'dashboard-card-small-pink'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           loading="false"
           outlined
@@ -209,7 +209,7 @@
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
@@ -241,7 +241,7 @@
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
@@ -274,7 +274,7 @@
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
@@ -306,7 +306,7 @@
               ? 'dashboard-card-small-pink'
               : 'dashboard-card-small'
           "
-          :height="$vuetify.breakpoint.smAndDown ? '150px' : '180px'"
+          :height="$vuetify.breakpoint.smAndDown ? '160px' : '180px'"
           elevation="24"
           :loading="loading"
           outlined
