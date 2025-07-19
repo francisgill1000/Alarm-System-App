@@ -4,7 +4,12 @@
     v-if="can('dashboard_access') && can('dashboard_view')"
   >
     <v-row :key="key">
-      <v-col cols="3" sm="6" md="3">
+      <v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :style="
             $vuetify.breakpoint.smAndDown
@@ -56,7 +61,12 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3" sm="6" md="3">
+      <v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :style="
             $vuetify.breakpoint.smAndDown
@@ -105,7 +115,12 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="3" sm="6" md="3">
+      ><v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :style="
             $vuetify.breakpoint.smAndDown
@@ -147,7 +162,12 @@
             </div>
           </div>
         </v-card> </v-col
-      ><v-col cols="3" sm="6" md="3">
+      ><v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :class="
             device.door_open_status == 0
@@ -202,7 +222,12 @@
       "
     ></div> -->
     <v-row>
-      <v-col cols="3" sm="6" md="3">
+      <v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :class="
             relayStatus && relayStatus.relay0
@@ -234,7 +259,12 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3" sm="6" md="3">
+      <v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :class="
             relayStatus && relayStatus.relay1
@@ -266,7 +296,12 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3" sm="6" md="3">
+      <v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <!-- {{ relayStatus.relay2 }} -->
         <v-card
           :class="
@@ -299,7 +334,12 @@
         </v-card>
       </v-col>
 
-      <v-col cols="3" sm="6" md="3">
+      <v-col
+        cols="3"
+        sm="6"
+        md="3"
+        style="padding-left: 10px; padding-right: 5px"
+      >
         <v-card
           :class="
             relayStatus && relayStatus.relay3
