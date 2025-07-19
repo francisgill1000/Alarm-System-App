@@ -11,7 +11,7 @@
     "icon": "mdi mdi-temperature-celsius",
     "title": "Logs",
     "to": "/alarm/temperatureLogs",
-    "menu": "employee_access",
+    "menu": "logs",
     "submenu": "leftmenu",
     "module": "dashboard"
   },
@@ -19,37 +19,30 @@
     "icon": "mdi-alarm-light",
     "title": "Reports",
     "to": "/alarm/AlarmLogs",
-    "menu": "employee_schedule_access",
+    "menu": "reports",
     "submenu": "leftmenu",
     "module": "dashboard"
   },
 
   {
-    "icon": "mdi-filmstrip-box-multiple",
-    "title": "Branches",
-    "to": "/branches",
-    "menu": "branch_access",
-    "module": "settings"
-  },
-  {
     "icon": "mdi-email",
     "title": "Notifications",
     "to": "/automation",
-    "menu": "notifications_access",
+    "menu": "notifications",
     "module": "settings"
   },
   {
     "icon": "mdi mdi-server",
     "title": "Devices",
     "to": "/alarm/rooms",
-    "menu": "notifications_access",
+    "menu": "rooms",
     "module": "settings"
   },
   {
     "icon": "mdi mdi-whatsapp",
     "title": "Whatsapp",
     "to": "/whatsapp",
-    "menu": "notifications_access",
+    "menu": "whatsapp",
     "module": "settings"
   }
 ]

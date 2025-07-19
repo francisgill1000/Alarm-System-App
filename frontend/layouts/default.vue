@@ -384,6 +384,15 @@
                 color="dark"
                 fill
                 @click="setSubLeftMenuItems(items.menu, items.to)"
+                :color="
+                  menuProperties[items.menu] &&
+                  menuProperties[items.menu].selected
+                "
+                :style="
+                  $vuetify.theme.dark && menuProperties[items.menu]?.selected
+                    ? 'background-color: #007d61; color: white;'
+                    : ''
+                "
               >
                 <span style="color: #fff !important">{{ items.title }}</span>
               </v-btn>
@@ -1196,6 +1205,27 @@ export default {
           elevation: 0,
           selected: "",
         },
+        logs: {
+          elevation: 0,
+          selected: "",
+        },
+
+        reports: {
+          elevation: 0,
+          selected: "",
+        },
+        notifications: {
+          elevation: 0,
+          selected: "",
+        },
+        rooms: {
+          elevation: 0,
+          selected: "",
+        },
+        whatsapp: {
+          elevation: 0,
+          selected: "",
+        },
       },
 
       topMenu_Selected: "dashboard",
@@ -1419,7 +1449,7 @@ export default {
       if (loadSelectedMenu[0]) {
         menu_name = loadSelectedMenu[0].module;
 
-        // console.log("menu_name", menu_name);
+        console.log("menu_name", menu_name);
 
         if (this.menuProperties.hasOwnProperty(menu_name)) {
           for (const key in this.menuProperties) {
@@ -1850,7 +1880,17 @@ export default {
       // );
       let bgColor = "violet";
       this.setMenus();
+      console.log("menu_name", menu_name);
 
+      if (this.menuProperties.hasOwnProperty(menu_name)) {
+        for (const key in this.menuProperties) {
+          this.menuProperties[key].elevation = 0;
+          this.menuProperties[key].selected = "";
+        }
+
+        this.menuProperties[menu_name].elevation = 0;
+        this.menuProperties[menu_name].selected = bgColor;
+      }
       // Check if menu_name exists in menuProperties
       if (this.menuProperties.hasOwnProperty(menu_name)) {
         for (const key in this.menuProperties) {
