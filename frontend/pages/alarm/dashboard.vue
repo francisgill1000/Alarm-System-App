@@ -16,7 +16,7 @@
     ></div>
 
     <v-row style="margin-top: 0px">
-      <v-col cols="12" sm="6" md="6" v-if="!$vuetify.breakpoint.smAndDown">
+      <v-col cols="12" sm="6" md="6" v-if="!isMobileView">
         <v-card
           v-if="!displayLiveData"
           height="400px"
@@ -53,7 +53,7 @@
         <v-card
           class="dashboard-card"
           :style="
-            $vuetify.breakpoint.smAndDown
+            isMobileView
               ? 'height: auto;'
               : 'height: 400px; border-radius: 10px;'
           "
@@ -128,7 +128,7 @@
 
               <v-row>
                 <v-col
-                  v-if="!$vuetify.breakpoint.smAndDown"
+                  v-if="!isMobileView"
                   cols="2"
                   class="align-items-center justify-content-center pt-0"
                 >
@@ -139,14 +139,14 @@
                 </v-col>
                 <v-col cols="10" class="pa-0" style="margin-top: -30px">
                   <TemperatureChartMobile
-                    v-if="$vuetify.breakpoint.smAndDown"
+                    v-if="isMobileView"
                     id="1"
                     style="width: 100px"
                     :name="'ArrowArcChartTemperature1'"
                     :temperature="temperature_latest"
                     :key="Sensorkey"
                     :temperature_date_time="temperature_date_time"
-                    :width="$vuetify.breakpoint.smAndDown ? 100 : 300"
+                    :width="isMobileView ? 100 : 300"
                   />
                   <TemperatureChart3
                     v-else
@@ -174,7 +174,7 @@
 
             <v-col cols="5">
               <v-divider
-                v-if="$vuetify.breakpoint.smAndDown"
+                v-if="isMobileView"
                 inset
                 horizontal
                 style="color: #cfcece"
@@ -200,7 +200,7 @@
 
               <v-row>
                 <v-col
-                  v-if="!$vuetify.breakpoint.smAndDown"
+                  v-if="!isMobileView"
                   cols="2"
                   class="align-items-center justify-content-center pt-0"
                 >
@@ -211,7 +211,7 @@
                 </v-col>
                 <v-col cols="10" class="pa-0" style="margin-top: -30px">
                   <HumidityChart3Mobile
-                    v-if="$vuetify.breakpoint.smAndDown"
+                    v-if="isMobileView"
                     :name="'ArrowArcChart2Humidity'"
                     :humidity="humidity_latest"
                     :key="Sensorkey + '2'"
@@ -254,7 +254,7 @@
           @manualButtonTriggered="manualButtonTriggered()"
         />
       </v-col>
-      <v-col cols="12" sm="6" md="6">
+      <v-col cols="12" sm="6" md="6" v-if="!isMobileView">
         <v-card
           class="dashboard-card"
           height="380px"
@@ -387,6 +387,7 @@ export default {
       MQTTRetryCount: 0,
       lastMQTTSendTime: 0,
       deviceOnline: 0, // will store the evaluated result
+      isMobileView: false,
     };
   },
   beforeDestroy() {
@@ -408,8 +409,15 @@ export default {
       this.isMQTTConnected = false;
     });
   },
+  // watch: {
+  //   from_date(val) {},
+  // },
+
   watch: {
-    from_date(val) {},
+    "$vuetify.breakpoint.smAndDown"(val) {
+      this.isMobileView = val;
+      console.log("View changed:", val ? "Mobile" : "Desktop");
+    },
   },
   computed: {
     // deviceOnlineStatus() {
@@ -425,6 +433,9 @@ export default {
     // },
   },
   async mounted() {
+    console.log(this.$vuetify.breakpoint.smAndDown);
+
+    this.isMobileView = this.$vuetify.breakpoint.smAndDown ? true : false;
     this.loading = true;
     this.connectMQTT();
     // setTimeout(() => {}, 1000 * 3);
