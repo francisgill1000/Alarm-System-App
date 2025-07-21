@@ -420,7 +420,7 @@
           title="Xtream Guard"
           :src="logo_src"
           :style="
-            $vuetify.breakpoint.smAndDown ? 'width:100px' : 'width: 150px'
+            $vuetify.breakpoint.smAndDown ? 'width:125px' : 'width: 150px'
           "
         />
       </span>
