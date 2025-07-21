@@ -251,7 +251,7 @@
       fixed
       app
       :color="sideBarcolor"
-      :width="150"
+      :width="115"
     >
       <br />
 
@@ -264,17 +264,65 @@
           style="display: inline-block"
         >
           <v-list-item-icon class="ma-2">
-            <v-icon>mdi mdi-menu</v-icon>
+            <v-icon color="red">mdi mdi-close-circle</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-title class="text-center p-2"> Menu </v-list-item-title>
+          <v-list-item-title class="text-center p-2"> Close </v-list-item-title>
         </v-list-item>
         <v-list-item
+          v-for="(items, index) in company_top_menu"
+          router
+          :class="'pa-2 ' + (!miniVariant || 'pl-2') + ' '"
+          vertical
+          style="display: inline-block"
+          @click="setSubLeftMenuItems(items.menu, items.to)"
+          :color="
+            menuProperties[items.menu] && menuProperties[items.menu].selected
+          "
+          :style="
+            $vuetify.theme.dark && menuProperties[items.menu]?.selected
+              ? 'background-color: #007d61; color: white;'
+              : ''
+          "
+        >
+          <v-list-item-icon class="ma-2">
+            <v-icon v-if="items.menu == 'dashboard'"
+              >mdi mdi-view-dashboard</v-icon
+            >
+            <!-- <v-icon v-else-if="items.menu == 'dashboard'">mdi mdi-fire</v-icon> -->
+
+            <v-icon v-else-if="items.menu == 'logs'">mdi-thermometer </v-icon>
+            <v-icon v-else-if="items.menu == 'reports'">mdi-alarm-light</v-icon>
+
+            <v-icon v-else-if="items.menu == 'rooms'">mdi mdi-server</v-icon>
+
+            <v-icon v-else-if="items.menu == 'whatsapp'"
+              >mdi mdi-whatsapp</v-icon
+            >
+            <v-icon v-else-if="items.menu == 'notifications'">mdi-email</v-icon>
+
+            <v-icon v-else>mdi mdi-menu</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-title class="text-center p-2">
+            {{ items.title }}
+          </v-list-item-title>
+        </v-list-item>
+
+        <!-- <v-list-item
           @click="goToPage('/alarm/dashboard')"
           router
           :class="!miniVariant || 'pl-2'"
           vertical
           style="display: inline-block"
+          :color="
+            menuProperties['dashboard'] && menuProperties['dashboard'].selected
+          "
+          :style="
+            $vuetify.theme.dark && menuProperties['dashboard']?.selected
+              ? 'background-color: #007d61; color: white;'
+              : ''
+          "
         >
           <v-list-item-icon class="ma-2">
             <v-icon>mdi mdi-view-dashboard</v-icon>
@@ -290,6 +338,12 @@
           :class="!miniVariant || 'pl-2'"
           vertical
           style="display: inline-block"
+          :color="menuProperties['logs'] && menuProperties['logs'].selected"
+          :style="
+            $vuetify.theme.dark && menuProperties['logs']?.selected
+              ? 'background-color: #007d61; color: white;'
+              : ''
+          "
         >
           <v-list-item-icon class="ma-2">
             <v-icon>mdi mdi-fire</v-icon>
@@ -305,6 +359,14 @@
           :class="!miniVariant || 'pl-2'"
           vertical
           style="display: inline-block"
+          :color="
+            menuProperties['reports'] && menuProperties['reports'].selected
+          "
+          :style="
+            $vuetify.theme.dark && menuProperties['reports']?.selected
+              ? 'background-color: #007d61; color: white;'
+              : ''
+          "
         >
           <v-list-item-icon class="ma-2">
             <v-icon>mdi-alarm-light</v-icon>
@@ -320,6 +382,12 @@
           :class="!miniVariant || 'pl-2'"
           vertical
           style="display: inline-block"
+          :color="menuProperties['rooms'] && menuProperties['rooms'].selected"
+          :style="
+            $vuetify.theme.dark && menuProperties['rooms']?.selected
+              ? 'background-color: #007d61; color: white;'
+              : ''
+          "
         >
           <v-list-item-icon class="ma-2">
             <v-icon>mdi mdi-server</v-icon>
@@ -328,7 +396,7 @@
           <v-list-item-title class="text-center p-2">
             Server Rooms
           </v-list-item-title>
-        </v-list-item>
+        </v-list-item> -->
       </v-list>
     </v-navigation-drawer>
     <v-app-bar
@@ -339,10 +407,10 @@
       class="app-header-main"
       :style="$nuxt.$route.name == 'index' ? 'z-index: 100000' : ''"
     >
-      <!-- <v-app-bar-nav-icon
+      <v-app-bar-nav-icon
         v-if="$vuetify.breakpoint.smAndDown"
         @click.stop="drawer = !drawer"
-      /> -->
+      />
       <span
         class="text-overflow"
         style="cursor: pointer"
@@ -2678,7 +2746,9 @@ body {
 <!-- <style scoped>
 @import "@../../assets/blacktheme.css";
 </style> -->
-
+<style>
+@import "@../../assets/mobile.css";
+</style>
 <style>
 @import "@../../assets/darktheme.css";
 </style>

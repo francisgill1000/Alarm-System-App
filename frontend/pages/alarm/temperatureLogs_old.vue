@@ -173,7 +173,10 @@
                       @filter-attr="handleDatesFilter"
                       :defaultFilterType="1"
                       :height="'40px'"
-                      style="margin-top: -7px; width: 100%" :class="this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''"
+                      style="margin-top: -7px; width: 100%"
+                      :class="
+                        this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''
+                      "
                     />
                     <v-autocomplete
                       :id="header.key"
@@ -484,9 +487,13 @@ export default {
 
   mounted() {
     this.tableHeight = window.innerHeight - 270;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 270;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 270;
+        });
+    } catch (e) {}
 
     setInterval(() => {
       if (this.$route.name == "devicelogs") {

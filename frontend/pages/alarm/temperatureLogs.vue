@@ -9,100 +9,75 @@
     <v-row>
       <v-col>
         <v-card elevation="0" class="mt-2">
-          <v-toolbar class="mb-2" dense flat>
-            <v-toolbar-title> <span>Temperature Reports</span></v-toolbar-title>
-            <span>
-              <v-btn
-                title="Reload"
-                dense
-                class="ma-0 px-0"
-                x-small
-                :ripple="false"
-                @click="getDataFromApi()"
-                text
-              >
-                <v-icon class="ml-2" dark>mdi mdi-reload</v-icon>
-              </v-btn>
-            </span>
+          <v-toolbar
+            extended
+            class="mb-2"
+            dense
+            flat
+            :style="$vuetify.breakpoint.smAndDown ? 'height:150px;' : ''"
+          >
+            <v-toolbar-title class="mr-2"></v-toolbar-title>
 
-            <v-spacer></v-spacer>
-            <!-- <span>
-              <v-select
-                @change="getDataFromApi()"
-                style="height: 30px; width: 230px; margin-right: 21px"
-                label="Alarm"
-                outlined
-                dense
-                small
-                v-model="filter_alarm_status"
-                item-text="name"
-                item-value="value"
-                :items="[
-                  { name: `All`, value: null },
-                  { name: `Smoke/Fire Detected `, value: `2` },
-                  { name: `Water  Leakage`, value: `3` },
-                  { name: `Door  Open`, value: `4` },
-                  { name: `AC Power Off`, value: `5` },
-                  { name: `Any Alarm Detected`, value: `1` },
-                  { name: `All Alarm - Normal`, value: `0` },
-                ]"
-                placeholder="Room"
-              ></v-select>
-            </span> -->
-            <span>
-              <!-- <v-autocomplete
-                @change="getDataFromApi()"
-                style="height: 30px; width: 180px; margin-right: 21px"
-                label="Room"
-                outlined
-                dense
-                small
-                v-model="filter_device_serial_number"
-                item-text="name"
-                item-value="serial_number"
-                :items="[
-                  { name: `All Rooms`, serial_number: null },
-                  ...devices,
-                ]"
-                placeholder="Room"
-              ></v-autocomplete> -->
+            <template v-slot:extension>
+              <v-row>
+                <v-col cols="12" sm="6" md="3"
+                  >Temperature Reports
+                  <v-btn
+                    title="Reload"
+                    dense
+                    class="ma-0 px-0"
+                    x-small
+                    :ripple="false"
+                    @click="getDataFromApi()"
+                    text
+                  >
+                    <v-icon class="ml-2" dark>mdi-reload</v-icon>
+                  </v-btn></v-col
+                >
 
-              <v-select
-                style="height: 30px; width: 180px; margin-right: 21px"
-                @change="getDataFromApi()"
-                v-model="device_serial_number_with_sensor"
-                :items="[
-                  { name: `All Rooms`, serial_number: null },
-                  ...devices,
-                ]"
-                dense
-                small
-                outlined
-                hide-details
-                label="Room"
-                :item-value="
-                  (item) =>
-                    `${item.serial_number}|${
-                      item.temperature_serial_address ?? 'null'
-                    }`
-                "
-                :item-text="
-                  (item) =>
-                    item.temperature_sensor_name
-                      ? `${item.name} - ${item.temperature_sensor_name}`
-                      : item.name
-                "
-              ></v-select>
-            </span>
-            <span>
-              <DateRangeComponent
-                @filter-attr="handleDatesFilter"
-                :defaultFilterType="1"
-                :height="'40px'"
-                style="margin-top: -7px; width: 100%"
-                :class="this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''"
-              />
-            </span>
+                <v-col v-if="!$vuetify.breakpoint.smAndDown"></v-col>
+                <v-col style="max-width: 400px">
+                  <v-row
+                    ><v-col style="max-width: 200px"
+                      ><v-select
+                        style="width: 200px"
+                        dense
+                        outlined
+                        hide-details
+                        label="Room"
+                        v-model="device_serial_number_with_sensor"
+                        :items="[
+                          { name: 'All Rooms', serial_number: null },
+                          ...devices,
+                        ]"
+                        :item-value="
+                          (item) =>
+                            `${item.serial_number}|${
+                              item.temperature_serial_address ?? 'null'
+                            }`
+                        "
+                        :item-text="
+                          (item) =>
+                            item.temperature_sensor_name
+                              ? `${item.name} - ${item.temperature_sensor_name}`
+                              : item.name
+                        "
+                    /></v-col>
+
+                    <v-col style="max-width: 160px">
+                      <DateRangeComponent
+                        @filter-attr="handleDatesFilter"
+                        :defaultFilterType="1"
+                        :height="'40px'"
+                        style="margin: 5px; width: 100%"
+                        :class="
+                          $vuetify.theme.dark ? 'daterange-blacktheme' : ''
+                        "
+                      /> </v-col
+                  ></v-row>
+                </v-col>
+              </v-row>
+            </template>
           </v-toolbar>
 
           <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
@@ -284,7 +259,7 @@ export default {
       {
         text: "Date",
         align: "center",
-        sortable: true,
+        sortable: false,
         key: "log_time",
         value: "log_time",
         width: "150px",
@@ -384,9 +359,13 @@ export default {
   },
   mounted() {
     this.tableHeight = window.innerHeight - 270;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 270;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 270;
+        });
+    } catch (e) {}
 
     this.intervalObj = setInterval(() => {
       this.getDataFromApi();

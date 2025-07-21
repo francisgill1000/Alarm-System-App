@@ -131,7 +131,7 @@
               >
             </v-btn>
           </span>
-          <span>
+          <!-- <span>
             <v-btn
               x-small
               :ripple="false"
@@ -141,7 +141,7 @@
             >
               <v-icon dark>mdi-filter</v-icon>
             </v-btn>
-          </span>
+          </span> -->
 
           <v-spacer></v-spacer>
 
@@ -539,10 +539,10 @@ export default {
       {
         text: "Name",
         align: "left",
-        sortable: true,
+        sortable: false,
         key: "subject",
         value: "subject",
-        filterable: true,
+        filterable: false,
         filterSpecial: false,
       },
       // {
@@ -566,47 +566,47 @@ export default {
       {
         text: "Manager1",
         align: "left",
-        sortable: true,
+        sortable: false,
         key: "manager",
         value: "manager1",
-        filterable: true,
+        filterable: false,
         filterSpecial: false,
       },
       {
         text: "Manager2",
         align: "left",
-        sortable: true,
+        sortable: false,
         key: "manager",
         value: "manager2",
-        filterable: true,
+        filterable: false,
         filterSpecial: false,
       },
       {
         text: "Manager3",
         align: "left",
-        sortable: true,
+        sortable: false,
         key: "manager",
         value: "manager3",
-        filterable: true,
+        filterable: false,
         filterSpecial: false,
       },
       {
         text: "Media",
         align: "left",
-        sortable: true,
+        sortable: false,
         key: "medium",
         value: "medium",
-        filterable: true,
-        filterSpecial: true,
+        filterable: false,
+        filterSpecial: false,
       },
 
       {
         text: "Last Sent",
         align: "left",
-        sortable: true,
+        sortable: false,
         key: "time",
         value: "last_sent",
-        filterable: true,
+        filterable: false,
         filterSpecial: false,
       },
       {
@@ -644,9 +644,14 @@ export default {
     // try {
     //   if (window) this.tableHeight = window.innerHeight - 220;
     // } catch (e) {}
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 220;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 220;
+        });
+    } catch (e) {}
+
     this.preloader = false;
     this.id = this.$auth?.user?.company?.id;
     this.getDataFromApi();
@@ -655,12 +660,12 @@ export default {
         {
           text: "Branch",
           align: "left",
-          sortable: true,
+          sortable: false,
           key: "branch_id", //sorting
           value: "branch.branch_name", //edit purpose
 
-          filterable: true,
-          filterSpecial: true,
+          filterable: false,
+          filterSpecial: false,
         },
       ];
       this.headers_table.splice(1, 0, ...branch_header);

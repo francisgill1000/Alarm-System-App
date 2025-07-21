@@ -26,7 +26,7 @@
 
     <v-row v-else>
       <v-col cols="12">
-        <v-tabs v-model="tab">
+        <v-tabs v-model="tab" :show-arrows="$vuetify.breakpoint.smAndDown">
           <v-tab> Device Info </v-tab>
           <v-tab> Communication </v-tab>
           <v-tab>Alarms</v-tab>
@@ -40,7 +40,7 @@
                   <v-row>
                     <!-- <v-col cols="12"> <h3>Network Settings</h3></v-col> -->
 
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-row>
                         <v-col cols="12">
                           <v-select
@@ -95,7 +95,7 @@
                       </v-row>
                     </v-col>
 
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-row>
                         <v-col cols="12">
                           <v-text-field
@@ -171,7 +171,7 @@
                 <v-card-text>
                   <br />
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-text-field
                         :disabled="!deviceSettings.config.mqtt_communication"
                         v-model="deviceSettings.config.mqtt_server"
@@ -185,7 +185,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-text-field
                         :disabled="!deviceSettings.config.mqtt_communication"
                         v-model="deviceSettings.config.mqtt_port"
@@ -198,7 +198,7 @@
                       ></v-text-field>
                     </v-col> </v-row
                   ><v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-text-field
                         :disabled="!deviceSettings.config.mqtt_communication"
                         v-model="deviceSettings.config.mqtt_clientId"
@@ -233,7 +233,7 @@
                 <v-card-text>
                   <br />
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-text-field
                         :disabled="!deviceSettings.config.socket_communication"
                         v-model="deviceSettings.config.server_ip"
@@ -247,7 +247,7 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-text-field
                         :disabled="!deviceSettings.config.socket_communication"
                         v-model="deviceSettings.config.server_port"
@@ -281,7 +281,7 @@
                 <v-card-text>
                   <br />
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="12" sm="12" md="6">
                       <v-text-field
                         :disabled="!deviceSettings.config.http_communication"
                         v-model="deviceSettings.config.http_link"
@@ -324,7 +324,7 @@
                   <v-card elevation="2" outlined style="height: 400px">
                     <v-card-text>
                       <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12" sm="12" md="6">
                           <v-row>
                             <v-col cols="12">
                               <v-select

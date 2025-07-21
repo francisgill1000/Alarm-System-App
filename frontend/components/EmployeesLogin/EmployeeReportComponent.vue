@@ -768,9 +768,13 @@ export default {
   },
   mounted() {
     this.tableHeight = window.innerHeight - 370;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 370;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 370;
+        });
+    } catch (e) {}
   },
   async created() {
     // // this.loading = true;

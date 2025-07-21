@@ -648,9 +648,13 @@ export default {
 
   async created() {
     this.tableHeight = window.innerHeight - 220;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 220;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 220;
+        });
+    } catch (e) {}
     this.loading = false;
     this.boilerplate = true;
 

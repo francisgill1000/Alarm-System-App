@@ -9,7 +9,148 @@
     <v-row>
       <v-col>
         <v-card elevation="0" class="mt-0">
-          <v-toolbar class="mb-2 white--text" color="white" dense flat>
+          <v-toolbar
+            extended
+            class="mb-2"
+            dense
+            flat
+            :style="$vuetify.breakpoint.smAndDown ? 'height:150px;' : ''"
+          >
+            <v-toolbar-title class="mr-2"></v-toolbar-title>
+
+            <template v-slot:extension>
+              <v-row>
+                <v-col cols="12" sm="6" md="3">
+                  Alarm Reports
+                  <v-btn
+                    title="Reload"
+                    dense
+                    class="ma-0 px-0"
+                    x-small
+                    :ripple="false"
+                    @click="getDataFromApi()"
+                    text
+                  >
+                    <v-icon class="ml-2" dark>mdi-reload</v-icon>
+                  </v-btn>
+                  <span
+                    style="
+                      width: 150px;
+                      display: inline-block;
+                      text-align: right;
+                      float: right;
+                    "
+                  >
+                    <v-select
+                      v-if="$vuetify.breakpoint.smAndDown"
+                      @change="getDataFromApi()"
+                      label="Alarm"
+                      outlined
+                      dense
+                      small
+                      v-model="filter_alarm_status"
+                      item-text="name"
+                      item-value="value"
+                      area-hidden="true"
+                      :items="[
+                        // { name: `All`, value: null },
+                        { name: `All`, value: 1 },
+                        { name: `Fire Detected `, value: 2 },
+                        { name: `Smoke Detected `, value: 6 },
+                        { name: `Water  Leakage`, value: 3 },
+                        { name: `Door  Open`, value: 4 },
+                        { name: `AC Power Off`, value: 5 },
+
+                        //{ name: `All Alarm - Normal`, value: 0 },
+                      ]"
+                      placeholder="Room"
+                    ></v-select>
+                  </span>
+                </v-col>
+
+                <v-col v-if="!$vuetify.breakpoint.smAndDown"></v-col>
+
+                <v-col
+                  :style="
+                    'max-width: 600px;' +
+                    ($vuetify.breakpoint.smAndDown ? 'margin-top:-53px' : '')
+                  "
+                >
+                  <v-row
+                    ><v-col
+                      cols="12"
+                      sm="6"
+                      md="3"
+                      :style="
+                        !$vuetify.breakpoint.smAndDown ? 'max-width: 200px' : ''
+                      "
+                    >
+                      <v-select
+                        v-if="!$vuetify.breakpoint.smAndDown"
+                        @change="getDataFromApi()"
+                        :style="
+                          'height: 30px;  margin-right: 21px;' +
+                          $vuetify.breakpoint.smAndDown
+                            ? 'max-width: 230px'
+                            : 'max-width:450px'
+                        "
+                        label="Alarm"
+                        outlined
+                        dense
+                        small
+                        v-model="filter_alarm_status"
+                        item-text="name"
+                        item-value="value"
+                        area-hidden="true"
+                        :items="[
+                          // { name: `All`, value: null },
+                          { name: `All`, value: 1 },
+                          { name: `Fire Detected `, value: 2 },
+                          { name: `Smoke Detected `, value: 6 },
+                          { name: `Water  Leakage`, value: 3 },
+                          { name: `Door  Open`, value: 4 },
+                          { name: `AC Power Off`, value: 5 },
+
+                          //{ name: `All Alarm - Normal`, value: 0 },
+                        ]"
+                        placeholder="Room"
+                      ></v-select
+                    ></v-col>
+                    <v-col style="max-width: 160px">
+                      <v-autocomplete
+                        @change="getDataFromApi()"
+                        style="height: 30px; width: 180px; margin-right: 21px"
+                        label="Room"
+                        outlined
+                        dense
+                        small
+                        v-model="filter_device_serial_number"
+                        item-text="name"
+                        item-value="serial_number"
+                        :items="[
+                          { name: `All Rooms`, serial_number: null },
+                          ...devices,
+                        ]"
+                        placeholder="Room"
+                      ></v-autocomplete>
+                    </v-col>
+                    <v-col style="max-width: 200px">
+                      <DateRangeComponent
+                        @filter-attr="handleDatesFilter"
+                        :defaultFilterType="1"
+                        :height="'40px'"
+                        style="margin-top: 5px; width: 100%"
+                        :class="
+                          $vuetify.theme.dark ? 'daterange-blacktheme' : ''
+                        "
+                      /> </v-col
+                  ></v-row>
+                </v-col>
+              </v-row>
+            </template>
+          </v-toolbar>
+
+          <!-- <v-toolbar class="mb-2 white--text" color="white" dense flat>
             <v-toolbar-title> <span> Alarm Reports</span></v-toolbar-title>
             <span>
               <v-btn
@@ -78,7 +219,7 @@
                 :class="this.$vuetify.theme.dark ? 'daterange-blacktheme' : ''"
               />
             </span>
-          </v-toolbar>
+          </v-toolbar> -->
 
           <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
             {{ snackText }}
@@ -286,7 +427,7 @@ export default {
       {
         text: "Date",
         align: "center",
-        sortable: true,
+        sortable: false,
         key: "log_time",
         value: "log_time",
         width: "150px",
@@ -296,7 +437,7 @@ export default {
       {
         text: "End Date",
         align: "center",
-        sortable: true,
+        sortable: false,
         key: "end_time",
         value: "end_time",
         width: "150px",
@@ -403,9 +544,13 @@ export default {
 
   mounted() {
     this.tableHeight = window.innerHeight - 250;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 250;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 250;
+        });
+    } catch (e) {}
 
     this.intervalObj = setInterval(() => {
       {

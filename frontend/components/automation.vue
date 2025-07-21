@@ -693,54 +693,54 @@ export default {
       // /test/whatsapp
       this.$axios.get("/test/whatsapp").then((res) => {});
     },
-    test() {
-      var axios = require("axios");
-      // var data = JSON.stringify({
-      //   messaging_product: "whatsapp",
-      //   recipient_type: "individual",
-      //   to: "923108559858",
-      //   type: "text",
-      //   text: {
-      //     preview_url: false,
-      //     body: "contect"
-      //   }
-      //   // type: "text",
-      //   // text: {
-      //   //   // the text object
-      //   //   preview_url: false,
-      //   //   body: "sdfsdf"
-      //   // }
-      // });
+    // test() {
+    //   var axios = require("axios");
+    //   // var data = JSON.stringify({
+    //   //   messaging_product: "whatsapp",
+    //   //   recipient_type: "individual",
+    //   //   to: "923108559858",
+    //   //   type: "text",
+    //   //   text: {
+    //   //     preview_url: false,
+    //   //     body: "contect"
+    //   //   }
+    //   //   // type: "text",
+    //   //   // text: {
+    //   //   //   // the text object
+    //   //   //   preview_url: false,
+    //   //   //   body: "sdfsdf"
+    //   //   // }
+    //   // });
 
-      var data = JSON.stringify({
-        messaging_product: "whatsapp",
-        to: "923108559858",
-        type: "template",
-        template: {
-          name: "automated_reports",
-          language: {
-            code: "en",
-          },
-        },
-      });
+    //   var data = JSON.stringify({
+    //     messaging_product: "whatsapp",
+    //     to: "923108559858",
+    //     type: "template",
+    //     template: {
+    //       name: "automated_reports",
+    //       language: {
+    //         code: "en",
+    //       },
+    //     },
+    //   });
 
-      var config = {
-        method: "post",
-        url: "https://graph.facebook.com/v14.0/102482416002121/messages",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization:
-            "Bearer EAAP9IfKKSo0BAGDS96w2XuYjjpXIqxZBAOcwzlFWecCxODjNO3ruEcbnZCkmHSWNAGNf1Q9wC2uwe5XnyxteTOYAO3l9wgy4iu9L6wwYgtZBZAygXV3Tc4euoYANOZCFlvMAsnNz7vNQEYUYdL56l9poliM3eS6ZCZBV4dMzJhKEQKDbUTZB2ZBvEVl2mlHvSj8dCWgITF8e9GFkTXO8isMsx",
-        },
-        data: data,
-      };
+    //   var config = {
+    //     method: "post",
+    //     url: "https://graph.facebook.com/v14.0/102482416002121/messages",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization:
+    //         "Bearer EAAP9IfKKSo0BAGDS96w2XuYjjpXIqxZBAOcwzlFWecCxODjNO3ruEcbnZCkmHSWNAGNf1Q9wC2uwe5XnyxteTOYAO3l9wgy4iu9L6wwYgtZBZAygXV3Tc4euoYANOZCFlvMAsnNz7vNQEYUYdL56l9poliM3eS6ZCZBV4dMzJhKEQKDbUTZB2ZBvEVl2mlHvSj8dCWgITF8e9GFkTXO8isMsx",
+    //     },
+    //     data: data,
+    //   };
 
-      axios(config)
-        .then(function (response) {})
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
+    //   axios(config)
+    //     .then(function (response) {})
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // },
   },
 };
 </script>

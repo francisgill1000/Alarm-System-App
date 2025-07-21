@@ -337,7 +337,7 @@
 
     <v-card class="mb-0 mt-2" elevation="0">
       <v-toolbar class="rounded-md" dense flat>
-        <v-toolbar-title><span> Server Rooms List</span></v-toolbar-title>
+        <v-toolbar-title><span> Rooms </span></v-toolbar-title>
 
         <span>
           <v-btn
@@ -348,13 +348,13 @@
             text
             title="Reload"
           >
-            <v-icon class="ml-2" @click="getDataFromApi()" dark
+            <!-- <v-icon class="ml-2" @click="getDataFromApi()" dark
               >mdi mdi-reload</v-icon
-            >
+            > -->
           </v-btn>
         </span>
 
-        <span v-if="isCompany" style="width: 250px">
+        <span v-if="isCompany" style="width: 200px">
           <v-select
             @change="getDataFromApi()"
             class="pt-10 px-2"
@@ -400,7 +400,7 @@
             <v-icon dark white>mdi-cached</v-icon>
           </v-btn>
         </span>
-        <span>
+        <span v-if="!$vuetify.breakpoint.smAndDown">
           <v-btn
             v-if="can(`device_create`)"
             x-small
@@ -562,7 +562,10 @@
                   Sensors
                 </v-list-item-title>
               </v-list-item> -->
-              <v-list-item v-if="can(`device_edit`)" @click="editItem(item)">
+              <v-list-item
+                v-if="!$vuetify.breakpoint.smAndDown && can(`device_edit`)"
+                @click="editItem(item)"
+              >
                 <v-list-item-title style="cursor: pointer">
                   <v-icon small> mdi-pencil </v-icon>
                   Edit
@@ -576,7 +579,7 @@
                 </v-list-item-title>
               </v-list-item>
               <v-list-item
-                v-if="can(`device_delete`)"
+                v-if="!$vuetify.breakpoint.smAndDown && can(`device_delete`)"
                 @click="deleteItem(item)"
               >
                 <v-list-item-title style="cursor: pointer">
@@ -755,21 +758,21 @@ export default {
       },
 
       {
-        text: "Smoke  ",
+        text: "Smoke Alarm ",
         align: "center",
         sortable: false,
         value: "smoke_alarm_status",
         filterable: false,
       },
       {
-        text: "Water Leakage",
+        text: "Water Leakage Alarm",
         align: "center",
         sortable: false,
         value: "water_alarm_status",
         filterable: false,
       },
       {
-        text: "AC Power  ",
+        text: "AC Power Alarm ",
         align: "center",
 
         sortable: false,
@@ -778,7 +781,7 @@ export default {
       },
 
       {
-        text: "Door Open",
+        text: "Door Open Alarm",
         align: "center",
         sortable: false,
         value: "door_open_status",
@@ -875,9 +878,13 @@ export default {
       }
     }, 1000 * 60);
     this.tableHeight = window.innerHeight - 230;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 230;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 230;
+        });
+    } catch (e) {}
   },
   async created() {
     this.loading = true;

@@ -813,9 +813,12 @@ export default {
   }),
   async mounted() {
     this.tableHeight = window.innerHeight - 90;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 90;
-    });
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 90;
+        });
+    } catch (e) {}
   },
   async created() {
     try {

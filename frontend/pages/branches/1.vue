@@ -483,9 +483,13 @@ export default {
 
   mounted() {
     this.tableHeight = window.innerHeight - 270;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 270;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 270;
+        });
+    } catch (e) {}
   },
   created() {
     if (this.$auth.user.branch_id == null) {
@@ -616,7 +620,7 @@ export default {
     can(per) {
       return this.$pagePermission.can(per, this);
     },
-    
+
     getRecords(filter_column = "", filter_value = "") {
       this.filters = {};
       this.isFilter = false;

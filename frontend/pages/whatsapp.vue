@@ -189,9 +189,13 @@ export default {
     await this.getWhatsappAccount(this.$auth.user.company_id);
 
     this.tableHeight = window.innerHeight - 100;
-    window.addEventListener("resize", () => {
-      this.tableHeight = window.innerHeight - 100;
-    });
+
+    try {
+      if (window)
+        window.addEventListener("resize", () => {
+          this.tableHeight = window.innerHeight - 100;
+        });
+    } catch (e) {}
   },
 
   methods: {
