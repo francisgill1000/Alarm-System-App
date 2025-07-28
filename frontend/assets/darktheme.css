@@ -1,7 +1,10 @@
 body {
   background-color: var(--v-theme-background);
 }
-
+.theme--dark .chartlabelcolor
+{
+  color:#FFF!important;
+}
 .theme-dark-bg {
   background-color: #10154d; /* Dark theme background */
 

@@ -9,7 +9,7 @@
         position: relative;
       }
       .temperature {
-        color: #fff;
+        /* color: black; */
         position: absolute;
         bottom: 80px; /* Push to top 50 */
         left: 50%; /* Horizontal center */

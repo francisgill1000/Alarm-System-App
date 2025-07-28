@@ -22,3 +22,8 @@ theme--light.v-icon
 background-color: #04253b;;
 }
 
+
+.theme--light .chartlabelcolor
+{
+  color:black!important;
+}

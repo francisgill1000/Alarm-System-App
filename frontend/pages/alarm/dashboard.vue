@@ -179,12 +179,12 @@
                 horizontal
                 style="color: #cfcece"
               ></v-divider>
-              <v-divider
+              <!-- <v-divider
                 v-else
                 inset
                 vertical
                 style="color: #cfcece"
-              ></v-divider>
+              ></v-divider> -->
 
               <!-- <v-divider inset vertical style="color: #cfcece"></v-divider> -->
               <v-row>

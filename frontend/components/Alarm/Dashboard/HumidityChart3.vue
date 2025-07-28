@@ -9,7 +9,6 @@
         position: relative;
       }
       .humidity {
-        color: #fff;
         position: absolute;
         bottom: 80px; /* Push to top 50 */
         left: 50%; /* Horizontal center */
@@ -21,7 +20,7 @@
     </style>
     <div class="chartBox text-center">
       <canvas :id="name + '_canva'" width="300" height="300"></canvas>
-      <div :id="name" class="humidity"></div>
+      <div :id="name" class="humidity chartlabelcolor"></div>
       <div style="font-size: 14px">
         <v-icon color="default-font-color">mdi-clock-outline</v-icon>
         {{ humidity_date_time }}

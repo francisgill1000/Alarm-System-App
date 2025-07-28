@@ -353,6 +353,7 @@ class ApiAlarmControlController extends Controller
             $lastOpen = DeviceSensorLogs::where('serial_number', $serialNumber)
                 ->where('alarm_type', $alarmType)
                 ->where('alarm_status', 1)
+
                 ->when(
                     $alarmType === "temperature_alarm",
                     fn($query) => $query->where('temperature_serial_address', $extraData["temperature_serial_address"] ?? null)

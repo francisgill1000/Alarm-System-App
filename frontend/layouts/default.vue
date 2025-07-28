@@ -639,8 +639,8 @@
         @click="toggleTheme()"
         class="mr-3"
       >
-        <v-icon style="text-align: center; color: #fff"
-          >mdi-swap-horizontal-circle-outline
+        <v-icon style="text-align: center; color: #fff">
+          mdi-palette
         </v-icon></v-btn
       >
 
