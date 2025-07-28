@@ -336,7 +336,8 @@ export default {
     },
   }),
   created() {
-    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    this.$vuetify.theme.dark = false;
+    // !this.$vuetify.theme.dark;
     this.$auth.logout();
     // this.$store.commit("dashboard/resetState", null);
     this.$store.dispatch("dashboard/resetState");
@@ -351,6 +352,8 @@ export default {
 
     this.$store.dispatch("dashboard/resetState");
     this.$store.dispatch("resetState");
+
+    this.$vuetify.theme.dark = false;
   },
   methods: {
     openForgotPassword() {
